@@ -1,13 +1,11 @@
-[![Build Status](https://travis-ci.org/Yorubaname/yorubaname-website.svg?branch=master)](https://travis-ci.org/Yorubaname/yorubaname-website)
+## The Yoruba Dictionary web application
 
-## Yorubaname Website Application
-
-The Yorubaname website application powers the backend services for www.yorubaname.com. It includes various modules that implement
-the various needed functionality. The code for the front facing website found at www.yorubaname.com is also included in it.
+The Yoruba Dictionary web application powers the backend services for www.yorubaword.com. It includes various modules that implement
+the various needed functionality. The code for the front-facing website found at www.yorubaword.com is also included in it.
 
 ## Getting Started With Running and Development
 
-This should be your 5 minute guide to getting the application running on your local machine and contributing code.
+This should be your 5-minute guide to getting the application running on your local machine and contributing code.
 
 ### Requirement
 
@@ -25,15 +23,15 @@ Consult this [link](https://maven.apache.org/install.html) for more information 
 
 First a quick overview of how things stack up should be of help.
 
-The Yorubaname Website application is the backend portion of the yorubaname dictionary application, and it is built around individual modules that perform one functionality and that functionality only. For example we have `elastic-search` module for the search etc.
+The Yoruba Dictionary web application is the backend portion of the Yoruba dictionary, and it is built around individual modules that perform one functionality and that functionality only. For example we have `elastic-search` module for the search etc.
 
 The `webapi-module` is built using these other modules and its own functionality is to expose the services the dictionary
 application offers over a REST API.
 
 The `website module` is the front facing part of the dictionary. It is also built using the APIs exposed by the `webapi-module` 
 
-The idea behind this set up is to be able to deploy the `webapi-module` and build services on its API the way the
-yorubaname dashboard app (whose source can be found here https://github.com/Yorubaname/yorubaname-dashboard) does.
+The idea behind this set up is to be able to deploy the `webapi-module` and build services on its API the way 
+[the Yoruba Dictionary dashboard dashboard app](https://github.com/Yorubaname/the-yoruba-dictionary-dashboard) does.
 
 A mobile tier would also take advantage of this setup or to have the `webapi-module` as a coupled
 dependency to another software component (The way the `website` component depends on `webapi-module`.)
@@ -61,8 +59,8 @@ intend to install/use MySQL.
 
 Note, since the Yoruba Language makes extensive use of diacritics, your MySQL install needs to be configured to 
 use UTF-8 in other to be able to handle the contents of the dictionary. If this is not done, the application won't 
-start, because the bootstrap process inserts names which use diacritics into the database, and if the encoding is 
-not right the insertiong would fail. In such a case you would see an error similar to:
+start, because the bootstrap process inserts words which use diacritics into the database, and if the encoding is 
+not right, the inserting would fail. In such a case you would see an error similar to:
 
 ```
 Caused by: java.sql.SQLException: Incorrect string value: '\xE1\xBB\x8D\xCD\x81l...' for column 'extended_meaning' at row 1
@@ -83,7 +81,7 @@ You can consult the [Configuring the Character Set and Collation for Application
 
 First create a MySQL database, with the following details:
 
-* Dictionary Name: dictionary
+* Database Name: yoruba_dictionary
 * Username: dictionary
 * Password: dictionary
 
@@ -141,7 +139,7 @@ The search API is defined in the `searchapi` module. We currently have two imple
 1. ElasticSearch - Implemented in the `elasticsearch-module` module
 2. JPA based search - Implemented in the `jpa-search-module` module
 
-The `jpa-search-module` module is used in the `website` module which represents the website running at www.yorubaname.com 
+The `jpa-search-module` module is used in the `website` module which represents the website running at www.yorubaword.com 
 
 If you want to use `elasticsearch` module then remove the following section in the pom.xml for `website` module:
 
@@ -173,9 +171,9 @@ the only thing required is for the appropriate configurations to be provided whi
 Different aspect of the embedded ElasticSearch be configured via application properties. The available configuration keys
 and their defaults are
 
-* es.clustername=yoruba_name_dictionary
+* es.clustername=yoruba_dictionary
 * es.indexname=dictionary
-* es.documenttype=nameentry
+* es.documenttype=wordentry
 * es.hostname=localhost
 * es.portnumber=9300
 * es.data.path=
@@ -188,12 +186,12 @@ by supplying the preferred directory through the `es.data.path` in the applicati
 
 The documentation for the API endpoints can be accessed by running the application and navigating to `http://localhost:8081/swagger-ui.html`
 
-### Running the Yorubaname Dashboard app
+### Running the Yoruba Dictionary dashboard app
 
-The Yorubaname Dashboard application powers the admin portal that can be used to manage entries in the yorubaname dictionary. It 
+The Yoruba Dictionary dashboard application powers the admin portal that can be used by authorized personnel to manage entries in the Yoruba dictionary. It 
 is a standalone application with a separate codebase.
 
-The instructions on how to run the Yorubaname Dashboard Application can be found here https://github.com/Yorubaname/yorubaname-dashboard
+The instructions on how to run the Yoruba Dictionary dashboard application can be found here https://github.com/Yorubaname/the-yoruba-dictionary-dashboard
 
 
 
