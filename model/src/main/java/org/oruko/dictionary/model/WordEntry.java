@@ -11,24 +11,23 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 /**
- * Entity for persisting NameDto entries
- * Created by dadepo on 2/4/15.
+ * Entity for persisting WordDto entries
  */
 @Entity
-@Table(name = "name_entry")
-public class NameEntry extends AbstractNameEntry implements Comparable<NameEntry> {
+@Table(name = "word_entry")
+public class WordEntry extends AbstractWordEntry implements Comparable<WordEntry> {
 
     @Column(unique = true)
     @NotNull
     @NotEmpty
     private String name;
 
-    public NameEntry() {
+    public WordEntry() {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = this.createdAt;
     }
 
-    public NameEntry(String name) {
+    public WordEntry(String name) {
         this.name = name;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = this.createdAt;
@@ -62,11 +61,11 @@ public class NameEntry extends AbstractNameEntry implements Comparable<NameEntry
     }
 
     /**
-     * Updates properties using another instance of {@link org.oruko.dictionary.model.NameEntry}
+     * Updates properties using another instance of {@link WordEntry}
      * The state of the update name entry will be changed to modified
      */
-    public void update(NameEntry nameEntry) {
-        BeanUtils.copyProperties(nameEntry, this);
+    public void update(WordEntry wordEntry) {
+        BeanUtils.copyProperties(wordEntry, this);
         // TODO revisit how to get this done on the entity level: how to get @Temporary working with LocalDateTime
         if (State.PUBLISHED.equals(this.getState())) {
             this.setState(State.MODIFIED);
@@ -75,14 +74,14 @@ public class NameEntry extends AbstractNameEntry implements Comparable<NameEntry
     }
 
     /**
-     * Implements the sorting algorithm for {@link NameEntry}
+     * Implements the sorting algorithm for {@link WordEntry}
      *
-     * @param nameToCompare the instance of {@link NameEntry} to
+     * @param nameToCompare the instance of {@link WordEntry} to
      *                      compare with.
      * @return -1, 0 or 1.
      */
     @Override
-    public int compareTo(NameEntry nameToCompare) {
+    public int compareTo(WordEntry nameToCompare) {
         return this.name.compareTo(nameToCompare.getName());
     }
 }

@@ -1,7 +1,7 @@
 package org.oruko.dictionary.web.rest;
 
-import org.oruko.dictionary.model.NameEntryFeedback;
-import org.oruko.dictionary.model.repository.NameEntryFeedbackRepository;
+import org.oruko.dictionary.model.WordEntryFeedback;
+import org.oruko.dictionary.model.repository.WordEntryFeedbackRepository;
 import org.oruko.dictionary.web.NameEntryService;
 import org.oruko.dictionary.web.exception.GenericApiCallException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,12 +30,12 @@ import java.util.Map;
 public class FeedbackApi {
 
     private NameEntryService entryService;
-    private NameEntryFeedbackRepository feedbackRepository;
+    private WordEntryFeedbackRepository feedbackRepository;
 
 
     @Autowired
     public FeedbackApi(NameEntryService entryService,
-                       NameEntryFeedbackRepository feedbackRepository) {
+                       WordEntryFeedbackRepository feedbackRepository) {
         this.entryService = entryService;
         this.feedbackRepository = feedbackRepository;
     }
@@ -46,7 +46,7 @@ public class FeedbackApi {
      * @return returns a list of all feedback
      */
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<NameEntryFeedback>> getFeedbacks() {
+    public ResponseEntity<List<WordEntryFeedback>> getFeedbacks() {
         final Sort sort = new Sort(Sort.Direction.DESC, "submittedAt");
         return new ResponseEntity<>(feedbackRepository.findAll(sort), HttpStatus.OK);
     }
@@ -70,7 +70,7 @@ public class FeedbackApi {
             throw new GenericApiCallException(name + " does not exist. Cannot add feedback");
         }
 
-        feedbackRepository.save(new NameEntryFeedback(name, feedback));
+        feedbackRepository.save(new WordEntryFeedback(name, feedback));
         return new ResponseEntity<>(response("Feedback added"), HttpStatus.CREATED);
     }
 
@@ -82,7 +82,7 @@ public class FeedbackApi {
      * @return a list of all feedback for given name
      */
     @RequestMapping(params = "name", method = RequestMethod.GET)
-    public ResponseEntity<List<NameEntryFeedback>> getFeedbacksForName(@RequestParam("name") String name) {
+    public ResponseEntity<List<WordEntryFeedback>> getFeedbacksForName(@RequestParam("name") String name) {
         final Sort sort = new Sort(Sort.Direction.DESC, "submittedAt");
         return new ResponseEntity<>(feedbackRepository.findByName(name, sort), HttpStatus.OK);
     }
@@ -99,7 +99,7 @@ public class FeedbackApi {
             throw new GenericApiCallException(name + " does not exist. Cannot delete all feedback");
         }
         final Sort sort = new Sort(Sort.Direction.DESC, "submittedAt");
-        List<NameEntryFeedback> feedbacks = feedbackRepository.findByName(name, sort);
+        List<WordEntryFeedback> feedbacks = feedbackRepository.findByName(name, sort);
         feedbacks.stream().forEach(feedback -> feedbackRepository.delete(feedback));
 
         return new ResponseEntity<>(response("All Feedback messages deleted for "+ name), HttpStatus.OK);
@@ -124,8 +124,8 @@ public class FeedbackApi {
      */
     @RequestMapping(value = "{id}", method = RequestMethod.GET,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<NameEntryFeedback> getAFeedback(@PathVariable("id") String feedbackId) {
-        final NameEntryFeedback feedback = feedbackRepository.findOne(Long.valueOf(feedbackId));
+    public ResponseEntity<WordEntryFeedback> getAFeedback(@PathVariable("id") String feedbackId) {
+        final WordEntryFeedback feedback = feedbackRepository.findOne(Long.valueOf(feedbackId));
         if (feedback == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -141,7 +141,7 @@ public class FeedbackApi {
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, String>> deleteAFeedback(@PathVariable("id") String feedbackId) {
         final Long id = Long.valueOf(feedbackId);
-        final NameEntryFeedback feedback = feedbackRepository.findOne(id);
+        final WordEntryFeedback feedback = feedbackRepository.findOne(id);
         if (feedback == null) {
             return new ResponseEntity<>(response("No feedback found with supplied Id. None deleted"),
                                         HttpStatus.BAD_REQUEST);

@@ -1,7 +1,7 @@
 package org.oruko.dictionary.model;
 
 /**
- * Enum representing the various states a {@link NameEntry}
+ * Enum representing the various states a {@link WordEntry}
  * can be within the system.
  *
  * @author Dadepo Aderemi.

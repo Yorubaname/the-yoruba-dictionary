@@ -1,11 +1,11 @@
 package org.oruko.dictionary.web;
 
-import org.oruko.dictionary.model.NameEntry;
-import org.oruko.dictionary.model.NameEntryFeedback;
+import org.oruko.dictionary.model.WordEntry;
+import org.oruko.dictionary.model.WordEntryFeedback;
 import org.oruko.dictionary.model.State;
 import org.oruko.dictionary.model.exception.RepositoryAccessError;
-import org.oruko.dictionary.model.repository.NameEntryFeedbackRepository;
-import org.oruko.dictionary.model.repository.NameEntryRepository;
+import org.oruko.dictionary.model.repository.WordEntryFeedbackRepository;
+import org.oruko.dictionary.model.repository.WordEntryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,20 +29,20 @@ public class NameEntryService {
     private Integer PAGE = 0;
     private Integer COUNT_SIZE = 50;
 
-    private NameEntryRepository nameEntryRepository;
-    private NameEntryFeedbackRepository nameEntryFeedbackRepository;
+    private WordEntryRepository wordEntryRepository;
+    private WordEntryFeedbackRepository wordEntryFeedbackRepository;
 
     /**
      * Public constructor for {@link NameEntryService} depends on instances of
      *
-     * @param nameEntryRepository         Repository responsible for persisting {@link NameEntry}
-     * @param nameEntryFeedbackRepository Repository responsible for persisting {@link NameEntryFeedback}
+     * @param wordEntryRepository         Repository responsible for persisting {@link WordEntry}
+     * @param wordEntryFeedbackRepository Repository responsible for persisting {@link WordEntryFeedback}
      */
     @Autowired
-    public NameEntryService(NameEntryRepository nameEntryRepository,
-                            NameEntryFeedbackRepository nameEntryFeedbackRepository) {
-        this.nameEntryRepository = nameEntryRepository;
-        this.nameEntryFeedbackRepository = nameEntryFeedbackRepository;
+    public NameEntryService(WordEntryRepository wordEntryRepository,
+                            WordEntryFeedbackRepository wordEntryFeedbackRepository) {
+        this.wordEntryRepository = wordEntryRepository;
+        this.wordEntryFeedbackRepository = wordEntryFeedbackRepository;
     }
 
     /**
@@ -51,7 +51,7 @@ public class NameEntryService {
      *
      * @param entry
      */
-    public void insertTakingCareOfDuplicates(NameEntry entry) {
+    public void insertTakingCareOfDuplicates(WordEntry entry) {
         String name = entry.getName();
 
         if (namePresentAsVariant(name)) {
@@ -62,7 +62,7 @@ public class NameEntryService {
             throw new RepositoryAccessError("Given name already exists in the index");
         }
 
-        nameEntryRepository.save(entry);
+        wordEntryRepository.save(entry);
     }
 
 
@@ -72,14 +72,14 @@ public class NameEntryService {
      *
      * @param entries the list of names
      */
-    public void bulkInsertTakingCareOfDuplicates(List<NameEntry> entries) {
+    public void bulkInsertTakingCareOfDuplicates(List<WordEntry> entries) {
         int i = 0;
-        for (NameEntry entry : entries) {
+        for (WordEntry entry : entries) {
             this.insertTakingCareOfDuplicates(entry);
             i++;
 
             if (i == BATCH_SIZE) {
-                nameEntryRepository.flush();
+                wordEntryRepository.flush();
                 i = 0;
             }
         }
@@ -89,35 +89,35 @@ public class NameEntryService {
     /**
      * Returns all the feedback for a name, sorted by time submitted
      *
-     * @return the feedback as a list of {@link NameEntryFeedback}
+     * @return the feedback as a list of {@link WordEntryFeedback}
      */
-    public List<NameEntryFeedback> getFeedback(NameEntry entry) {
+    public List<WordEntryFeedback> getFeedback(WordEntry entry) {
         final Sort sort = new Sort(Sort.Direction.DESC, "submittedAt");
-        return nameEntryFeedbackRepository.findByName(entry.getName(), sort);
+        return wordEntryFeedbackRepository.findByName(entry.getName(), sort);
     }
 
     /**
-     * Saves {@link org.oruko.dictionary.model.NameEntry}
+     * Saves {@link WordEntry}
      *
      * @param entry the entry to be saved
      */
-    public NameEntry saveName(NameEntry entry) {
-        return nameEntryRepository.save(entry);
+    public WordEntry saveName(WordEntry entry) {
+        return wordEntryRepository.save(entry);
     }
 
     /**
-     * Saves a list {@link org.oruko.dictionary.model.NameEntry}
+     * Saves a list {@link WordEntry}
      *
      * @param entries the list of name entries to be saved
      */
-    public List<NameEntry> saveNames(List<NameEntry> entries) {
+    public List<WordEntry> saveNames(List<WordEntry> entries) {
         int i = 0;
-        List<NameEntry> savedNames = new ArrayList<>();
-        for (NameEntry entry : entries) {
+        List<WordEntry> savedNames = new ArrayList<>();
+        for (WordEntry entry : entries) {
             savedNames.add(this.saveName(entry));
             i++;
             if (i == BATCH_SIZE) {
-                nameEntryRepository.flush();
+                wordEntryRepository.flush();
                 i = 0;
             }
         }
@@ -127,17 +127,17 @@ public class NameEntryService {
 
     /**
      * /**
-     * Updates the properties with values from another {@link org.oruko.dictionary.model.NameEntry}
+     * Updates the properties with values from another {@link WordEntry}
      *
      * @param oldEntry the entry to be updated
      * @param newEntry the entry with the new value
      * @return the updated entry
      */
-    public NameEntry updateName(NameEntry oldEntry, NameEntry newEntry) {
+    public WordEntry updateName(WordEntry oldEntry, WordEntry newEntry) {
         String oldEntryName = oldEntry.getName();
         // update main entry
         oldEntry.update(newEntry);
-        return nameEntryRepository.save(oldEntry);
+        return wordEntryRepository.save(oldEntry);
     }
 
 
@@ -147,17 +147,17 @@ public class NameEntryService {
      * @param nameEntries the new entries
      * @return the updated entries
      */
-    public List<NameEntry> bulkUpdateNames(List<NameEntry> nameEntries) {
-        List<NameEntry> updated = new ArrayList<>();
+    public List<WordEntry> bulkUpdateNames(List<WordEntry> nameEntries) {
+        List<WordEntry> updated = new ArrayList<>();
 
         int i = 0;
-        for (NameEntry nameEntry : nameEntries) {
-            NameEntry oldEntry = this.loadName(nameEntry.getName());
-            updated.add(this.updateName(oldEntry, nameEntry));
+        for (WordEntry wordEntry : nameEntries) {
+            WordEntry oldEntry = this.loadName(wordEntry.getName());
+            updated.add(this.updateName(oldEntry, wordEntry));
             i++;
 
             if (i == BATCH_SIZE) {
-                nameEntryRepository.flush();
+                wordEntryRepository.flush();
                 i = 0;
             }
         }
@@ -165,47 +165,47 @@ public class NameEntryService {
     }
 
     /**
-     * Used to retrieve {@link org.oruko.dictionary.model.NameEntry} from the repository. Supports ability to
+     * Used to retrieve {@link WordEntry} from the repository. Supports ability to
      * specify how many to retrieve and pagination.
      *
      * @param pageNumberParam specifies page number
      * @param countParam      specifies the count of result
-     * @return a list of {@link org.oruko.dictionary.model.NameEntry}
+     * @return a list of {@link WordEntry}
      */
-    public List<NameEntry> loadAllNames(Optional<Integer> pageNumberParam, Optional<Integer> countParam) {
+    public List<WordEntry> loadAllNames(Optional<Integer> pageNumberParam, Optional<Integer> countParam) {
 
-        List<NameEntry> nameEntries = new ArrayList<>();
+        List<WordEntry> nameEntries = new ArrayList<>();
         Integer pageNumber = pageNumberParam.orElse(PAGE);
         Integer count = countParam.orElse(COUNT_SIZE);
 
         PageRequest request =
                 new PageRequest(pageNumber == 0 ? 0 : pageNumber - 1, count, Sort.Direction.ASC, "id");
 
-        Page<NameEntry> pages = nameEntryRepository.findAll(request);
+        Page<WordEntry> pages = wordEntryRepository.findAll(request);
         pages.forEach(nameEntries::add);
 
         return nameEntries;
     }
 
     /**
-     * Used to retrieve {@link NameEntry} of given state from the repository.
+     * Used to retrieve {@link WordEntry} of given state from the repository.
      *
      * @param state the {@link State} of the entry
-     * @return list of {@link NameEntry}. If state is not present, it returns an empty list
+     * @return list of {@link WordEntry}. If state is not present, it returns an empty list
      */
-    public List<NameEntry> loadAllByState(Optional<State> state) {
-        return state.map(s -> nameEntryRepository.findByState(s)).orElseGet(Collections::emptyList);
+    public List<WordEntry> loadAllByState(Optional<State> state) {
+        return state.map(s -> wordEntryRepository.findByState(s)).orElseGet(Collections::emptyList);
     }
 
     /**
-     * Used to retrieve paginated result of {@link NameEntry} of given state from the repository
+     * Used to retrieve paginated result of {@link WordEntry} of given state from the repository
      *
      * @param state      state the {@link State} of the entry
      * @param pageParam  specifies page number
      * @param countParam specifies the count of result
-     * @return a list of {@link org.oruko.dictionary.model.NameEntry}
+     * @return a list of {@link WordEntry}
      */
-    public List<NameEntry> loadByState(Optional<State> state, Optional<Integer> pageParam, Optional<Integer> countParam) {
+    public List<WordEntry> loadByState(Optional<State> state, Optional<Integer> pageParam, Optional<Integer> countParam) {
 
         if (!state.isPresent()) {
             return this.loadAllNames(pageParam, countParam);
@@ -214,17 +214,17 @@ public class NameEntryService {
         final Integer page = pageParam.map(integer -> integer - 1).orElse(1);
         final Integer count = countParam.orElse(COUNT_SIZE);
 
-        return nameEntryRepository.findByState(state.get(), new PageRequest(page, count));
+        return wordEntryRepository.findByState(state.get(), new PageRequest(page, count));
 
     }
 
     /**
-     * Used to retrieve all {@link org.oruko.dictionary.model.NameEntry} from the repository.
+     * Used to retrieve all {@link WordEntry} from the repository.
      *
-     * @return a list of all {@link org.oruko.dictionary.model.NameEntry}
+     * @return a list of all {@link WordEntry}
      */
-    public List<NameEntry> loadAllNames() {
-        return nameEntryRepository.findAll();
+    public List<WordEntry> loadAllNames() {
+        return wordEntryRepository.findAll();
     }
 
     /**
@@ -233,24 +233,24 @@ public class NameEntryService {
      * @return number of names
      */
     public Long getNameCount() {
-        return nameEntryRepository.count();
+        return wordEntryRepository.count();
     }
 
     /**
-     * Used to retrieve a {@link org.oruko.dictionary.model.NameEntry} from the repository using its known name
+     * Used to retrieve a {@link WordEntry} from the repository using its known name
      *
      * @param name the name
-     * @return the NameEntry
+     * @return the WordEntry
      */
-    public NameEntry loadName(String name) {
-        return nameEntryRepository.findByName(name);
+    public WordEntry loadName(String name) {
+        return wordEntryRepository.findByName(name);
     }
 
     /**
      * Duplicates all the name entry plus the duplicates
      */
     public void deleteAllAndDuplicates() {
-        nameEntryRepository.deleteAll();
+        wordEntryRepository.deleteAll();
         //TODO introduce an event that all names have been deleted
     }
 
@@ -261,8 +261,8 @@ public class NameEntryService {
      * @param name the name to delete
      */
     public void deleteNameEntryAndDuplicates(String name) {
-        NameEntry nameEntry = nameEntryRepository.findByName(name);
-        nameEntryRepository.delete(nameEntry);
+        WordEntry wordEntry = wordEntryRepository.findByName(name);
+        wordEntryRepository.delete(wordEntry);
     }
 
     /**
@@ -277,7 +277,7 @@ public class NameEntryService {
             i++;
 
             if (i == BATCH_SIZE) {
-                nameEntryRepository.flush();
+                wordEntryRepository.flush();
                 i = 0;
             }
         }
@@ -285,13 +285,13 @@ public class NameEntryService {
 
     // ==================================================== Helpers ====================================================
     private boolean alreadyExists(String name) {
-        NameEntry entry = nameEntryRepository.findByName(name);
+        WordEntry entry = wordEntryRepository.findByName(name);
         return entry != null;
     }
 
     private boolean namePresentAsVariant(String name) {
         // TODO revisit. Might end up being impacting performance
-        List<NameEntry> allNames = nameEntryRepository.findAll();
+        List<WordEntry> allNames = wordEntryRepository.findAll();
         return allNames.stream().anyMatch((nameEntry) -> {
             if (nameEntry.getVariants() != null) {
                 return nameEntry.getVariants().contains(name);

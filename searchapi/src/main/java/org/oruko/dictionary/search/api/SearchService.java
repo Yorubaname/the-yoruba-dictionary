@@ -1,6 +1,6 @@
 package org.oruko.dictionary.search.api;
 
-import org.oruko.dictionary.model.NameEntry;
+import org.oruko.dictionary.model.WordEntry;
 
 import java.util.List;
 import java.util.Set;
@@ -12,7 +12,7 @@ public interface SearchService {
      * @param nameQuery the name
      * @return the nameEntry or null if name not found
      */
-    NameEntry getByName(String nameQuery);
+    WordEntry getByName(String nameQuery);
 
     /**
      * For searching the name entries for a name
@@ -22,7 +22,7 @@ public interface SearchService {
      * @param searchTerm the search term
      * @return the list of entries found
      */
-    Set<NameEntry> search(String searchTerm);
+    Set<WordEntry> search(String searchTerm);
 
     /**
      * Return all the names which starts with the given alphabet
@@ -31,7 +31,7 @@ public interface SearchService {
      *
      * @return the list of names that starts with the given alphabet
      */
-    Set<NameEntry> listByAlphabet(String alphabetQuery);
+    Set<WordEntry> listByAlphabet(String alphabetQuery);
 
     /**
      * For getting the list of partial matches for autocomplete
@@ -43,8 +43,8 @@ public interface SearchService {
 
     Integer getSearchableNames();
 
-    IndexOperationStatus bulkIndexName(List<NameEntry> entries);
+    IndexOperationStatus bulkIndexName(List<WordEntry> entries);
     IndexOperationStatus removeFromIndex(String name);
     IndexOperationStatus bulkRemoveByNameFromIndex(List<String> name);
-    IndexOperationStatus bulkRemoveFromIndex(List<NameEntry> nameEntries);
+    IndexOperationStatus bulkRemoveFromIndex(List<WordEntry> nameEntries);
 }

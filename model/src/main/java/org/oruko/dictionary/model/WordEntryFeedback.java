@@ -19,7 +19,7 @@ import javax.persistence.Id;
  * Created by Dadepo Aderemi.
  */
 @Entity
-public class NameEntryFeedback {
+public class WordEntryFeedback {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -34,10 +34,10 @@ public class NameEntryFeedback {
     private LocalDateTime submittedAt;
 
     /** no args constructor for JPA **/
-    public NameEntryFeedback() {
+    public WordEntryFeedback() {
     }
 
-    public NameEntryFeedback(@JsonProperty("name") String name,
+    public WordEntryFeedback(@JsonProperty("name") String name,
                              @JsonProperty("feedback") String feedback) {
         this.name = name;
         this.feedback = feedback;

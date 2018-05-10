@@ -1,7 +1,7 @@
 package org.oruko.dictionary.website;
 
 import org.apache.commons.lang3.StringUtils;
-import org.oruko.dictionary.model.NameEntry;
+import org.oruko.dictionary.model.WordEntry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -15,7 +15,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -44,7 +43,7 @@ public class SearchResultController {
 
     /**
      * Displays the result for a single entry
-     * @param nameEntry the {@link org.oruko.dictionary.model.NameEntry}
+     * @param nameEntry the {@link WordEntry}
      * @param map the map
      * @return the view name
      */
@@ -53,7 +52,7 @@ public class SearchResultController {
         map.addAttribute("title", "Name Entry");
         map.addAttribute("host", host);
         if (!map.containsAttribute("name")) {
-            final NameEntry name = apiService.getName(nameEntry);
+            final WordEntry name = apiService.getName(nameEntry);
             if (name == null) {
                 // no single entry found for query, return to view where search result can be displayed
                 return "redirect:/entries?q=" + nameEntry;

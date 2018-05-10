@@ -3,7 +3,7 @@ package org.oruko.dictionary.web.rest;
 import org.oruko.dictionary.events.EventPubService;
 import org.oruko.dictionary.events.NameIndexedEvent;
 import org.oruko.dictionary.events.NameSearchedEvent;
-import org.oruko.dictionary.model.NameEntry;
+import org.oruko.dictionary.model.WordEntry;
 import org.oruko.dictionary.model.State;
 import org.oruko.dictionary.search.api.IndexOperationStatus;
 import org.oruko.dictionary.search.api.SearchService;
@@ -94,10 +94,10 @@ public class SearchApi {
      */
     @RequestMapping(value = {"/", ""}, method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public Set<NameEntry> search(@RequestParam(value = "q", required = true) String searchTerm,
+    public Set<WordEntry> search(@RequestParam(value = "q", required = true) String searchTerm,
                                  HttpServletRequest request) {
 
-        Set<NameEntry> foundNames = searchService.search(searchTerm);
+        Set<WordEntry> foundNames = searchService.search(searchTerm);
         if (foundNames != null
                 && foundNames.size() == 1
                 && foundNames.stream().allMatch(result -> result.getName().equals(searchTerm))) {
@@ -120,7 +120,7 @@ public class SearchApi {
 
     @RequestMapping(value = "/alphabet/{alphabet}", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public Set<NameEntry> getByAlphabet(@PathVariable Optional<String> alphabet) {
+    public Set<WordEntry> getByAlphabet(@PathVariable Optional<String> alphabet) {
         if (!alphabet.isPresent()) {
             return Collections.emptySet();
         }
@@ -129,9 +129,9 @@ public class SearchApi {
 
     @RequestMapping(value = "/{searchTerm}", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public NameEntry findByName(@PathVariable String searchTerm, HttpServletRequest request) {
+    public WordEntry findByName(@PathVariable String searchTerm, HttpServletRequest request) {
 
-        NameEntry name = searchService.getByName(searchTerm);
+        WordEntry name = searchService.getByName(searchTerm);
 
         if (name != null) {
             eventPubService.publish(new NameSearchedEvent(searchTerm, request.getRemoteAddr()));
@@ -174,31 +174,31 @@ public class SearchApi {
     }
 
     /**
-     * Endpoint to index a NameEntry sent in as JSON string.
+     * Endpoint to index a WordEntry sent in as JSON string.
      *
-     * @param entry the {@link NameEntry} representation of the JSON String.
+     * @param entry the {@link WordEntry} representation of the JSON String.
      * @return a {@link ResponseEntity} representing the status of the operation.
      */
     @RequestMapping(value = "/indexes", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, Object>> indexEntry(@Valid NameEntry entry) {
+    public ResponseEntity<Map<String, Object>> indexEntry(@Valid WordEntry entry) {
         Map<String, Object> response = new HashMap<>();
-        NameEntry nameEntry = nameEntryService.loadName(entry.getName());
-        if (nameEntry == null) {
+        WordEntry wordEntry = nameEntryService.loadName(entry.getName());
+        if (wordEntry == null) {
             response.put("message", "Cannot index entry. Name " + entry.getName() + " not in the database");
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
 
-        nameEntry.setState(State.PUBLISHED);
-        nameEntryService.saveName(nameEntry);
-        publishNameIsIndexed(nameEntry);
+        wordEntry.setState(State.PUBLISHED);
+        nameEntryService.saveName(wordEntry);
+        publishNameIsIndexed(wordEntry);
         response.put("message", "Name is now searchable");
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    private void publishNameIsIndexed(NameEntry nameEntry) {
-        eventPubService.publish(new NameIndexedEvent(nameEntry.getName()));
+    private void publishNameIsIndexed(WordEntry wordEntry) {
+        eventPubService.publish(new NameIndexedEvent(wordEntry.getName()));
     }
 
     /**
@@ -212,17 +212,17 @@ public class SearchApi {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Object>> indexEntryByName(@PathVariable String name) {
         Map<String, Object> response = new HashMap<>();
-        NameEntry nameEntry = nameEntryService.loadName(name);
-        if (nameEntry == null) {
+        WordEntry wordEntry = nameEntryService.loadName(name);
+        if (wordEntry == null) {
             // name requested to be indexed not in the database
             response.put("message",
                          name+" not found in the repository so not indexed");
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        publishNameIsIndexed(nameEntry);
-        nameEntry.setState(State.PUBLISHED);
-        nameEntryService.saveName(nameEntry);
+        publishNameIsIndexed(wordEntry);
+        wordEntry.setState(State.PUBLISHED);
+        nameEntryService.saveName(wordEntry);
         response.put("message", name + " has been published");
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -242,11 +242,11 @@ public class SearchApi {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Object>> batchIndexEntriesByName(@RequestBody String[] names) {
         Map<String, Object> response = new HashMap<>();
-        List<NameEntry> nameEntries = new ArrayList<>();
+        List<WordEntry> nameEntries = new ArrayList<>();
         List<String> notFound = new ArrayList<>();
 
         Arrays.stream(names).forEach(name -> {
-            NameEntry entry = nameEntryService.loadName(name);
+            WordEntry entry = nameEntryService.loadName(name);
             if (entry == null) {
                 notFound.add(name);
             } else {
@@ -267,10 +267,10 @@ public class SearchApi {
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        for (NameEntry nameEntry : nameEntries) {
-            publishNameIsIndexed(nameEntry);
-            nameEntry.setState(State.PUBLISHED);
-            nameEntryService.saveName(nameEntry);
+        for (WordEntry wordEntry : nameEntries) {
+            publishNameIsIndexed(wordEntry);
+            wordEntry.setState(State.PUBLISHED);
+            nameEntryService.saveName(wordEntry);
         }
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -293,10 +293,10 @@ public class SearchApi {
         Map<String, Object> response = new HashMap<>();
         response.put("message", message);
         if (deleted) {
-            NameEntry nameEntry = nameEntryService.loadName(name);
-            if (nameEntry != null) {
-                nameEntry.setState(State.NEW);
-                nameEntryService.saveName(nameEntry);
+            WordEntry wordEntry = nameEntryService.loadName(name);
+            if (wordEntry != null) {
+                wordEntry.setState(State.NEW);
+                nameEntryService.saveName(wordEntry);
             }
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
@@ -316,11 +316,11 @@ public class SearchApi {
     public ResponseEntity<Map<String, Object>> batchDeleteFromIndex(@RequestBody String[] names) {
         Map<String, Object> response = new HashMap<>();
         List<String> found = new ArrayList<>();
-        List<NameEntry> nameEntries = new ArrayList<>();
+        List<WordEntry> nameEntries = new ArrayList<>();
         List<String> notFound = new ArrayList<>();
 
         Arrays.stream(names).forEach(name -> {
-            NameEntry entry = nameEntryService.loadName(name);
+            WordEntry entry = nameEntryService.loadName(name);
             if (entry == null) {
                 notFound.add(name);
             } else {

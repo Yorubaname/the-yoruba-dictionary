@@ -1,8 +1,8 @@
 package org.oruko.dictionary.search.jpa;
 
-import org.oruko.dictionary.model.NameEntry;
+import org.oruko.dictionary.model.WordEntry;
 import org.oruko.dictionary.model.State;
-import org.oruko.dictionary.model.repository.NameEntryRepository;
+import org.oruko.dictionary.model.repository.WordEntryRepository;
 import org.oruko.dictionary.search.api.IndexOperationStatus;
 import org.oruko.dictionary.search.api.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,21 +16,21 @@ import java.util.stream.Collectors;
 
 @Service
 public class JpaSearchService implements SearchService {
-    private NameEntryRepository nameEntryRepository;
+    private WordEntryRepository wordEntryRepository;
 
     @Autowired
-    public JpaSearchService(NameEntryRepository nameEntryRepository) {
-        this.nameEntryRepository = nameEntryRepository;
+    public JpaSearchService(WordEntryRepository wordEntryRepository) {
+        this.wordEntryRepository = wordEntryRepository;
     }
 
     @Override
-    public NameEntry getByName(String nameQuery) {
-        return nameEntryRepository.findByNameAndState(nameQuery, State.PUBLISHED);
+    public WordEntry getByName(String nameQuery) {
+        return wordEntryRepository.findByNameAndState(nameQuery, State.PUBLISHED);
     }
 
     @Override
-    public Set<NameEntry> search(String searchTerm) {
-        Set<NameEntry> possibleFound = new LinkedHashSet<>();
+    public Set<WordEntry> search(String searchTerm) {
+        Set<WordEntry> possibleFound = new LinkedHashSet<>();
         /**
          * The following approach should be taken:
          *
@@ -44,38 +44,38 @@ public class JpaSearchService implements SearchService {
          * 6. Do a full text search against meaning. Irrespective of outcome, proceed to 7
          * 7. Do a full text search against extendedMeaning
          */
-        NameEntry exactFound = nameEntryRepository.findByNameAndState(searchTerm, State.PUBLISHED);
+        WordEntry exactFound = wordEntryRepository.findByNameAndState(searchTerm, State.PUBLISHED);
         if (exactFound != null) {
             return Collections.singleton(exactFound);
         }
-        Set<NameEntry> startingWithSearchTerm = nameEntryRepository.findByNameStartingWithAndState(searchTerm, State.PUBLISHED);
+        Set<WordEntry> startingWithSearchTerm = wordEntryRepository.findByNameStartingWithAndState(searchTerm, State.PUBLISHED);
         if (startingWithSearchTerm != null && startingWithSearchTerm.size() > 0) {
             return startingWithSearchTerm;
         }
 
-        possibleFound.addAll(nameEntryRepository.findNameEntryByNameContainingAndState(searchTerm, State.PUBLISHED));
-        possibleFound.addAll(nameEntryRepository.findNameEntryByVariantsContainingAndState(searchTerm, State.PUBLISHED));
-        possibleFound.addAll(nameEntryRepository.findNameEntryByMeaningContainingAndState(searchTerm, State.PUBLISHED));
-        possibleFound.addAll(nameEntryRepository.findNameEntryByExtendedMeaningContainingAndState(searchTerm, State.PUBLISHED));
+        possibleFound.addAll(wordEntryRepository.findNameEntryByNameContainingAndState(searchTerm, State.PUBLISHED));
+        possibleFound.addAll(wordEntryRepository.findNameEntryByVariantsContainingAndState(searchTerm, State.PUBLISHED));
+        possibleFound.addAll(wordEntryRepository.findNameEntryByMeaningContainingAndState(searchTerm, State.PUBLISHED));
+        possibleFound.addAll(wordEntryRepository.findNameEntryByExtendedMeaningContainingAndState(searchTerm, State.PUBLISHED));
 
         return possibleFound;
     }
 
     @Override
-    public Set<NameEntry> listByAlphabet(String alphabetQuery) {
-        return nameEntryRepository.findByNameStartingWithAndState(alphabetQuery, State.PUBLISHED);
+    public Set<WordEntry> listByAlphabet(String alphabetQuery) {
+        return wordEntryRepository.findByNameStartingWithAndState(alphabetQuery, State.PUBLISHED);
     }
 
     @Override
     public Set<String> autocomplete(String query) {
-        Set<NameEntry> names = new LinkedHashSet<>();
+        Set<WordEntry> names = new LinkedHashSet<>();
         Set<String> nameToReturn = new LinkedHashSet<>();
         // TODO calling the db in a for loop might not be a terribly good idea. Revist
         for (int i=2; i<query.length() + 1; i++) {
             String searchTerm = query.substring(0, i);
-            names.addAll(nameEntryRepository.findByNameStartingWithAndState(searchTerm, State.PUBLISHED));
+            names.addAll(wordEntryRepository.findByNameStartingWithAndState(searchTerm, State.PUBLISHED));
         }
-        Set<NameEntry> otherParts = nameEntryRepository.findNameEntryByNameContainingAndState(query, State.PUBLISHED);
+        Set<WordEntry> otherParts = wordEntryRepository.findNameEntryByNameContainingAndState(query, State.PUBLISHED);
         names.addAll(otherParts);
         names.forEach(name -> {
             nameToReturn.add(name.getName());
@@ -85,26 +85,26 @@ public class JpaSearchService implements SearchService {
 
     @Override
     public Integer getSearchableNames() {
-        return nameEntryRepository.countByState(State.PUBLISHED);
+        return wordEntryRepository.countByState(State.PUBLISHED);
     }
 
     @Override
-    public IndexOperationStatus bulkIndexName(List<NameEntry> entries) {
+    public IndexOperationStatus bulkIndexName(List<WordEntry> entries) {
         if (entries.size() == 0) {
             return new IndexOperationStatus(false, "Cannot index an empty list");
         }
-        nameEntryRepository.save(entries);
+        wordEntryRepository.save(entries);
         return new IndexOperationStatus(true, "Bulk indexing successfully. Indexed the following names "
-                + String.join(",", entries.stream().map(NameEntry::getName).collect(Collectors.toList())));
+                + String.join(",", entries.stream().map(WordEntry::getName).collect(Collectors.toList())));
     }
 
     public IndexOperationStatus removeFromIndex(String name) {
-        NameEntry foundName = nameEntryRepository.findByNameAndState(name, State.PUBLISHED);
+        WordEntry foundName = wordEntryRepository.findByNameAndState(name, State.PUBLISHED);
         if (foundName == null) {
             return new IndexOperationStatus(false, "Published Name not found");
         }
         foundName.setState(State.UNPUBLISHED);
-        nameEntryRepository.save(foundName);
+        wordEntryRepository.save(foundName);
         return new IndexOperationStatus(true, name + " removed from index");
     }
 
@@ -113,30 +113,30 @@ public class JpaSearchService implements SearchService {
         if (names.size() == 0) {
             return new IndexOperationStatus(false, "Cannot index an empty list");
         }
-        List<NameEntry> nameEntries = names.stream().map(name -> nameEntryRepository.findByNameAndState(name, State.PUBLISHED))
+        List<WordEntry> nameEntries = names.stream().map(name -> wordEntryRepository.findByNameAndState(name, State.PUBLISHED))
                 .collect(Collectors.toList());
 
 
-        List<NameEntry> namesUnpublished = nameEntries.stream().map(name -> {
+        List<WordEntry> namesUnpublished = nameEntries.stream().map(name -> {
             name.setState(State.UNPUBLISHED);
             return name;
         }).collect(Collectors.toList());
 
-        nameEntryRepository.save(namesUnpublished);
+        wordEntryRepository.save(namesUnpublished);
         return new IndexOperationStatus(true, "Successfully. "
                 + "Removed the following names from search index "
                 + String.join(",", names));
     }
 
     @Override
-    public IndexOperationStatus bulkRemoveFromIndex(List<NameEntry> nameEntries) {
-        List<NameEntry> namesUnpublished = nameEntries.stream()
+    public IndexOperationStatus bulkRemoveFromIndex(List<WordEntry> nameEntries) {
+        List<WordEntry> namesUnpublished = nameEntries.stream()
                 .peek(name -> name.setState(State.UNPUBLISHED))
                 .collect(Collectors.toList());
 
-        nameEntryRepository.save(namesUnpublished);
+        wordEntryRepository.save(namesUnpublished);
         return new IndexOperationStatus(true, "Successfully. "
                 + "Removed the following names from search index "
-                + String.join(",", nameEntries.stream().map(NameEntry::getName).collect(Collectors.toList())));
+                + String.join(",", nameEntries.stream().map(WordEntry::getName).collect(Collectors.toList())));
     }
 }

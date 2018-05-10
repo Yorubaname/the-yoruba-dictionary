@@ -1,8 +1,8 @@
 package org.oruko.dictionary.web;
 
-import org.oruko.dictionary.model.NameEntry;
+import org.oruko.dictionary.model.WordEntry;
 import org.oruko.dictionary.model.State;
-import org.oruko.dictionary.model.repository.NameEntryRepository;
+import org.oruko.dictionary.model.repository.WordEntryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,36 +15,36 @@ import java.util.List;
  */
 @Service
 public class SuggestedNameService {
-    private NameEntryRepository nameEntryRepository;
+    private WordEntryRepository wordEntryRepository;
 
     /**
-     * @param nameEntryRepository
+     * @param wordEntryRepository
      */
     @Autowired
-    public SuggestedNameService(NameEntryRepository nameEntryRepository) {
-        this.nameEntryRepository = nameEntryRepository;
+    public SuggestedNameService(WordEntryRepository wordEntryRepository) {
+        this.wordEntryRepository = wordEntryRepository;
     }
 
 
     /**
-     * Saves {@link org.oruko.dictionary.model.NameEntry}
+     * Saves {@link WordEntry}
      *
      * @param entry the entry to be saved
      */
-    public NameEntry saveName(NameEntry entry) {
+    public WordEntry saveName(WordEntry entry) {
         entry.setState(State.SUGGESTED);
-        return nameEntryRepository.save(entry);
+        return wordEntryRepository.save(entry);
     }
 
     /**
      * @return
      */
     public int countAll() {
-        return nameEntryRepository.countByState(State.SUGGESTED);
+        return wordEntryRepository.countByState(State.SUGGESTED);
     }
 
-    public List<NameEntry> findAll() {
-        return nameEntryRepository.findByState(State.SUGGESTED);
+    public List<WordEntry> findAll() {
+        return wordEntryRepository.findByState(State.SUGGESTED);
     }
 
     /**
@@ -53,15 +53,15 @@ public class SuggestedNameService {
      * @return A boolean indicating whether or not a deleted operation was actually executed
      */
     public boolean delete(Long id) {
-        NameEntry suggestedName = nameEntryRepository.findOne(id);
+        WordEntry suggestedName = wordEntryRepository.findOne(id);
         if (suggestedName != null && suggestedName.getState() == State.SUGGESTED) {
-            nameEntryRepository.delete(suggestedName);
+            wordEntryRepository.delete(suggestedName);
             return true;
         }
         return false;
     }
 
     public void deleteAll() {
-        nameEntryRepository.deleteByState(State.SUGGESTED);
+        wordEntryRepository.deleteByState(State.SUGGESTED);
     }
 }

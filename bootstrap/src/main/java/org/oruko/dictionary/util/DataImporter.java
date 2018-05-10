@@ -1,11 +1,11 @@
 package org.oruko.dictionary.util;
 
 import org.oruko.dictionary.model.GeoLocation;
-import org.oruko.dictionary.model.NameEntry;
+import org.oruko.dictionary.model.WordEntry;
 import org.oruko.dictionary.model.State;
 import org.oruko.dictionary.model.repository.Etymology;
 import org.oruko.dictionary.model.repository.GeoLocationRepository;
-import org.oruko.dictionary.model.repository.NameEntryRepository;
+import org.oruko.dictionary.model.repository.WordEntryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -30,7 +30,7 @@ public class DataImporter {
     private GeoLocationRepository geoLocationRepository;
 
     @Autowired
-    private NameEntryRepository nameEntryRepository;
+    private WordEntryRepository wordEntryRepository;
 
 
     @PostConstruct
@@ -43,12 +43,12 @@ public class DataImporter {
          * Only initialize the database only when in dev
          * //TODO move this to profiles
          */
-        if (host.equalsIgnoreCase("localhost") && nameEntryRepository.count() == 0) {
-            List<NameEntry> nameEntries = initializeDb();
+        if (host.equalsIgnoreCase("localhost") && wordEntryRepository.count() == 0) {
+            List<WordEntry> nameEntries = initializeDb();
         }
     }
 
-    private List<NameEntry> initializeDb() {
+    private List<WordEntry> initializeDb() {
         Etymology dummyEtymology1 = new Etymology();
         dummyEtymology1.setPart("first section");
         dummyEtymology1.setMeaning("first section meaning");
@@ -62,91 +62,79 @@ public class DataImporter {
         etymology.add(dummyEtymology2);
 
         // sample name entries
-        NameEntry lagbaja = new NameEntry("lagbaja");
+        WordEntry lagbaja = new WordEntry("lagbaja");
         lagbaja.setMeaning("This is dummy meaning for Lagbaja");
-        lagbaja.setExtendedMeaning("This is extended dummy meaning for Lagbaja");
         lagbaja.setGeoLocation(Arrays.asList(new GeoLocation("IBADAN", "NWY"),
                                              new GeoLocation("I DO NOT KNOW", "UNDEFINED")));
         lagbaja.setEtymology(etymology);
         lagbaja.setState(State.NEW);
 
 
-        NameEntry tamedo = new NameEntry("tamedo");
+        WordEntry tamedo = new WordEntry("tamedo");
         tamedo.setMeaning("This is dummy meaning for tamedo");
-        tamedo.setExtendedMeaning("This is extended dummy meaning for tamedo");
         tamedo.setGeoLocation(Arrays.asList(new GeoLocation("IBADAN", "NWY")));
         tamedo.setEtymology(etymology);
         tamedo.setState(State.NEW);
 
-        NameEntry koko = new NameEntry("koko");
+        WordEntry koko = new WordEntry("koko");
         koko.setMeaning("This is dummy meaning for koko");
-        koko.setExtendedMeaning("This is extended dummy meaning for koko");
         koko.setGeoLocation(Arrays.asList(new GeoLocation("IBADAN", "NWY")));
         koko.setEtymology(etymology);
         koko.setState(State.MODIFIED);
 
 
-        NameEntry tola = new NameEntry("tola");
+        WordEntry tola = new WordEntry("tola");
         tola.setMeaning("This is dummy meaning for tola");
-        tola.setExtendedMeaning("This is extended dummy meaning for tola");
         tola.setGeoLocation(Arrays.asList(new GeoLocation("IBADAN", "NWY")));
         tola.setEtymology(etymology);
         tola.setState(State.MODIFIED);
 
 
-        NameEntry dadepo = new NameEntry("dadepo");
+        WordEntry dadepo = new WordEntry("dadepo");
         dadepo.setMeaning("This is dummy meaning for dadepo");
-        dadepo.setExtendedMeaning("This is extended dummy meaning for dadepo");
         dadepo.setGeoLocation(Arrays.asList(new GeoLocation("IBADAN", "NWY")));
         dadepo.setEtymology(etymology);
         dadepo.setState(State.MODIFIED);
 
-        NameEntry bolanle = new NameEntry("Bọ́lánlé");
+        WordEntry bolanle = new WordEntry("Bọ́lánlé");
         bolanle.setMeaning("This is dummy meaning for Bọ́lánlé");
-        bolanle.setExtendedMeaning("This is extended dummy meaning for Bọ́lánlé");
         bolanle.setGeoLocation(Arrays.asList(new GeoLocation("IBADAN", "NWY")));
         bolanle.setEtymology(etymology);
         bolanle.setState(State.PUBLISHED);
 
 
-        NameEntry bimpe = new NameEntry("Bimpe");
+        WordEntry bimpe = new WordEntry("Bimpe");
         bimpe.setMeaning("This is dummy meaning for Bimpe");
-        bimpe.setExtendedMeaning("This is extended dummy meaning for Bimpe");
         bimpe.setGeoLocation(Arrays.asList(new GeoLocation("IBADAN", "NWY")));
         bimpe.setEtymology(etymology);
         bimpe.setState(State.PUBLISHED);
 
-        NameEntry ade0 = new NameEntry("Ade");
+        WordEntry ade0 = new WordEntry("Ade");
         ade0.setMeaning("This is dummy meaning for ade");
-        ade0.setExtendedMeaning("This is extended dummy meaning for ade");
         ade0.setGeoLocation(Arrays.asList(new GeoLocation("IBADAN", "NWY")));
         ade0.setEtymology(etymology);
         ade0.setState(State.NEW);
 
-        NameEntry ade1 = new NameEntry("Adewale");
+        WordEntry ade1 = new WordEntry("Adewale");
         ade1.setMeaning("This is dummy meaning for adewale");
-        ade1.setExtendedMeaning("This is extended dummy meaning for adewale");
         ade1.setGeoLocation(Arrays.asList(new GeoLocation("IBADAN", "NWY")));
         ade1.setEtymology(etymology);
         ade1.setState(State.NEW);
 
-        NameEntry ade2 = new NameEntry("Adekunle");
+        WordEntry ade2 = new WordEntry("Adekunle");
         ade2.setMeaning("This is dummy meaning for Adekunle");
-        ade2.setExtendedMeaning("This is extended dummy meaning for Adekunle");
         ade2.setGeoLocation(Arrays.asList(new GeoLocation("IBADAN", "NWY")));
         ade2.setEtymology(etymology);
         ade2.setState(State.NEW);
 
-        NameEntry ade3 = new NameEntry("Adetunji");
+        WordEntry ade3 = new WordEntry("Adetunji");
         ade3.setMeaning("This is dummy meaning for Adetunji");
-        ade3.setExtendedMeaning("This is extended dummy meaning for Adetunji");
         ade3.setGeoLocation(Arrays.asList(new GeoLocation("IBADAN", "NWY")));
         ade3.setEtymology(etymology);
         ade3.setState(State.NEW);
 
-        NameEntry ade4 = new NameEntry("Adedotun");
+        WordEntry ade4 = new WordEntry("Adedotun");
         ade4.setMeaning("This is dummy meaning for Adedotun");
-        ade4.setExtendedMeaning("This is extended dummy meaning for Adedotun");
         ade4.setGeoLocation(Arrays.asList(new GeoLocation("IBADAN", "NWY")));
         ade4.setEtymology(etymology);
         ade4.setState(State.NEW);
@@ -154,37 +142,35 @@ public class DataImporter {
         /**
          * Sample for search beahviour with variants and otherlanguages
          */
-        NameEntry omowumi = new NameEntry("Omowumi");
+        WordEntry omowumi = new WordEntry("Omowumi");
         omowumi.setVariants("omawunmi, omawumi");
         omowumi.setInOtherLanguages("omewami");
         omowumi.setMeaning("This is dummy meaning for Omowumi");
-        omowumi.setExtendedMeaning("This is extended dummy meaning for Omowumi");
         omowumi.setGeoLocation(Arrays.asList(new GeoLocation("IBADAN", "NWY")));
         omowumi.setEtymology(etymology);
         omowumi.setState(State.NEW);
 
 
-        NameEntry omolabi = new NameEntry("Omolabi");
+        WordEntry omolabi = new WordEntry("Omolabi");
         omolabi.setMeaning("This is dummy meaning for omolabi");
-        omolabi.setExtendedMeaning("This is extended dummy meaning for omolabi");
         omolabi.setGeoLocation(Arrays.asList(new GeoLocation("IBADAN", "NWY")));
         omolabi.setEtymology(etymology);
         omolabi.setState(State.NEW);
 
-        nameEntryRepository.save(lagbaja);
-        nameEntryRepository.save(tamedo);
-        nameEntryRepository.save(koko);
-        nameEntryRepository.save(tola);
-        nameEntryRepository.save(dadepo);
-        nameEntryRepository.save(bolanle);
-        nameEntryRepository.save(bimpe);
-        nameEntryRepository.save(ade0);
-        nameEntryRepository.save(ade1);
-        nameEntryRepository.save(ade2);
-        nameEntryRepository.save(ade3);
-        nameEntryRepository.save(ade4);
-        nameEntryRepository.save(omowumi);
-        nameEntryRepository.save(omolabi);
+        wordEntryRepository.save(lagbaja);
+        wordEntryRepository.save(tamedo);
+        wordEntryRepository.save(koko);
+        wordEntryRepository.save(tola);
+        wordEntryRepository.save(dadepo);
+        wordEntryRepository.save(bolanle);
+        wordEntryRepository.save(bimpe);
+        wordEntryRepository.save(ade0);
+        wordEntryRepository.save(ade1);
+        wordEntryRepository.save(ade2);
+        wordEntryRepository.save(ade3);
+        wordEntryRepository.save(ade4);
+        wordEntryRepository.save(omowumi);
+        wordEntryRepository.save(omolabi);
 
         return Arrays.asList(lagbaja, tamedo, koko, tola, dadepo, bolanle,
                 ade0, ade1, ade2, ade3, ade4, omowumi, omolabi);

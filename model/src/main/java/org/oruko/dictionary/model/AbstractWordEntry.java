@@ -34,13 +34,13 @@ import java.util.List;
  * 12.Similar in other languages
  * 13.MEDIA
  * 14.TAGS:
- * Parent abstract class shared by {@link org.oruko.dictionary.model.NameEntry}
+ * Parent abstract class shared by {@link WordEntry}
  *
  * @author Dadepo Aderemi.
  */
 @MappedSuperclass
 //TODO revisit the entries and use a more appropriate data type in cases this is necessary
-public abstract class AbstractNameEntry {
+public abstract class AbstractWordEntry {
 
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     protected Long id;
@@ -59,9 +59,6 @@ public abstract class AbstractNameEntry {
 
     @Column(length = 5000)
     protected String meaning;
-
-    @Column(length = 50000)
-    protected String extendedMeaning;
 
     @Column(length = 1000)
     protected String morphology;
@@ -199,14 +196,6 @@ public abstract class AbstractNameEntry {
 
     public void setSyllables(String syllables) {
         this.syllables = syllables;
-    }
-
-    public String getExtendedMeaning() {
-        return extendedMeaning;
-    }
-
-    public void setExtendedMeaning(String extendedMeaning) {
-        this.extendedMeaning = extendedMeaning;
     }
 
     public String getVariants() {

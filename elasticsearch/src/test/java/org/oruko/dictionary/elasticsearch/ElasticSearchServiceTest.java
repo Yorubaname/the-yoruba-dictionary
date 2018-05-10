@@ -6,7 +6,7 @@ import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.test.ElasticsearchIntegrationTest;
 import org.junit.Before;
 import org.junit.Test;
-import org.oruko.dictionary.model.NameEntry;
+import org.oruko.dictionary.model.WordEntry;
 import org.oruko.dictionary.search.api.SearchService;
 
 import java.io.IOException;
@@ -84,7 +84,7 @@ public class ElasticSearchServiceTest extends ElasticsearchIntegrationTest {
 
         flushAndRefresh();
 
-        NameEntry jamo = searchService.getByName("jamo");
+        WordEntry jamo = searchService.getByName("jamo");
         assertEquals("jamo", jamo.getName());
     }
 

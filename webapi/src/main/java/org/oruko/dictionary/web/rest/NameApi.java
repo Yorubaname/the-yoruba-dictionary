@@ -5,7 +5,7 @@ import org.oruko.dictionary.events.EventPubService;
 import org.oruko.dictionary.events.NameDeletedEvent;
 import org.oruko.dictionary.importer.ImporterInterface;
 import org.oruko.dictionary.model.GeoLocation;
-import org.oruko.dictionary.model.NameEntry;
+import org.oruko.dictionary.model.WordEntry;
 import org.oruko.dictionary.model.State;
 import org.oruko.dictionary.model.repository.GeoLocationRepository;
 import org.oruko.dictionary.web.GeoLocationTypeConverter;
@@ -89,14 +89,14 @@ public class NameApi {
     }
 
     /**
-     * End point that is used to add a {@link org.oruko.dictionary.model.NameEntry}.
-     * @param entry the {@link org.oruko.dictionary.model.NameEntry}
+     * End point that is used to add a {@link WordEntry}.
+     * @param entry the {@link WordEntry}
      * @param bindingResult {@link org.springframework.validation.BindingResult} used to capture result of validation
      * @return {@link org.springframework.http.ResponseEntity} with string containing error message.
      * "success" is returned if no error
      */
     @RequestMapping(value = "/v1/names", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, String>> addName(@Valid @RequestBody NameEntry entry,
+    public ResponseEntity<Map<String, String>> addName(@Valid @RequestBody WordEntry entry,
                                                        BindingResult bindingResult) {
         if (!bindingResult.hasErrors()) {
             if (entry.getState() == null) {
@@ -123,7 +123,7 @@ public class NameApi {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Object>> getMetaData() {
 
-        final List<NameEntry> nameEntries = entryService.loadAllNames();
+        final List<WordEntry> nameEntries = entryService.loadAllNames();
         long totalNames = ((Integer) nameEntries.size()).longValue();
 
         final long totalModifiedNames = nameEntries.stream()
@@ -149,16 +149,16 @@ public class NameApi {
      * @param pageParam a {@link Integer} representing the page (offset) to start the
      *                  result set from. 0 if none is given
      * @param countParam a {@link Integer} the number of names to return. 50 is none is given
-     * @return the list of {@link org.oruko.dictionary.model.NameEntry}
+     * @return the list of {@link WordEntry}
      */
     @RequestMapping(value = "/v1/names", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<NameEntry> getAllNames(@RequestParam("page") final Optional<Integer> pageParam,
-                                  @RequestParam("count") final Optional<Integer> countParam,
-                                  @RequestParam("all") final Optional<Boolean> all,
-                                  @RequestParam("submittedBy") final Optional<String> submittedBy,
-                                  @RequestParam("state") final Optional<State> state) {
+    public List<WordEntry> getAllNames(@RequestParam("page") final Optional<Integer> pageParam,
+                                       @RequestParam("count") final Optional<Integer> countParam,
+                                       @RequestParam("all") final Optional<Boolean> all,
+                                       @RequestParam("submittedBy") final Optional<String> submittedBy,
+                                       @RequestParam("state") final Optional<State> state) {
 
-        List<NameEntry> allNameEntries;
+        List<WordEntry> allNameEntries;
 
         if (all.isPresent() && all.get()) {
             if (state.isPresent()) {
@@ -170,10 +170,10 @@ public class NameApi {
             allNameEntries = entryService.loadByState(state, pageParam, countParam);
         }
 
-        List<NameEntry> names = new ArrayList<>(allNameEntries);
+        List<WordEntry> names = new ArrayList<>(allNameEntries);
 
         // for filtering based on value of submitBy
-        Predicate<NameEntry> filterBasedOnSubmitBy = (name) -> submittedBy
+        Predicate<WordEntry> filterBasedOnSubmitBy = (name) -> submittedBy
                 .map(s -> name.getSubmittedBy().trim().equalsIgnoreCase(s.trim()))
                 .orElse(true);
 
@@ -192,17 +192,17 @@ public class NameApi {
     @RequestMapping(value = "/v1/names/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public Object getName(@RequestParam("feedback") final Optional<Boolean> feedback,
                           @PathVariable String name) throws JsonProcessingException {
-        NameEntry nameEntry = entryService.loadName(name);
-        if (nameEntry == null) {
+        WordEntry wordEntry = entryService.loadName(name);
+        if (wordEntry == null) {
             String errorMsg = "#NAME not found in the database".replace("#NAME", name);
             throw new GenericApiCallException(errorMsg);
         }
 
         HashMap<String, Object> nameEntries = new HashMap<>();
-        nameEntries.put("mainEntry", nameEntry);
+        nameEntries.put("mainEntry", wordEntry);
 
         if (feedback.isPresent() && (feedback.get() == true)) {
-            nameEntries.put("feedback", entryService.getFeedback(nameEntry));
+            nameEntries.put("feedback", entryService.getFeedback(wordEntry));
         }
 
         if (nameEntries.size() == 1 && nameEntries.get("mainEntry") != null) {
@@ -214,8 +214,8 @@ public class NameApi {
 
 
     /**
-     * End point that is used to update a {@link org.oruko.dictionary.model.NameEntry}.
-     * @param newNameEntry the {@link org.oruko.dictionary.model.NameEntry}
+     * End point that is used to update a {@link WordEntry}.
+     * @param newWordEntry the {@link WordEntry}
      * @param bindingResult {@link org.springframework.validation.BindingResult} used to capture result of validation
      * @return {@link org.springframework.http.ResponseEntity} with string containting error message.
      * "success" is returned if no error
@@ -224,17 +224,17 @@ public class NameApi {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.PUT)
     public ResponseEntity<Map> updateName(@PathVariable String name,
-                                             @Valid @RequestBody NameEntry newNameEntry,
+                                             @Valid @RequestBody WordEntry newWordEntry,
                                              BindingResult bindingResult) {
         //TODO tonalMark is returning null on update. Fix
         if (!bindingResult.hasErrors()) {
 
-            NameEntry oldNameEntry = entryService.loadName(name);
+            WordEntry oldWordEntry = entryService.loadName(name);
 
-            if (oldNameEntry == null) {
+            if (oldWordEntry == null) {
                 throw new GenericApiCallException(name + " not in database", HttpStatus.INTERNAL_SERVER_ERROR);
             }
-            entryService.updateName(oldNameEntry, newNameEntry);
+            entryService.updateName(oldWordEntry, newWordEntry);
             return new ResponseEntity<>(response("Name successfully updated"), HttpStatus.CREATED);
         }
 
@@ -300,13 +300,13 @@ public class NameApi {
 
     /**
      * Endpoint for batch uploading of names. Names are sent as array of json from the client
-     * @param nameEntries the array of {@link org.oruko.dictionary.model.NameEntry}
+     * @param nameEntries the array of {@link WordEntry}
      * @param bindingResult {@link org.springframework.validation.BindingResult} used to capture result of validation
      * @return {@link org.springframework.http.ResponseEntity} with string containting error message.
      * "success" is returned if no error
      */
     @RequestMapping(value = "/v1/names/batch", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity< Map<String, String>> addName(@Valid @RequestBody NameEntry[] nameEntries,
+    public ResponseEntity< Map<String, String>> addName(@Valid @RequestBody WordEntry[] nameEntries,
                                                         BindingResult bindingResult) {
         if (!bindingResult.hasErrors() && nameEntries.length != 0) {
             entryService.bulkInsertTakingCareOfDuplicates(Arrays.asList(nameEntries));
@@ -318,22 +318,22 @@ public class NameApi {
 
     /**
      * Endpoint for batch updating  of names. Names are sent as array of json from the client
-     * @param nameEntries the array of {@link org.oruko.dictionary.model.NameEntry}
+     * @param nameEntries the array of {@link WordEntry}
      * @param bindingResult {@link org.springframework.validation.BindingResult} used to capture result of validation
      * @return {@link org.springframework.http.ResponseEntity} with string containing error message.
      * "success" is returned if no error
      */
     @RequestMapping(value = "/v1/names/batch", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity< Map<String, String>> updateNames(@Valid @RequestBody NameEntry[] nameEntries,
+    public ResponseEntity< Map<String, String>> updateNames(@Valid @RequestBody WordEntry[] nameEntries,
                                                          BindingResult bindingResult) {
         if (!bindingResult.hasErrors() && nameEntries.length != 0) {
 
             //TODO refactor into a method
-            List<NameEntry> notFoundNames = Stream.of(nameEntries)
+            List<WordEntry> notFoundNames = Stream.of(nameEntries)
                                              .filter(entry -> entryService.loadName(entry.getName()) == null)
                                             .collect(Collectors.toList());
 
-            List<NameEntry> foundNames = new ArrayList<>(Arrays.asList(nameEntries));
+            List<WordEntry> foundNames = new ArrayList<>(Arrays.asList(nameEntries));
             foundNames.removeAll(notFoundNames);
 
             if (foundNames.size() == 0) {
@@ -343,11 +343,11 @@ public class NameApi {
             entryService.bulkUpdateNames(foundNames);
 
             List<String> notFound = notFoundNames.stream()
-                                                 .map(NameEntry::getName)
+                                                 .map(WordEntry::getName)
                                                  .collect(Collectors.toList());
 
             List<String> found = foundNames.stream()
-                                             .map(NameEntry::getName)
+                                             .map(WordEntry::getName)
                                              .collect(Collectors.toList());
 
             String responseMessage = String.join(",", found) + " updated. ";

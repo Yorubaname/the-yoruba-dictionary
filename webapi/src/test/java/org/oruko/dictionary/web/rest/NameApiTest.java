@@ -12,7 +12,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.oruko.dictionary.events.EventPubService;
 import org.oruko.dictionary.importer.ImportStatus;
 import org.oruko.dictionary.importer.ImporterInterface;
-import org.oruko.dictionary.model.NameEntry;
+import org.oruko.dictionary.model.WordEntry;
 import org.oruko.dictionary.model.State;
 import org.oruko.dictionary.web.NameEntryService;
 import org.springframework.http.MediaType;
@@ -56,8 +56,8 @@ public class NameApiTest extends AbstractApiTest {
     private EventPubService eventPubService;
 
     MockMvc mockMvc;
-    NameEntry testNameEntry;
-    NameEntry anotherTestNameEntry;
+    WordEntry testWordEntry;
+    WordEntry anotherTestWordEntry;
 
     @Before
     public void setUp() {
@@ -73,18 +73,16 @@ public class NameApiTest extends AbstractApiTest {
 
         mockMvc = MockMvcBuilders.standaloneSetup(nameApi).setMessageConverters(converter).setHandlerExceptionResolvers(
                 createExceptionResolver()).build();
-        testNameEntry = new NameEntry("test-entry");
-        testNameEntry.setMeaning("test_meaninyig");
-        testNameEntry.setExtendedMeaning("test_extended_meaning");
-
-        anotherTestNameEntry = new NameEntry();
+        testWordEntry = new WordEntry("test-entry");
+        testWordEntry.setMeaning("test_meaninyig");
+        anotherTestWordEntry = new WordEntry();
     }
 
     @Test
     public void test_get_all_names_via_get() throws Exception {
-        testNameEntry.setName("firstname");
-        anotherTestNameEntry.setName("secondname");
-        when(entryService.loadAllNames()).thenReturn(Arrays.asList(testNameEntry, anotherTestNameEntry));
+        testWordEntry.setName("firstname");
+        anotherTestWordEntry.setName("secondname");
+        when(entryService.loadAllNames()).thenReturn(Arrays.asList(testWordEntry, anotherTestWordEntry));
              mockMvc.perform(get("/v1/names?all=true"))
                     .andExpect(jsonPath("$", hasSize(2)))
                     .andExpect(jsonPath("$[0].name", is("firstname")))
@@ -94,10 +92,10 @@ public class NameApiTest extends AbstractApiTest {
 
     @Test
     public void test_get_all_names_filtered_by_is_submitted_by() throws Exception {
-        testNameEntry.setSubmittedBy("test");
-        NameEntry secondEntry = new NameEntry("secondEntry");
+        testWordEntry.setSubmittedBy("test");
+        WordEntry secondEntry = new WordEntry("secondEntry");
         secondEntry.setSubmittedBy("Not Available");
-        when(entryService.loadByState(eq(Optional.empty()), any(), any())).thenReturn(Arrays.asList(testNameEntry, secondEntry));
+        when(entryService.loadByState(eq(Optional.empty()), any(), any())).thenReturn(Arrays.asList(testWordEntry, secondEntry));
 
         mockMvc.perform(get("/v1/names?submittedBy=test"))
                .andExpect(jsonPath("$", hasSize(1)))
@@ -107,8 +105,8 @@ public class NameApiTest extends AbstractApiTest {
 
     @Test
     public void test_get_all_names_filtered_by_state() throws Exception {
-        testNameEntry.setState(State.PUBLISHED);
-        NameEntry secondEntry = new NameEntry("secondEntry");
+        testWordEntry.setState(State.PUBLISHED);
+        WordEntry secondEntry = new WordEntry("secondEntry");
         secondEntry.setState(State.NEW);
         when(entryService.loadByState(eq(Optional.of(State.NEW)), any(), any())).thenReturn(Collections.singletonList(secondEntry));
 
@@ -123,7 +121,7 @@ public class NameApiTest extends AbstractApiTest {
 
     @Test
     public void test_get_a_name() throws Exception {
-        when(entryService.loadName("test-entry")).thenReturn(testNameEntry);
+        when(entryService.loadName("test-entry")).thenReturn(testWordEntry);
         mockMvc.perform(get("/v1/names/test-entry"))
                .andExpect(jsonPath("$.name", is("test-entry")))
                .andExpect(status().isOk());
@@ -131,7 +129,7 @@ public class NameApiTest extends AbstractApiTest {
 
     @Test
     public void test_get_all_names() throws Exception {
-        when(entryService.loadAllNames()).thenReturn(Arrays.asList(testNameEntry, anotherTestNameEntry));
+        when(entryService.loadAllNames()).thenReturn(Arrays.asList(testWordEntry, anotherTestWordEntry));
         mockMvc.perform(get("/v1/names?all=true"))
                .andExpect(jsonPath("$").isArray())
                .andExpect(status().isOk());
@@ -143,24 +141,24 @@ public class NameApiTest extends AbstractApiTest {
     @Test
     public void test_get_name_count() throws Exception {
         // Entries with NEW state
-        NameEntry nameEntry_new_1 = mock(NameEntry.class);
-        when(nameEntry_new_1.getState()).thenReturn(State.NEW);
-        NameEntry nameEntry_new_2 = mock(NameEntry.class);
-        when(nameEntry_new_2.getState()).thenReturn(State.NEW);
-        NameEntry nameEntry_new_3 = mock(NameEntry.class);
-        when(nameEntry_new_3.getState()).thenReturn(State.NEW);
+        WordEntry wordEntry_new_1 = mock(WordEntry.class);
+        when(wordEntry_new_1.getState()).thenReturn(State.NEW);
+        WordEntry wordEntry_new_2 = mock(WordEntry.class);
+        when(wordEntry_new_2.getState()).thenReturn(State.NEW);
+        WordEntry wordEntry_new_3 = mock(WordEntry.class);
+        when(wordEntry_new_3.getState()).thenReturn(State.NEW);
         // Entries with modified state
-        NameEntry nameEntry_modified_1 = mock(NameEntry.class);
-        when(nameEntry_modified_1.getState()).thenReturn(State.MODIFIED);
-        NameEntry nameEntry_modified_2 = mock(NameEntry.class);
-        when(nameEntry_modified_2.getState()).thenReturn(State.MODIFIED);
+        WordEntry wordEntry_modified_1 = mock(WordEntry.class);
+        when(wordEntry_modified_1.getState()).thenReturn(State.MODIFIED);
+        WordEntry wordEntry_modified_2 = mock(WordEntry.class);
+        when(wordEntry_modified_2.getState()).thenReturn(State.MODIFIED);
         // Entries with Published State
-        NameEntry nameEntry_published_2 = mock(NameEntry.class);
-        when(nameEntry_published_2.getState()).thenReturn(State.PUBLISHED);
+        WordEntry wordEntry_published_2 = mock(WordEntry.class);
+        when(wordEntry_published_2.getState()).thenReturn(State.PUBLISHED);
 
-        when(entryService.loadAllNames()).thenReturn(Arrays.asList(nameEntry_new_1, nameEntry_new_2, nameEntry_new_3,
-                                                                   nameEntry_modified_1,nameEntry_modified_2,
-                                                                   nameEntry_published_2));
+        when(entryService.loadAllNames()).thenReturn(Arrays.asList(wordEntry_new_1, wordEntry_new_2, wordEntry_new_3,
+                wordEntry_modified_1, wordEntry_modified_2,
+                wordEntry_published_2));
 
 
         mockMvc.perform(get("/v1/names/meta"))
@@ -183,34 +181,34 @@ public class NameApiTest extends AbstractApiTest {
 
     @Test
     public void test_add_name_via_post_request() throws Exception {
-        String requestJson = new ObjectMapper().writeValueAsString(testNameEntry);
+        String requestJson = new ObjectMapper().writeValueAsString(testWordEntry);
         mockMvc.perform(post("/v1/names")
                                 .contentType(MediaType.parseMediaType("application/json; charset=UTF-8"))
                                 .content(requestJson))
                .andExpect(jsonPath("$.message", IsNot.not(nullValue())))
                .andExpect(status().isCreated());
 
-        verify(entryService).insertTakingCareOfDuplicates(any(NameEntry.class));
+        verify(entryService).insertTakingCareOfDuplicates(any(WordEntry.class));
     }
 
     @Test
     public void test_add_name_via_post_request_make_sure_state_is_new() throws Exception {
-        testNameEntry.setState(State.NEW);
-        String requestJson = new ObjectMapper().writeValueAsString(testNameEntry);
+        testWordEntry.setState(State.NEW);
+        String requestJson = new ObjectMapper().writeValueAsString(testWordEntry);
         mockMvc.perform(post("/v1/names")
                                 .contentType(MediaType.parseMediaType("application/json; charset=UTF-8"))
                                 .content(requestJson))
                .andExpect(jsonPath("$.message", IsNot.not(nullValue())))
                .andExpect(status().isCreated());
 
-        verify(entryService).insertTakingCareOfDuplicates(any(NameEntry.class));
+        verify(entryService).insertTakingCareOfDuplicates(any(WordEntry.class));
     }
 
     @Test
     public void test_add_name_via_post_request_when_state_is_null_it_will_be_new() throws Exception {
-        testNameEntry.setState(null);
-        ArgumentCaptor<NameEntry> argumentCaptor = ArgumentCaptor.forClass(NameEntry.class);
-        String requestJson = new ObjectMapper().writeValueAsString(testNameEntry);
+        testWordEntry.setState(null);
+        ArgumentCaptor<WordEntry> argumentCaptor = ArgumentCaptor.forClass(WordEntry.class);
+        String requestJson = new ObjectMapper().writeValueAsString(testWordEntry);
         mockMvc.perform(post("/v1/names")
                                 .contentType(MediaType.parseMediaType("application/json; charset=UTF-8"))
                                 .content(requestJson))
@@ -218,14 +216,14 @@ public class NameApiTest extends AbstractApiTest {
                .andExpect(status().isCreated());
 
         verify(entryService).insertTakingCareOfDuplicates(argumentCaptor.capture());
-        final NameEntry value = argumentCaptor.getValue();
+        final WordEntry value = argumentCaptor.getValue();
         assertThat(value.getState().toString(), is("NEW"));
     }
 
     @Test
     public void test_add_name_via_post_request_when_state_is_not_null_expect_exception() throws Exception {
-        testNameEntry.setState(State.PUBLISHED);
-        String requestJson = new ObjectMapper().writeValueAsString(testNameEntry);
+        testWordEntry.setState(State.PUBLISHED);
+        String requestJson = new ObjectMapper().writeValueAsString(testWordEntry);
         mockMvc.perform(post("/v1/names")
                                 .contentType(MediaType.parseMediaType("application/json; charset=UTF-8"))
                                 .content(requestJson))
@@ -235,7 +233,7 @@ public class NameApiTest extends AbstractApiTest {
 
     @Test
     public void test_add_name_via_get_but_faulty_request() throws Exception {
-        String requestJson = new ObjectMapper().writeValueAsString(anotherTestNameEntry);
+        String requestJson = new ObjectMapper().writeValueAsString(anotherTestWordEntry);
         mockMvc.perform(post("/v1/names")
                                 .contentType(MediaType.parseMediaType("application/json; charset=UTF-8"))
                                 .content(requestJson))
@@ -244,7 +242,7 @@ public class NameApiTest extends AbstractApiTest {
 
     @Test
     public void test_modifying_name_via_put_request_but_faulty_request() throws Exception {
-        String requestJson = new ObjectMapper().writeValueAsString(anotherTestNameEntry);
+        String requestJson = new ObjectMapper().writeValueAsString(anotherTestWordEntry);
         mockMvc.perform(put("/v1/names/jaja")
                                 .contentType(MediaType.parseMediaType("application/json; charset=UTF-8"))
                                 .content(requestJson))
@@ -253,7 +251,7 @@ public class NameApiTest extends AbstractApiTest {
 
     @Test
     public void test_modifying_name_via_put_request_but_name_is_different_from_json_sent() throws Exception {
-        String requestJson = new ObjectMapper().writeValueAsString(testNameEntry);
+        String requestJson = new ObjectMapper().writeValueAsString(testWordEntry);
         mockMvc.perform(put("/v1/names/jaja")
                                 .contentType(MediaType.parseMediaType("application/json; charset=UTF-8"))
                                 .content(requestJson))
@@ -264,7 +262,7 @@ public class NameApiTest extends AbstractApiTest {
 
     @Test
     public void test_modifying_name_via_put_request_but_name_to_update_not_in_db() throws Exception {
-        String requestJson = new ObjectMapper().writeValueAsString(testNameEntry);
+        String requestJson = new ObjectMapper().writeValueAsString(testWordEntry);
         mockMvc.perform(put("/v1/names/test")
                                 .contentType(MediaType.parseMediaType("application/json; charset=UTF-8"))
                                 .content(requestJson))
@@ -274,16 +272,16 @@ public class NameApiTest extends AbstractApiTest {
 
     @Test
     public void test_modifying_name_via_put_request() throws Exception {
-        NameEntry nameEntry = mock(NameEntry.class);
-        when(entryService.loadName("test")).thenReturn(nameEntry);
-        String requestJson = new ObjectMapper().writeValueAsString(testNameEntry);
+        WordEntry wordEntry = mock(WordEntry.class);
+        when(entryService.loadName("test")).thenReturn(wordEntry);
+        String requestJson = new ObjectMapper().writeValueAsString(testWordEntry);
         mockMvc.perform(put("/v1/names/test")
                                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
                                 .content(requestJson))
                .andExpect(status().isCreated());
 
         //TODO revisit and see if argument captor can be put to use here
-        verify(entryService).updateName(isA(NameEntry.class), isA(NameEntry.class));
+        verify(entryService).updateName(isA(WordEntry.class), isA(WordEntry.class));
     }
 
     @Test
@@ -301,9 +299,9 @@ public class NameApiTest extends AbstractApiTest {
 
     @Test
     public void test_batch_upload() throws Exception {
-        NameEntry[] nameEntries = new NameEntry[2];
-        nameEntries[0] = new NameEntry("test");
-        nameEntries[1] = new NameEntry("anothertest");
+        WordEntry[] nameEntries = new WordEntry[2];
+        nameEntries[0] = new WordEntry("test");
+        nameEntries[1] = new WordEntry("anothertest");
         String requestJson = new ObjectMapper().writeValueAsString(nameEntries);
         mockMvc.perform(post("/v1/names/batch")
                                 .contentType(MediaType.parseMediaType("application/json; charset=UTF-8"))
@@ -311,12 +309,12 @@ public class NameApiTest extends AbstractApiTest {
                .andExpect(status().isCreated())
                .andExpect(jsonPath("$.message", IsNot.not(nullValue())));
 
-        verify(entryService, times(1)).bulkInsertTakingCareOfDuplicates(anyListOf(NameEntry.class));
+        verify(entryService, times(1)).bulkInsertTakingCareOfDuplicates(anyListOf(WordEntry.class));
     }
 
     @Test
     public void test_batch_upload_with_faulty_request() throws Exception {
-        NameEntry[] nameEntries = new NameEntry[0];
+        WordEntry[] nameEntries = new WordEntry[0];
         String requestJson = new ObjectMapper().writeValueAsString(nameEntries);
         mockMvc.perform(post("/v1/names/batch")
                                 .contentType(MediaType.parseMediaType("application/json; charset=UTF-8"))
@@ -339,14 +337,14 @@ public class NameApiTest extends AbstractApiTest {
 
     @Test
     public void test_get_names_with_feedback() throws Exception {
-        when(entryService.loadName("test")).thenReturn(testNameEntry);
+        when(entryService.loadName("test")).thenReturn(testWordEntry);
         mockMvc.perform(get("/v1/names/{name}?feedback=true", "test"))
                .andExpect(status().isOk()).andExpect(jsonPath("$.feedback", notNullValue()));
     }
 
     @Test
     public void test_get_names_without_feedback() throws Exception {
-        when(entryService.loadName("test")).thenReturn(testNameEntry);
+        when(entryService.loadName("test")).thenReturn(testWordEntry);
         mockMvc.perform(get("/v1/names/{name}?feedback=false", "test"))
                .andExpect(status().isOk()).andExpect(jsonPath("$.feedback").doesNotExist());
     }

@@ -8,9 +8,9 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.oruko.dictionary.events.EventPubService;
 import org.oruko.dictionary.events.NameUploadedEvent;
 import org.oruko.dictionary.model.GeoLocation;
-import org.oruko.dictionary.model.NameEntry;
+import org.oruko.dictionary.model.WordEntry;
 import org.oruko.dictionary.model.repository.GeoLocationRepository;
-import org.oruko.dictionary.model.repository.NameEntryRepository;
+import org.oruko.dictionary.model.repository.WordEntryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ import java.util.Iterator;
 
 /**
  * Importer for importing names from an excel sheet into
- * {@link org.oruko.dictionary.model.NameEntry}
+ * {@link WordEntry}
  *
  * @author Dadepo Aderemi.
  */
@@ -32,7 +32,7 @@ public class ExcelImporter implements ImporterInterface {
 
     private Logger logger = LoggerFactory.getLogger(ExcelImporter.class);
 
-    private NameEntryRepository nameEntryRepository;
+    private WordEntryRepository wordEntryRepository;
     private GeoLocationRepository geoLocationRepository;
     private ImporterValidator validator;
     private EventPubService eventPubService;
@@ -45,8 +45,8 @@ public class ExcelImporter implements ImporterInterface {
     }
 
     @Autowired
-    public void setNameEntryRepository(NameEntryRepository nameEntryRepository) {
-        this.nameEntryRepository = nameEntryRepository;
+    public void setWordEntryRepository(WordEntryRepository wordEntryRepository) {
+        this.wordEntryRepository = wordEntryRepository;
     }
 
     @Autowired
@@ -110,14 +110,14 @@ public class ExcelImporter implements ImporterInterface {
                     continue;
                 }
 
-                NameEntry nameEntry = new NameEntry();
+                WordEntry wordEntry = new WordEntry();
 
                 Cell nameCell = row.getCell(columnOrder.getColumnOrder().inverse().get("name"));
                 if (nameCell != null) {
                     name = nameCell.toString();
                     if (!name.isEmpty()) {
                         fieldIsEmpty = false;
-                        nameEntry.setName(name.trim());
+                        wordEntry.setName(name.trim());
                     } else {
                         // if name is empty then the row is nullified, so skip
                         continue;
@@ -129,7 +129,7 @@ public class ExcelImporter implements ImporterInterface {
                     pronunciation = pronunciationCell.toString();
                     if (!pronunciation.isEmpty()) {
                         fieldIsEmpty = false;
-                        nameEntry.setPronunciation(pronunciation.trim());
+                        wordEntry.setPronunciation(pronunciation.trim());
                     }
                 }
 
@@ -138,7 +138,7 @@ public class ExcelImporter implements ImporterInterface {
                     ipaNotation = ipaCell.toString();
                     if (!ipaNotation.isEmpty()) {
                         fieldIsEmpty = false;
-                        nameEntry.setIpaNotation(ipaNotation.trim());
+                        wordEntry.setIpaNotation(ipaNotation.trim());
                     }
                 }
 
@@ -147,7 +147,7 @@ public class ExcelImporter implements ImporterInterface {
                     variant = variantCell.toString();
                     if (!variant.isEmpty()) {
                         fieldIsEmpty = false;
-                        nameEntry.setVariants(variant.trim());
+                        wordEntry.setVariants(variant.trim());
                     }
                 }
 
@@ -156,7 +156,7 @@ public class ExcelImporter implements ImporterInterface {
                     syllable = syllableCell.toString();
                     if (!syllable.isEmpty()) {
                         fieldIsEmpty = false;
-                        nameEntry.setSyllables(syllable.trim());
+                        wordEntry.setSyllables(syllable.trim());
                     }
                 }
 
@@ -165,18 +165,9 @@ public class ExcelImporter implements ImporterInterface {
                     meaning = meaningCell.toString();
                     if (!meaning.isEmpty()) {
                         fieldIsEmpty = false;
-                        nameEntry.setMeaning(meaning.trim());
+                        wordEntry.setMeaning(meaning.trim());
                     }
 
-                }
-
-                Cell extendedMeaningCell = row.getCell(columnOrder.getColumnOrder().inverse().get("extended_meaning"));
-                if (extendedMeaningCell != null) {
-                    extendedMeaning = extendedMeaningCell.toString();
-                    if (!extendedMeaning.isEmpty()) {
-                        fieldIsEmpty = false;
-                        nameEntry.setExtendedMeaning(extendedMeaning.trim());
-                    }
                 }
 
                 Cell morphologyCell = row.getCell(columnOrder.getColumnOrder().inverse().get("morphology"));
@@ -184,7 +175,7 @@ public class ExcelImporter implements ImporterInterface {
                     morphology = morphologyCell.toString();
                     if (!morphology.isEmpty()) {
                         fieldIsEmpty = false;
-                        nameEntry.setMorphology(morphology.trim());
+                        wordEntry.setMorphology(morphology.trim());
                     }
                 }
 
@@ -194,7 +185,7 @@ public class ExcelImporter implements ImporterInterface {
                     if (!etymology.isEmpty()) {
                         // TODO define format for etymology in spreadsheet
                         fieldIsEmpty = false;
-                        nameEntry.setEtymology(null);
+                        wordEntry.setEtymology(null);
                     }
                 }
 
@@ -203,7 +194,7 @@ public class ExcelImporter implements ImporterInterface {
                     geoLocation = geoLocationCell.toString();
                     if (!geoLocation.isEmpty()) {
                         fieldIsEmpty = false;
-                        nameEntry.setGeoLocation(getGeoLocation(geoLocation));
+                        wordEntry.setGeoLocation(getGeoLocation(geoLocation));
                     }
                 }
 
@@ -213,7 +204,7 @@ public class ExcelImporter implements ImporterInterface {
                     media = mediaCell.toString();
                     if (!media.isEmpty()) {
                         fieldIsEmpty = false;
-                        nameEntry.setMedia(media.trim());
+                        wordEntry.setMedia(media.trim());
                     }
                 }
 
@@ -225,7 +216,7 @@ public class ExcelImporter implements ImporterInterface {
                     if (alreadyExists(name)) {
                         logger.info("Name {} already exists in the index. Skipping...", name);
                     } else {
-                        nameEntryRepository.save(nameEntry);
+                        wordEntryRepository.save(wordEntry);
                         status.incrementNumberOfNames();
                     }
                 } catch (Exception e) {
@@ -265,7 +256,7 @@ public class ExcelImporter implements ImporterInterface {
     }
 
     private boolean alreadyExists(String name) {
-        NameEntry entry = nameEntryRepository.findByName(name);
+        WordEntry entry = wordEntryRepository.findByName(name);
         if (entry == null) {
             return false;
         }

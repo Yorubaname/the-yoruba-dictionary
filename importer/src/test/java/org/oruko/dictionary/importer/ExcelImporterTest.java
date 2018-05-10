@@ -7,8 +7,8 @@ import org.junit.*;
 import org.junit.runner.*;
 import org.mockito.*;
 import org.mockito.runners.*;
-import org.oruko.dictionary.model.NameEntry;
-import org.oruko.dictionary.model.repository.NameEntryRepository;
+import org.oruko.dictionary.model.WordEntry;
+import org.oruko.dictionary.model.repository.WordEntryRepository;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.File;
@@ -22,7 +22,7 @@ import static org.mockito.Mockito.*;
 public class ExcelImporterTest {
 
     @Mock
-    NameEntryRepository repository;
+    WordEntryRepository repository;
 
     @Mock
     private ImporterValidator validator;
@@ -44,8 +44,8 @@ public class ExcelImporterTest {
         when(validator.isColumnNameInOrder(any(XSSFSheet.class))).thenReturn(true);
         ImportStatus status = importer.importFile(file);
 
-        ArgumentCaptor<NameEntry> messageCaptor = ArgumentCaptor.forClass(NameEntry.class);
-        List<NameEntry> allValues = messageCaptor.getAllValues();
+        ArgumentCaptor<WordEntry> messageCaptor = ArgumentCaptor.forClass(WordEntry.class);
+        List<WordEntry> allValues = messageCaptor.getAllValues();
 
         verify(repository, times(3)).save(messageCaptor.capture());
 

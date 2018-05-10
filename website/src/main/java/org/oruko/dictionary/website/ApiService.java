@@ -1,6 +1,6 @@
 package org.oruko.dictionary.website;
 
-import org.oruko.dictionary.model.NameEntry;
+import org.oruko.dictionary.model.WordEntry;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -33,8 +33,8 @@ public class ApiService {
     }
 
     @Cacheable("querySearchResult")
-    public NameEntry getName(String nameQuery) {
-        return restTemplate.getForObject(APIPATH + "/search/" + nameQuery, NameEntry.class);
+    public WordEntry getName(String nameQuery) {
+        return restTemplate.getForObject(APIPATH + "/search/" + nameQuery, WordEntry.class);
     }
 
     @Cacheable("names")

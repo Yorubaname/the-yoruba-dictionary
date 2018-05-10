@@ -16,7 +16,7 @@ import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.node.Node;
 import org.elasticsearch.search.SearchHit;
-import org.oruko.dictionary.model.NameEntry;
+import org.oruko.dictionary.model.WordEntry;
 import org.oruko.dictionary.search.api.IndexOperationStatus;
 import org.oruko.dictionary.search.api.SearchService;
 import org.slf4j.Logger;
@@ -89,7 +89,7 @@ public class ElasticSearchService implements SearchService {
      * @return the nameEntry as a Map or null if name not found
      */
     @Override
-    public NameEntry getByName(String nameQuery) {
+    public WordEntry getByName(String nameQuery) {
         SearchResponse searchResponse = exactSearchByName(nameQuery);
 
         SearchHit[] hits = searchResponse.getHits().getHits();
@@ -100,11 +100,11 @@ public class ElasticSearchService implements SearchService {
         }
     }
 
-    private NameEntry sourceToNameEntry(Map<String, Object> source) {
+    private WordEntry sourceToNameEntry(Map<String, Object> source) {
         String valueAsString = null;
         try {
             valueAsString = mapper.writeValueAsString(source);
-            return mapper.readValue(valueAsString, NameEntry.class);
+            return mapper.readValue(valueAsString, WordEntry.class);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -118,7 +118,7 @@ public class ElasticSearchService implements SearchService {
      * @return the list of entries found
      */
     @Override
-    public Set<NameEntry> search(String searchTerm) {
+    public Set<WordEntry> search(String searchTerm) {
         /**
          * 1. First do a exact search. If found return result. If not go to 2.
          * 2. Do a search with ascii-folding. If found return result, if not go to 3
@@ -131,7 +131,7 @@ public class ElasticSearchService implements SearchService {
          * 7. Do a full text search against extendedMeaning
          */
 
-        final Set<NameEntry> result = new LinkedHashSet<>();
+        final Set<WordEntry> result = new LinkedHashSet<>();
 
         // 1. exact search
         SearchResponse searchResponse = exactSearchByName(searchTerm);
@@ -197,8 +197,8 @@ public class ElasticSearchService implements SearchService {
 
 
     @Override
-    public Set<NameEntry> listByAlphabet(String alphabetQuery) {
-        final Set<NameEntry> result = new LinkedHashSet<>();
+    public Set<WordEntry> listByAlphabet(String alphabetQuery) {
+        final Set<WordEntry> result = new LinkedHashSet<>();
 
         final SearchResponse searchResponse = prefixFilterSearch(alphabetQuery, true);
         final SearchHit[] hits = searchResponse.getHits().getHits();
@@ -245,12 +245,12 @@ public class ElasticSearchService implements SearchService {
     }
 
     /**
-     * Add a {@link org.oruko.dictionary.model.NameEntry} into ElasticSearch index
+     * Add a {@link WordEntry} into ElasticSearch index
      *
-     * @param entry the {@link org.oruko.dictionary.model.NameEntry} to index
+     * @param entry the {@link WordEntry} to index
      * @return returns true | false depending on if the indexing operation was successful.
      */
-    public IndexOperationStatus indexName(NameEntry entry) {
+    public IndexOperationStatus indexName(WordEntry entry) {
 
         if (!isElasticSearchNodeAvailable()) {
             return new IndexOperationStatus(false,
@@ -267,14 +267,14 @@ public class ElasticSearchService implements SearchService {
 
             return new IndexOperationStatus(true, name + " indexed successfully");
         } catch (JsonProcessingException e) {
-            logger.info("Failed to parse NameEntry into Json", e);
-            return new IndexOperationStatus(true, "Failed to parse NameEntry into Json");
+            logger.info("Failed to parse WordEntry into Json", e);
+            return new IndexOperationStatus(true, "Failed to parse WordEntry into Json");
         }
     }
 
 
     @Override
-    public IndexOperationStatus bulkIndexName(List<NameEntry> entries) {
+    public IndexOperationStatus bulkIndexName(List<WordEntry> entries) {
 
         if (entries.size() == 0) {
             return new IndexOperationStatus(false, "Cannot index an empty list");
@@ -449,7 +449,7 @@ public class ElasticSearchService implements SearchService {
 
 
     @Override
-    public IndexOperationStatus bulkRemoveFromIndex(List<NameEntry> nameEntries) {
+    public IndexOperationStatus bulkRemoveFromIndex(List<WordEntry> nameEntries) {
         throw new NotImplementedException();
     }
 }

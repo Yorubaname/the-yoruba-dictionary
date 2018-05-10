@@ -15,7 +15,7 @@ import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 
 /**
- * Represents the text to speech rendition of {@link org.oruko.dictionary.model.NameEntry}
+ * Represents the text to speech rendition of {@link WordEntry}
  * Created by dadepo on 2/11/15.
  */
 @Entity

@@ -1,6 +1,6 @@
 package org.oruko.dictionary.web.rest;
 
-import org.oruko.dictionary.model.NameEntry;
+import org.oruko.dictionary.model.WordEntry;
 import org.oruko.dictionary.web.SuggestedNameService;
 import org.oruko.dictionary.web.exception.GenericApiCallException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +61,7 @@ public class SuggestionApi {
      * @return {@link org.springframework.http.ResponseEntity} with message if successful or not
      */
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, String>> suggestName(@Valid @RequestBody NameEntry suggestedName,
+    public ResponseEntity<Map<String, String>> suggestName(@Valid @RequestBody WordEntry suggestedName,
                                                            BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new GenericApiCallException(formatErrorMessage(bindingResult), HttpStatus.BAD_REQUEST);
@@ -75,7 +75,7 @@ public class SuggestionApi {
      * @return a {@link ResponseEntity} with all suggested names
      */
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<NameEntry> getAllSuggestedNames() {
+    public List<WordEntry> getAllSuggestedNames() {
         return suggestedNameService.findAll();
     }
 
