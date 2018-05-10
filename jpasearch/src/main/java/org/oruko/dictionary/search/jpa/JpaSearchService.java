@@ -56,7 +56,6 @@ public class JpaSearchService implements SearchService {
         possibleFound.addAll(wordEntryRepository.findNameEntryByNameContainingAndState(searchTerm, State.PUBLISHED));
         possibleFound.addAll(wordEntryRepository.findNameEntryByVariantsContainingAndState(searchTerm, State.PUBLISHED));
         possibleFound.addAll(wordEntryRepository.findNameEntryByMeaningContainingAndState(searchTerm, State.PUBLISHED));
-        possibleFound.addAll(wordEntryRepository.findNameEntryByExtendedMeaningContainingAndState(searchTerm, State.PUBLISHED));
 
         return possibleFound;
     }

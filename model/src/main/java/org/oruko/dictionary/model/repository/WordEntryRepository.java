@@ -41,7 +41,6 @@ public interface WordEntryRepository extends JpaRepository<WordEntry, Long> {
     Set<WordEntry> findNameEntryByNameContainingAndState(String name, State state);
     Set<WordEntry> findNameEntryByVariantsContainingAndState(String name, State state);
     Set<WordEntry> findNameEntryByMeaningContainingAndState(String name, State state);
-    Set<WordEntry> findNameEntryByExtendedMeaningContainingAndState(String name, State state);
     WordEntry findByNameAndState(String name, State state);
 
 
