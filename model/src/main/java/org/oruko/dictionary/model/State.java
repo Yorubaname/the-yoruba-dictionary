@@ -22,5 +22,9 @@ public enum State {
     /**
      * A name that has been published (indexed into the search engine) was modified, thus needs to be re-indexed
      */
-    MODIFIED
+    MODIFIED,
+    /**
+     * A name that was submitted by an anonymous user (indexed into the search engine) was modified, thus needs to be re-indexed
+     */
+    SUGGESTED
 }

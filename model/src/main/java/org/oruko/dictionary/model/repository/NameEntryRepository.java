@@ -47,4 +47,5 @@ public interface NameEntryRepository extends JpaRepository<NameEntry, Long> {
 
     Integer countByState(State state);
     Boolean deleteByNameAndState(String name, State state);
+    Boolean deleteByState(State state);
 }

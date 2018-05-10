@@ -1,7 +1,7 @@
 package org.oruko.dictionary.web.rest;
 
-import org.oruko.dictionary.model.SuggestedName;
-import org.oruko.dictionary.model.repository.SuggestedNameRepository;
+import org.oruko.dictionary.model.NameEntry;
+import org.oruko.dictionary.web.SuggestedNameService;
 import org.oruko.dictionary.web.exception.GenericApiCallException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,16 +28,15 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/v1/suggestions")
 public class SuggestionApi {
-
-    private SuggestedNameRepository suggestedNameRepository;
+    SuggestedNameService suggestedNameService;
 
     /**
      * Constructor for {@link SuggestionApi}
-     * @param suggestedNameRepository the {@link SuggestedNameRepository}
+     * @param suggestedNameService the {@link SuggestedNameService}
      */
     @Autowired
-    public SuggestionApi(SuggestedNameRepository suggestedNameRepository) {
-        this.suggestedNameRepository = suggestedNameRepository;
+    public SuggestionApi(SuggestedNameService suggestedNameService) {
+        this.suggestedNameService = suggestedNameService;
     }
 
     /**
@@ -48,7 +47,7 @@ public class SuggestionApi {
     @RequestMapping(value = "/meta", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Object>> getSuggestedMetaData() {
         Map<String, Object> metaData = new HashMap<>();
-        metaData.put("totalSuggestedNames", suggestedNameRepository.count());
+        metaData.put("totalSuggestedNames", suggestedNameService.countAll());
         return new ResponseEntity<>(metaData, HttpStatus.OK);
     }
 
@@ -62,12 +61,12 @@ public class SuggestionApi {
      * @return {@link org.springframework.http.ResponseEntity} with message if successful or not
      */
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, String>> suggestName(@Valid @RequestBody SuggestedName suggestedName,
+    public ResponseEntity<Map<String, String>> suggestName(@Valid @RequestBody NameEntry suggestedName,
                                                            BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new GenericApiCallException(formatErrorMessage(bindingResult), HttpStatus.BAD_REQUEST);
         }
-        suggestedNameRepository.save(suggestedName);
+        suggestedNameService.saveName(suggestedName);
         return new ResponseEntity<>(response("Suggested Name successfully added"), HttpStatus.CREATED);
     }
 
@@ -76,8 +75,8 @@ public class SuggestionApi {
      * @return a {@link ResponseEntity} with all suggested names
      */
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<SuggestedName> getAllSuggestedNames() {
-        return suggestedNameRepository.findAll();
+    public List<NameEntry> getAllSuggestedNames() {
+        return suggestedNameService.findAll();
     }
 
     /**
@@ -87,14 +86,9 @@ public class SuggestionApi {
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Map<String, String>> deleteSuggestedName(@PathVariable Long id) {
-        SuggestedName suggestedName = suggestedNameRepository.findOne(id);
-        if (suggestedName != null) {
-            suggestedNameRepository.delete(suggestedName);
-            return new ResponseEntity<>(response("Suggested name with " + id + " successfully deleted"),
-                                        HttpStatus.NO_CONTENT);
-        }
-
-        return new ResponseEntity<>(response("Suggested name with " + id + " not found as a suggested name"),
+        boolean deleted = suggestedNameService.delete(id);
+        return deleted ? new ResponseEntity<>(response("Suggested name with " + id + " successfully deleted"),
+                HttpStatus.NO_CONTENT) : new ResponseEntity<>(response("Suggested name with " + id + " was not found"),
                                     HttpStatus.BAD_REQUEST);
     }
 
@@ -105,8 +99,8 @@ public class SuggestionApi {
      */
     @RequestMapping(method = RequestMethod.DELETE)
     public ResponseEntity<Map<String, String>> deleteAllSuggestions() {
-        suggestedNameRepository.deleteAll();
-        return new ResponseEntity<>(response("All suggested names has been deleted"), HttpStatus.OK);
+        suggestedNameService.deleteAll();
+        return new ResponseEntity<>(response("All suggested names have been deleted"), HttpStatus.OK);
     }
 
 
