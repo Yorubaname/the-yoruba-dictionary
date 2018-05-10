@@ -4,10 +4,8 @@ import org.junit.*;
 import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.oruko.dictionary.model.DuplicateNameEntry;
 import org.oruko.dictionary.model.NameEntry;
 import org.oruko.dictionary.model.exception.RepositoryAccessError;
-import org.oruko.dictionary.model.repository.DuplicateNameEntryRepository;
 import org.oruko.dictionary.model.repository.NameEntryRepository;
 
 import java.util.Arrays;
@@ -22,9 +20,6 @@ public class NameEntryServiceTest {
 
     @Mock
     NameEntryRepository nameEntryRepository;
-
-    @Mock
-    DuplicateNameEntryRepository duplicateEntryRepository;
 
     // System under test
     @InjectMocks
@@ -48,10 +43,9 @@ public class NameEntryServiceTest {
 
         verify(nameEntryRepository).save(nameEntry);
         verify(nameEntryRepository).findByName(testName);
-        verifyZeroInteractions(duplicateEntryRepository);
     }
 
-    @Test
+    @Test(expected = RepositoryAccessError.class)
     public void testInsertTakingCareOfDuplicates_with_duplicates_and_name_not_in_variant() throws Exception {
         String testName = "Ajani";
         NameEntry nameEntryMock = mock(NameEntry.class);
@@ -61,7 +55,6 @@ public class NameEntryServiceTest {
         when(nameEntryRepository.findByName(testName)).thenReturn(nameEntry);
         nameEntryService.insertTakingCareOfDuplicates(nameEntry);
 
-        verify(duplicateEntryRepository).save(any(DuplicateNameEntry.class));
         verify(nameEntryRepository).findAll();
         verify(nameEntryRepository).findByName(testName);
         verifyZeroInteractions(nameEntryRepository);
@@ -107,9 +100,7 @@ public class NameEntryServiceTest {
     public void testDeleteAllAndDuplicates() throws Exception {
         nameEntryService.deleteAllAndDuplicates();
         verify(nameEntryRepository).deleteAll();
-        verify(duplicateEntryRepository).deleteAll();
         verifyNoMoreInteractions(nameEntryRepository);
-        verifyZeroInteractions(duplicateEntryRepository);
     }
 
     @Test
@@ -118,13 +109,5 @@ public class NameEntryServiceTest {
         when(nameEntryRepository.findByName("lagbaja")).thenReturn(testName);
         nameEntryService.deleteNameEntryAndDuplicates("lagbaja");
         verify(nameEntryRepository).delete(testName);
-        verify(duplicateEntryRepository).delete(isA(DuplicateNameEntry.class));
-    }
-
-    @Test
-    public void testDeleteInDuplicateEntry() throws Exception {
-        DuplicateNameEntry duplicateNameEntry = mock(DuplicateNameEntry.class);
-        nameEntryService.deleteInDuplicateEntry(duplicateNameEntry);
-        verify(duplicateEntryRepository).delete(duplicateNameEntry);
     }
 }

@@ -1,11 +1,9 @@
 package org.oruko.dictionary.web;
 
-import org.oruko.dictionary.model.DuplicateNameEntry;
 import org.oruko.dictionary.model.NameEntry;
 import org.oruko.dictionary.model.NameEntryFeedback;
 import org.oruko.dictionary.model.State;
 import org.oruko.dictionary.model.exception.RepositoryAccessError;
-import org.oruko.dictionary.model.repository.DuplicateNameEntryRepository;
 import org.oruko.dictionary.model.repository.NameEntryFeedbackRepository;
 import org.oruko.dictionary.model.repository.NameEntryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,24 +30,18 @@ public class NameEntryService {
     private Integer COUNT_SIZE = 50;
 
     private NameEntryRepository nameEntryRepository;
-    private DuplicateNameEntryRepository duplicateEntryRepository;
     private NameEntryFeedbackRepository nameEntryFeedbackRepository;
 
     /**
-     *
      * Public constructor for {@link NameEntryService} depends on instances of
-     * {@link NameEntryRepository} and {@link DuplicateNameEntryRepository}
      *
-     * @param nameEntryRepository      Repository responsible for persisting {@link NameEntry}
-     * @param duplicateEntryRepository Repository responsible for persisting {@link DuplicateNameEntry}
-     * @param nameEntryFeedbackRepository  Repository responsible for persisting {@link NameEntryFeedback}
+     * @param nameEntryRepository         Repository responsible for persisting {@link NameEntry}
+     * @param nameEntryFeedbackRepository Repository responsible for persisting {@link NameEntryFeedback}
      */
     @Autowired
     public NameEntryService(NameEntryRepository nameEntryRepository,
-                            DuplicateNameEntryRepository duplicateEntryRepository,
                             NameEntryFeedbackRepository nameEntryFeedbackRepository) {
         this.nameEntryRepository = nameEntryRepository;
-        this.duplicateEntryRepository = duplicateEntryRepository;
         this.nameEntryFeedbackRepository = nameEntryFeedbackRepository;
     }
 
@@ -62,15 +54,15 @@ public class NameEntryService {
     public void insertTakingCareOfDuplicates(NameEntry entry) {
         String name = entry.getName();
 
-        if (!namePresentAsVariant(name)) {
-            if (alreadyExists(name)) {
-                duplicateEntryRepository.save(new DuplicateNameEntry(entry));
-            } else {
-                nameEntryRepository.save(entry);
-            }
-        } else {
+        if (namePresentAsVariant(name)) {
             throw new RepositoryAccessError("Given name already exists as a variant entry");
         }
+
+        if (alreadyExists(name)) {
+            throw new RepositoryAccessError("Given name already exists in the index");
+        }
+
+        nameEntryRepository.save(entry);
     }
 
 
@@ -134,7 +126,7 @@ public class NameEntryService {
 
 
     /**
-     *     /**
+     * /**
      * Updates the properties with values from another {@link org.oruko.dictionary.model.NameEntry}
      *
      * @param oldEntry the entry to be updated
@@ -143,17 +135,8 @@ public class NameEntryService {
      */
     public NameEntry updateName(NameEntry oldEntry, NameEntry newEntry) {
         String oldEntryName = oldEntry.getName();
-
         // update main entry
         oldEntry.update(newEntry);
-
-        List<DuplicateNameEntry> oldDuplicateNames = duplicateEntryRepository.findByName(oldEntryName);
-
-        // update all duplicate entries
-        oldDuplicateNames.forEach(duplicateNameEntry -> {
-            duplicateNameEntry.setName(newEntry.getName());
-            duplicateEntryRepository.save(duplicateNameEntry);
-        });
         return nameEntryRepository.save(oldEntry);
     }
 
@@ -175,7 +158,6 @@ public class NameEntryService {
 
             if (i == BATCH_SIZE) {
                 nameEntryRepository.flush();
-                duplicateEntryRepository.flush();
                 i = 0;
             }
         }
@@ -207,6 +189,7 @@ public class NameEntryService {
 
     /**
      * Used to retrieve {@link NameEntry} of given state from the repository.
+     *
      * @param state the {@link State} of the entry
      * @return list of {@link NameEntry}. If state is not present, it returns an empty list
      */
@@ -216,9 +199,10 @@ public class NameEntryService {
 
     /**
      * Used to retrieve paginated result of {@link NameEntry} of given state from the repository
-     * @param state state the {@link State} of the entry
-     * @param pageParam specifies page number
-     * @param countParam  specifies the count of result
+     *
+     * @param state      state the {@link State} of the entry
+     * @param pageParam  specifies page number
+     * @param countParam specifies the count of result
      * @return a list of {@link org.oruko.dictionary.model.NameEntry}
      */
     public List<NameEntry> loadByState(Optional<State> state, Optional<Integer> pageParam, Optional<Integer> countParam) {
@@ -230,7 +214,7 @@ public class NameEntryService {
         final Integer page = pageParam.map(integer -> integer - 1).orElse(1);
         final Integer count = countParam.orElse(COUNT_SIZE);
 
-        return nameEntryRepository.findByState(state.get(), new PageRequest(page,count));
+        return nameEntryRepository.findByState(state.get(), new PageRequest(page, count));
 
     }
 
@@ -263,70 +247,46 @@ public class NameEntryService {
     }
 
     /**
-     * Used to retrieve the duplicate entries for the given name string
-     *
-     * @param name the name
-     * @return a list of {@link org.oruko.dictionary.model.DuplicateNameEntry}
-     */
-    public List<DuplicateNameEntry> loadNameDuplicates(String name) {
-        return duplicateEntryRepository.findByName(name);
-    }
-
-    /**
      * Duplicates all the name entry plus the duplicates
      */
     public void deleteAllAndDuplicates() {
         nameEntryRepository.deleteAll();
-        duplicateEntryRepository.deleteAll();
         //TODO introduce an event that all names have been deleted
     }
 
 
     /**
      * Duplicates a name entry plus its duplicates
+     *
      * @param name the name to delete
      */
     public void deleteNameEntryAndDuplicates(String name) {
         NameEntry nameEntry = nameEntryRepository.findByName(name);
         nameEntryRepository.delete(nameEntry);
-        duplicateEntryRepository.delete(new DuplicateNameEntry(nameEntry));
     }
 
     /**
      * Deletes multiple name entries and their duplicates
+     *
      * @param names a list of names to delete their entries and their duplicates
      */
     public void batchDeleteNameEntryAndDuplicates(List<String> names) {
         int i = 0;
-        for (String name: names ) {
+        for (String name : names) {
             this.deleteNameEntryAndDuplicates(name);
             i++;
 
             if (i == BATCH_SIZE) {
                 nameEntryRepository.flush();
-                duplicateEntryRepository.flush();
                 i = 0;
             }
         }
     }
 
-    /**
-     * Deletes a duplicated entry
-     *
-     * @param duplicateNameEntry the duplicated entry to delete
-     */
-    public void deleteInDuplicateEntry(DuplicateNameEntry duplicateNameEntry) {
-        duplicateEntryRepository.delete(duplicateNameEntry);
-    }
-
-
     // ==================================================== Helpers ====================================================
     private boolean alreadyExists(String name) {
         NameEntry entry = nameEntryRepository.findByName(name);
-        if (entry == null) {
-            return false;
-        }
-        return true;
+        return entry != null;
     }
 
     private boolean namePresentAsVariant(String name) {

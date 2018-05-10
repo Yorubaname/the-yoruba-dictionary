@@ -7,10 +7,8 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.oruko.dictionary.events.EventPubService;
 import org.oruko.dictionary.events.NameUploadedEvent;
-import org.oruko.dictionary.model.DuplicateNameEntry;
 import org.oruko.dictionary.model.GeoLocation;
 import org.oruko.dictionary.model.NameEntry;
-import org.oruko.dictionary.model.repository.DuplicateNameEntryRepository;
 import org.oruko.dictionary.model.repository.GeoLocationRepository;
 import org.oruko.dictionary.model.repository.NameEntryRepository;
 import org.slf4j.Logger;
@@ -36,7 +34,6 @@ public class ExcelImporter implements ImporterInterface {
 
     private NameEntryRepository nameEntryRepository;
     private GeoLocationRepository geoLocationRepository;
-    private DuplicateNameEntryRepository duplicateEntryRepository;
     private ImporterValidator validator;
     private EventPubService eventPubService;
     private ColumnOrder columnOrder;
@@ -56,12 +53,6 @@ public class ExcelImporter implements ImporterInterface {
     public void setGeoLocationRepository(
             GeoLocationRepository geoLocationRepository) {
         this.geoLocationRepository = geoLocationRepository;
-    }
-
-    @Autowired
-    public void setDuplicateEntryRepository(
-            DuplicateNameEntryRepository duplicateEntryRepository) {
-        this.duplicateEntryRepository = duplicateEntryRepository;
     }
 
     @Autowired
@@ -232,8 +223,7 @@ public class ExcelImporter implements ImporterInterface {
 
                 try {
                     if (alreadyExists(name)) {
-                        duplicateEntryRepository.save(new DuplicateNameEntry(nameEntry));
-                        status.incrementNumberOfNames();
+                        logger.info("Name {} already exists in the index. Skipping...", name);
                     } else {
                         nameEntryRepository.save(nameEntry);
                         status.incrementNumberOfNames();

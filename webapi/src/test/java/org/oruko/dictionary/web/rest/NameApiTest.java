@@ -12,7 +12,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.oruko.dictionary.events.EventPubService;
 import org.oruko.dictionary.importer.ImportStatus;
 import org.oruko.dictionary.importer.ImporterInterface;
-import org.oruko.dictionary.model.DuplicateNameEntry;
 import org.oruko.dictionary.model.NameEntry;
 import org.oruko.dictionary.model.State;
 import org.oruko.dictionary.web.NameEntryService;
@@ -181,18 +180,6 @@ public class NameApiTest extends AbstractApiTest {
         mockMvc.perform(get("/v1/names/test"))
                .andExpect(status().isBadRequest());
     }
-
-    @Test
-    public void test_get_all_a_name_that_has_duplicates() throws Exception {
-        DuplicateNameEntry duplicateNameEntry = new DuplicateNameEntry(testNameEntry);
-        when(entryService.loadName("test")).thenReturn(testNameEntry);
-        when(entryService.loadNameDuplicates("test")).thenReturn(Collections.singletonList(duplicateNameEntry));
-        mockMvc.perform(get("/v1/names/test?duplicates=true"))
-               .andExpect(jsonPath("$.duplicates", hasSize(1)))
-               .andExpect(jsonPath("$.mainEntry.name", is("test-entry")))
-               .andExpect(status().isOk());
-    }
-
 
     @Test
     public void test_add_name_via_post_request() throws Exception {

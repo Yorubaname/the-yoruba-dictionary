@@ -34,8 +34,7 @@ import java.util.List;
  * 12.Similar in other languages
  * 13.MEDIA
  * 14.TAGS:
- * Parent abstract class shared by {@link org.oruko.dictionary.model.DuplicateNameEntry} and
- * {@link org.oruko.dictionary.model.AbstractNameEntry}
+ * Parent abstract class shared by {@link org.oruko.dictionary.model.NameEntry}
  *
  * @author Dadepo Aderemi.
  */

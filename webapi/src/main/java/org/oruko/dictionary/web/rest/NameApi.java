@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.oruko.dictionary.events.EventPubService;
 import org.oruko.dictionary.events.NameDeletedEvent;
 import org.oruko.dictionary.importer.ImporterInterface;
-import org.oruko.dictionary.model.DuplicateNameEntry;
 import org.oruko.dictionary.model.GeoLocation;
 import org.oruko.dictionary.model.NameEntry;
 import org.oruko.dictionary.model.State;
@@ -186,14 +185,12 @@ public class NameApi {
 
     /**
      * Get the details of a name
-     * @param withDuplicates flag whether to return duplicate entries for the name being retrieved
      * @param name the name whose details needs to be retrieved
      * @return a name serialized to a jason string
      * @throws JsonProcessingException json processing exception
      */
     @RequestMapping(value = "/v1/names/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object getName(@RequestParam("duplicates") final Optional<Boolean> withDuplicates,
-                          @RequestParam("feedback") final Optional<Boolean> feedback,
+    public Object getName(@RequestParam("feedback") final Optional<Boolean> feedback,
                           @PathVariable String name) throws JsonProcessingException {
         NameEntry nameEntry = entryService.loadName(name);
         if (nameEntry == null) {
@@ -203,11 +200,6 @@ public class NameApi {
 
         HashMap<String, Object> nameEntries = new HashMap<>();
         nameEntries.put("mainEntry", nameEntry);
-
-        if (withDuplicates.isPresent() && (withDuplicates.get() == true)) {
-            List<DuplicateNameEntry> duplicates = entryService.loadNameDuplicates(name);
-            nameEntries.put("duplicates", duplicates);
-        }
 
         if (feedback.isPresent() && (feedback.get() == true)) {
             nameEntries.put("feedback", entryService.getFeedback(nameEntry));

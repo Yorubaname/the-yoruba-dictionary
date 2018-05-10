@@ -8,7 +8,6 @@ import org.junit.runner.*;
 import org.mockito.*;
 import org.mockito.runners.*;
 import org.oruko.dictionary.model.NameEntry;
-import org.oruko.dictionary.model.repository.DuplicateNameEntryRepository;
 import org.oruko.dictionary.model.repository.NameEntryRepository;
 import org.springframework.core.io.ClassPathResource;
 
@@ -24,12 +23,6 @@ public class ExcelImporterTest {
 
     @Mock
     NameEntryRepository repository;
-
-    @Mock
-    private NameEntryRepository nameEntryRepository;
-
-    @Mock
-    private DuplicateNameEntryRepository duplicateEntryRepository;
 
     @Mock
     private ImporterValidator validator;
