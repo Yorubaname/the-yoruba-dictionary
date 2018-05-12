@@ -3,7 +3,7 @@ package org.oruko.dictionary.util;
 import org.oruko.dictionary.model.GeoLocation;
 import org.oruko.dictionary.model.WordEntry;
 import org.oruko.dictionary.model.State;
-import org.oruko.dictionary.model.repository.Etymology;
+import org.oruko.dictionary.model.Etymology;
 import org.oruko.dictionary.model.repository.GeoLocationRepository;
 import org.oruko.dictionary.model.repository.WordEntryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -143,7 +143,6 @@ public class DataImporter {
          * Sample for search beahviour with variants and otherlanguages
          */
         WordEntry omowumi = new WordEntry("Omowumi");
-        omowumi.setVariants("omawunmi, omawumi");
         omowumi.setInOtherLanguages("omewami");
         omowumi.setMeaning("This is dummy meaning for Omowumi");
         omowumi.setGeoLocation(Arrays.asList(new GeoLocation("IBADAN", "NWY")));

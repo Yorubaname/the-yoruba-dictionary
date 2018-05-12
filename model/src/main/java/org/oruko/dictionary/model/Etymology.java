@@ -1,4 +1,4 @@
-package org.oruko.dictionary.model.repository;
+package org.oruko.dictionary.model;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,7 +11,6 @@ import javax.persistence.Embeddable;
  */
 @Embeddable
 public class Etymology {
-
 
     private String part;
     private String meaning;
