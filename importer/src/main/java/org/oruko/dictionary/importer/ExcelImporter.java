@@ -142,15 +142,6 @@ public class ExcelImporter implements ImporterInterface {
                     }
                 }
 
-                Cell variantCell = row.getCell(columnOrder.getColumnOrder().inverse().get("variant"));
-                if (variantCell != null) {
-                    variant = variantCell.toString();
-                    if (!variant.isEmpty()) {
-                        fieldIsEmpty = false;
-                        wordEntry.setVariants(variant.trim());
-                    }
-                }
-
                 Cell syllableCell = row.getCell(columnOrder.getColumnOrder().inverse().get("syllable"));
                 if (syllableCell != null) {
                     syllable = syllableCell.toString();

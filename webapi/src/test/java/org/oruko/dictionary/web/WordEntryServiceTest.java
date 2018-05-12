@@ -63,7 +63,6 @@ public class WordEntryServiceTest {
     public void testInsertTakingCareOfDuplicates_with_duplicates_and_name_already_in_variant() throws Exception {
         String testName = "Ajani";
         WordEntry wordEntryMock = mock(WordEntry.class);
-        when(wordEntryMock.getVariants()).thenReturn("Ajani");
         when(wordEntry.getName()).thenReturn(testName);
         when(wordEntryRepository.findAll()).thenReturn(Collections.singletonList(wordEntryMock));
         when(wordEntryRepository.findByName(testName)).thenReturn(wordEntry);

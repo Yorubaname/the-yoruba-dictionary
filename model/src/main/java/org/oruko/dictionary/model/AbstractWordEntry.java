@@ -4,36 +4,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import org.oruko.dictionary.model.repository.Etymology;
 
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * 1. Name
- * 2. Pronunciation
- * 3. IPA notation
- * 4. Syllabic breakdown:
- * 5. Meaning
- * 6. Extended Meaning
- * 7. Morphology: Omo-wun-mi (How is this different from 4 again?)
- * 8. GLOSS/Etymology
- * 9. Geo-location
- * 10.Variants (aka See Also/Alternative Spelling)
- * 11.Famous people
- * 12.Similar in other languages
- * 13.MEDIA
- * 14.TAGS:
  * Parent abstract class shared by {@link WordEntry}
  *
  * @author Dadepo Aderemi.
@@ -51,8 +27,8 @@ public abstract class AbstractWordEntry {
     @Column
     protected String ipaNotation;
 
-    @Column(length = 1000)
-    protected String variants;
+    @ElementCollection
+    protected List<WordVariant> variants;
 
     @Column
     protected String syllables;
@@ -87,6 +63,12 @@ public abstract class AbstractWordEntry {
 
     @ElementCollection
     protected List<Etymology> etymology;
+
+    @ElementCollection
+    protected List<MediaLink> mediaLinks;
+
+    @OneToMany(mappedBy = "owner")
+    protected List<Definition> definitions;
 
     @Column
     @Enumerated(EnumType.STRING)
@@ -198,11 +180,11 @@ public abstract class AbstractWordEntry {
         this.syllables = syllables;
     }
 
-    public String getVariants() {
+    public List<WordVariant> getVariants() {
         return variants;
     }
 
-    public void setVariants(String variants) {
+    public void setVariants(List<WordVariant> variants) {
         this.variants = variants;
     }
 
@@ -260,5 +242,21 @@ public abstract class AbstractWordEntry {
 
     public void setState(State state) {
         this.state = state;
+    }
+
+    public List<MediaLink> getMediaLinks() {
+        return mediaLinks;
+    }
+
+    public void setMediaLinks(List<MediaLink> mediaLinks) {
+        this.mediaLinks = mediaLinks;
+    }
+
+    public List<Definition> getDefinitions() {
+        return definitions;
+    }
+
+    public void setDefinitions(List<Definition> definitions) {
+        this.definitions = definitions;
     }
 }
