@@ -85,7 +85,7 @@ public class ElasticSearchServiceTest extends ElasticsearchIntegrationTest {
         flushAndRefresh();
 
         WordEntry jamo = searchService.getByName("jamo");
-        assertEquals("jamo", jamo.getName());
+        assertEquals("jamo", jamo.getWord());
     }
 
 }

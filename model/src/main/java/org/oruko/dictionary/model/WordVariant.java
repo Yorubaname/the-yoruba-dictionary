@@ -14,18 +14,18 @@ import javax.validation.constraints.NotNull;
 public class WordVariant {
     @NotNull
     @NotEmpty
-    private String name;
+    private String word;
 
     @ManyToOne
     @JoinColumn(name = "geo_location_id")
     private GeoLocation geoLocation;
 
-    public String getName() {
-        return name;
+    public String getWord() {
+        return word;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setWord(String word) {
+        this.word = word;
     }
 
     public GeoLocation getGeoLocation() {

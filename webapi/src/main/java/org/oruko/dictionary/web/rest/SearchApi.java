@@ -100,7 +100,7 @@ public class SearchApi {
         Set<WordEntry> foundNames = searchService.search(searchTerm);
         if (foundNames != null
                 && foundNames.size() == 1
-                && foundNames.stream().allMatch(result -> result.getName().equals(searchTerm))) {
+                && foundNames.stream().allMatch(result -> result.getWord().equals(searchTerm))) {
             eventPubService.publish(new NameSearchedEvent(searchTerm, request.getRemoteAddr()));
         }
         return foundNames;
@@ -184,9 +184,9 @@ public class SearchApi {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Object>> indexEntry(@Valid WordEntry entry) {
         Map<String, Object> response = new HashMap<>();
-        WordEntry wordEntry = nameEntryService.loadName(entry.getName());
+        WordEntry wordEntry = nameEntryService.loadName(entry.getWord());
         if (wordEntry == null) {
-            response.put("message", "Cannot index entry. Name " + entry.getName() + " not in the database");
+            response.put("message", "Cannot index entry. Name " + entry.getWord() + " not in the database");
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
 
@@ -198,7 +198,7 @@ public class SearchApi {
     }
 
     private void publishNameIsIndexed(WordEntry wordEntry) {
-        eventPubService.publish(new NameIndexedEvent(wordEntry.getName()));
+        eventPubService.publish(new NameIndexedEvent(wordEntry.getWord()));
     }
 
     /**

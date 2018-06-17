@@ -117,7 +117,7 @@ public class ExcelImporter implements ImporterInterface {
                     name = nameCell.toString();
                     if (!name.isEmpty()) {
                         fieldIsEmpty = false;
-                        wordEntry.setName(name.trim());
+                        wordEntry.setWord(name.trim());
                     } else {
                         // if name is empty then the row is nullified, so skip
                         continue;
@@ -246,8 +246,8 @@ public class ExcelImporter implements ImporterInterface {
         return wb.getSheetAt(sheetIndex);
     }
 
-    private boolean alreadyExists(String name) {
-        WordEntry entry = wordEntryRepository.findByName(name);
+    private boolean alreadyExists(String word) {
+        WordEntry entry = wordEntryRepository.findByWord(word);
         if (entry == null) {
             return false;
         }

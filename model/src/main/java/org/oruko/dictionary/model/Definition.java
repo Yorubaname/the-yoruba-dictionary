@@ -35,7 +35,7 @@ public class Definition {
     @ElementCollection
     private List<Example> examples;
 
-    @ManyToOne(fetch=FetchType.LAZY, targetEntity = WordEntry.class)
+    @ManyToOne(fetch=FetchType.EAGER, targetEntity = WordEntry.class)
     @JoinColumn(name="word_id")
     private AbstractWordEntry owner;
 
@@ -73,5 +73,9 @@ public class Definition {
 
     public long getId() {
         return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }

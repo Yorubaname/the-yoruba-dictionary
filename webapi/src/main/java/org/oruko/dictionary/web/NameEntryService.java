@@ -1,5 +1,6 @@
 package org.oruko.dictionary.web;
 
+import org.oruko.dictionary.model.Definition;
 import org.oruko.dictionary.model.WordEntry;
 import org.oruko.dictionary.model.WordEntryFeedback;
 import org.oruko.dictionary.model.State;
@@ -52,7 +53,7 @@ public class NameEntryService {
      * @param entry
      */
     public void insertTakingCareOfDuplicates(WordEntry entry) {
-        String name = entry.getName();
+        String name = entry.getWord();
 
         if (namePresentAsVariant(name)) {
             throw new RepositoryAccessError("Given name already exists as a variant entry");
@@ -93,7 +94,7 @@ public class NameEntryService {
      */
     public List<WordEntryFeedback> getFeedback(WordEntry entry) {
         final Sort sort = new Sort(Sort.Direction.DESC, "submittedAt");
-        return wordEntryFeedbackRepository.findByName(entry.getName(), sort);
+        return wordEntryFeedbackRepository.findByName(entry.getWord(), sort);
     }
 
     /**
@@ -134,9 +135,14 @@ public class NameEntryService {
      * @return the updated entry
      */
     public WordEntry updateName(WordEntry oldEntry, WordEntry newEntry) {
-        String oldEntryName = oldEntry.getName();
+        String oldEntryName = oldEntry.getWord();
         // update main entry
         oldEntry.update(newEntry);
+        oldEntry.getDefinitions().clear();
+        for (Definition definition : newEntry.getDefinitions()) {
+            definition.setId(0);
+            oldEntry.getDefinitions().add(definition);
+        }
         return wordEntryRepository.save(oldEntry);
     }
 
@@ -152,7 +158,7 @@ public class NameEntryService {
 
         int i = 0;
         for (WordEntry wordEntry : nameEntries) {
-            WordEntry oldEntry = this.loadName(wordEntry.getName());
+            WordEntry oldEntry = this.loadName(wordEntry.getWord());
             updated.add(this.updateName(oldEntry, wordEntry));
             i++;
 
@@ -239,11 +245,11 @@ public class NameEntryService {
     /**
      * Used to retrieve a {@link WordEntry} from the repository using its known name
      *
-     * @param name the name
+     * @param word the word
      * @return the WordEntry
      */
-    public WordEntry loadName(String name) {
-        return wordEntryRepository.findByName(name);
+    public WordEntry loadName(String word) {
+        return wordEntryRepository.findByWord(word);
     }
 
     /**
@@ -258,10 +264,10 @@ public class NameEntryService {
     /**
      * Duplicates a name entry plus its duplicates
      *
-     * @param name the name to delete
+     * @param word the word to delete
      */
-    public void deleteNameEntryAndDuplicates(String name) {
-        WordEntry wordEntry = wordEntryRepository.findByName(name);
+    public void deleteNameEntryAndDuplicates(String word) {
+        WordEntry wordEntry = wordEntryRepository.findByWord(word);
         wordEntryRepository.delete(wordEntry);
     }
 
@@ -284,8 +290,8 @@ public class NameEntryService {
     }
 
     // ==================================================== Helpers ====================================================
-    private boolean alreadyExists(String name) {
-        WordEntry entry = wordEntryRepository.findByName(name);
+    private boolean alreadyExists(String word) {
+        WordEntry entry = wordEntryRepository.findByWord(word);
         return entry != null;
     }
 

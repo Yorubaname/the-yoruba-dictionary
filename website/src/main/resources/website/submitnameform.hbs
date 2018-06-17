@@ -10,12 +10,12 @@
 
     <div class="form-group">
         <label class="required">{{message "lang.submitname.entermeaning"}}:</label>
-        <textarea required="true" name="suggestedMeaning" id="suggestedMeaning" class="form-control" rows="3"></textarea>
+        <textarea required="true" word="suggestedMeaning" id="suggestedMeaning" class="form-control" rows="3"></textarea>
     </div><br>
 
     <div class="form-group">
         <label class="optional">{{message "lang.submitname.enterlocation"}}:</label>
-        <select name="suggestedGeoLocation" id="suggestedGeoLocation" multiple="multiple">
+        <select word="suggestedGeoLocation" id="suggestedGeoLocation" multiple="multiple">
             {{#each geoLocations}}
                 <option value="{{this.region}}.{{this.place}}">{{this.place}}</option>
             {{/each}}
@@ -23,14 +23,14 @@
     </div><br>
 
     <!--Uncomment when TTS is implemented<div class="form-group">-->
-    <!--<label class="optonal">Please help us pronounce the new name:</label>-->
+    <!--<label class="optonal">Please help us pronounce the new word:</label>-->
     <!--<input type="file" id="pronunciation">-->
     <!--</div>-->
 
     <div class="form-group">
         <label class="required">{{message "lang.submitname.enteremail"}}:</label>
-        <input type="email" name="suggestedEmail" class="form-control" id="suggestedEmail" placeholder="Your email" required="true">
+        <input type="email" word="suggestedEmail" class="form-control" id="suggestedEmail" placeholder="Your email" required="true">
     </div>
 
-    <button type="submit" id="submit-name" class="btn btn-success">Submit New Name</button>
+    <button type="submit" id="submit-word" class="btn btn-success">Submit New Name</button>
 </form>

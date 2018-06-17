@@ -107,7 +107,7 @@ public class NameApi {
                 // You can only add a name to the system with its state NEW
                 throw new GenericApiCallException("Invalid State: A new entry needs to have the NEW state");
             }
-            entry.setName(entry.getName().trim().toLowerCase());
+            entry.setWord(entry.getWord().trim().toLowerCase());
             entryService.insertTakingCareOfDuplicates(entry);
             return new ResponseEntity<>(response("Name successfully added"), HttpStatus.CREATED);
         }
@@ -330,7 +330,7 @@ public class NameApi {
 
             //TODO refactor into a method
             List<WordEntry> notFoundNames = Stream.of(nameEntries)
-                                             .filter(entry -> entryService.loadName(entry.getName()) == null)
+                                             .filter(entry -> entryService.loadName(entry.getWord()) == null)
                                             .collect(Collectors.toList());
 
             List<WordEntry> foundNames = new ArrayList<>(Arrays.asList(nameEntries));
@@ -343,11 +343,11 @@ public class NameApi {
             entryService.bulkUpdateNames(foundNames);
 
             List<String> notFound = notFoundNames.stream()
-                                                 .map(WordEntry::getName)
+                                                 .map(WordEntry::getWord)
                                                  .collect(Collectors.toList());
 
             List<String> found = foundNames.stream()
-                                             .map(WordEntry::getName)
+                                             .map(WordEntry::getWord)
                                              .collect(Collectors.toList());
 
             String responseMessage = String.join(",", found) + " updated. ";

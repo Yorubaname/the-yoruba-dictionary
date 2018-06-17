@@ -50,17 +50,17 @@ public class ExcelImporterTest {
         verify(repository, times(3)).save(messageCaptor.capture());
 
         // Assert first row
-        assertThat(allValues.get(0).getName(), IsEqualIgnoringCase.equalToIgnoringCase("kola"));
+        assertThat(allValues.get(0).getWord(), IsEqualIgnoringCase.equalToIgnoringCase("kola"));
         assertThat(allValues.get(0).getTonalMark(), is("DD".toCharArray()));
         assertThat(allValues.get(0).getMeaning(), IsEqualIgnoringCase.equalToIgnoringCase("kola means"));
 
         // Assert second row
-        assertThat(allValues.get(1).getName(), IsEqualIgnoringCase.equalToIgnoringCase("koko"));
+        assertThat(allValues.get(1).getWord(), IsEqualIgnoringCase.equalToIgnoringCase("koko"));
         assertThat(allValues.get(1).getTonalMark(), is("RR".toCharArray()));
         assertThat(allValues.get(1).getMeaning(), IsEqualIgnoringCase.equalToIgnoringCase("koko means"));
 
         // Assert second row
-        assertThat(allValues.get(2).getName(), IsEqualIgnoringCase.equalToIgnoringCase("dadepo"));
+        assertThat(allValues.get(2).getWord(), IsEqualIgnoringCase.equalToIgnoringCase("dadepo"));
         assertThat(allValues.get(2).getTonalMark(), is("MM".toCharArray()));
         assertThat(allValues.get(2).getMeaning(), IsEqualIgnoringCase.equalToIgnoringCase("dadepo means"));
 

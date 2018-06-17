@@ -17,7 +17,31 @@ public class Example {
     private String content;
 
     @Column(length = 5000)
-    public String englishTranslation;
+    private String englishTranslation;
 
     private ExampleType type;
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getEnglishTranslation() {
+        return englishTranslation;
+    }
+
+    public void setEnglishTranslation(String englishTranslation) {
+        this.englishTranslation = englishTranslation;
+    }
+
+    public ExampleType getType() {
+        return type;
+    }
+
+    public void setType(ExampleType type) {
+        this.type = type;
+    }
 }

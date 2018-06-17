@@ -20,15 +20,15 @@ public class WordEntry extends AbstractWordEntry implements Comparable<WordEntry
     @Column(unique = true)
     @NotNull
     @NotEmpty
-    private String name;
+    private String word;
 
     public WordEntry() {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = this.createdAt;
     }
 
-    public WordEntry(String name) {
-        this.name = name;
+    public WordEntry(String word) {
+        this.word = word;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = this.createdAt;
     }
@@ -43,29 +43,29 @@ public class WordEntry extends AbstractWordEntry implements Comparable<WordEntry
     }
 
     /**
-     * Get the name
+     * Get the word
      *
-     * @return returns the name
+     * @return returns the word
      */
-    public String getName() {
-        return name;
+    public String getWord() {
+        return word;
     }
 
     /**
-     * Set the name
+     * Set the word
      *
-     * @param name the name
+     * @param word the word
      */
-    public void setName(String name) {
-        this.name = name;
+    public void setWord(String word) {
+        this.word = word;
     }
 
     /**
      * Updates properties using another instance of {@link WordEntry}
-     * The state of the update name entry will be changed to modified
+     * The state of the update word entry will be changed to modified
      */
     public void update(WordEntry wordEntry) {
-        BeanUtils.copyProperties(wordEntry, this);
+        BeanUtils.copyProperties(wordEntry, this, "definitions");
         // TODO revisit how to get this done on the entity level: how to get @Temporary working with LocalDateTime
         if (State.PUBLISHED.equals(this.getState())) {
             this.setState(State.MODIFIED);
@@ -82,6 +82,6 @@ public class WordEntry extends AbstractWordEntry implements Comparable<WordEntry
      */
     @Override
     public int compareTo(WordEntry nameToCompare) {
-        return this.name.compareTo(nameToCompare.getName());
+        return this.word.compareTo(nameToCompare.getWord());
     }
 }

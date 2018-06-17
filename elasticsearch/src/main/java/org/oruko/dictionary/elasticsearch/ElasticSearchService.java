@@ -259,7 +259,7 @@ public class ElasticSearchService implements SearchService {
 
         try {
             String entryAsJson = mapper.writeValueAsString(entry);
-            String name = entry.getName();
+            String name = entry.getWord();
             client.prepareIndex(esConfig.getIndexName(), esConfig.getDocumentType(), name.toLowerCase())
                     .setSource(entryAsJson)
                     .execute()
@@ -289,7 +289,7 @@ public class ElasticSearchService implements SearchService {
         entries.forEach(entry -> {
             try {
                 String entryAsJson = mapper.writeValueAsString(entry);
-                String name = entry.getName();
+                String name = entry.getWord();
                 IndexRequestBuilder request = client.prepareIndex(esConfig.getIndexName(),
                         esConfig.getDocumentType(),
                         name.toLowerCase())
@@ -306,7 +306,7 @@ public class ElasticSearchService implements SearchService {
         }
 
         return new IndexOperationStatus(true, "Bulk indexing successfully. Indexed the following names "
-                + String.join(",", entries.stream().map(entry -> entry.getName()).collect(Collectors.toList())));
+                + String.join(",", entries.stream().map(entry -> entry.getWord()).collect(Collectors.toList())));
     }
 
     /**

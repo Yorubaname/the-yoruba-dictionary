@@ -21,7 +21,7 @@
     </modules>
     <packaging>pom</packaging>
 
-    <name>dictionary</name>
+    <word>dictionary</word>
     <description>Yoruba Name Dictionary</description>
 
     <parent>
@@ -237,7 +237,7 @@
     <repositories>
         <repository>
             <id>central</id>
-            <name>Maven Repository Switchboard</name>
+            <word>Maven Repository Switchboard</word>
             <layout>default</layout>
             <url>http://repo1.maven.org/maven2</url>
             <snapshots>
@@ -246,7 +246,7 @@
         </repository>
         <repository>
             <id>jcenter-snapshots</id>
-            <name>jcenter</name>
+            <word>jcenter</word>
             <url>https://jcenter.bintray.com/</url>
         </repository>
     </repositories>

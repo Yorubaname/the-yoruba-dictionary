@@ -36,12 +36,12 @@ public class WordEntryServiceTest {
     @Test
     public void testInsertTakingCareOfDuplicates_no_duplicates() throws Exception {
         String testName = "Ajani";
-        when(wordEntry.getName()).thenReturn(testName);
-        when(wordEntryRepository.findByName(testName)).thenReturn(null);
+        when(wordEntry.getWord()).thenReturn(testName);
+        when(wordEntryRepository.findByWord(testName)).thenReturn(null);
         nameEntryService.insertTakingCareOfDuplicates(wordEntry);
 
         verify(wordEntryRepository).save(wordEntry);
-        verify(wordEntryRepository).findByName(testName);
+        verify(wordEntryRepository).findByWord(testName);
     }
 
     @Test(expected = RepositoryAccessError.class)
@@ -49,13 +49,13 @@ public class WordEntryServiceTest {
         String testName = "Ajani";
         WordEntry wordEntryMock = mock(WordEntry.class);
         when(wordEntryMock.getVariants()).thenReturn(null);
-        when(wordEntry.getName()).thenReturn(testName);
+        when(wordEntry.getWord()).thenReturn(testName);
         when(wordEntryRepository.findAll()).thenReturn(Collections.singletonList(wordEntryMock));
-        when(wordEntryRepository.findByName(testName)).thenReturn(wordEntry);
+        when(wordEntryRepository.findByWord(testName)).thenReturn(wordEntry);
         nameEntryService.insertTakingCareOfDuplicates(wordEntry);
 
         verify(wordEntryRepository).findAll();
-        verify(wordEntryRepository).findByName(testName);
+        verify(wordEntryRepository).findByWord(testName);
         verifyZeroInteractions(wordEntryRepository);
     }
 
@@ -63,9 +63,9 @@ public class WordEntryServiceTest {
     public void testInsertTakingCareOfDuplicates_with_duplicates_and_name_already_in_variant() throws Exception {
         String testName = "Ajani";
         WordEntry wordEntryMock = mock(WordEntry.class);
-        when(wordEntry.getName()).thenReturn(testName);
+        when(wordEntry.getWord()).thenReturn(testName);
         when(wordEntryRepository.findAll()).thenReturn(Collections.singletonList(wordEntryMock));
-        when(wordEntryRepository.findByName(testName)).thenReturn(wordEntry);
+        when(wordEntryRepository.findByWord(testName)).thenReturn(wordEntry);
         nameEntryService.insertTakingCareOfDuplicates(wordEntry);
 
         verifyZeroInteractions(wordEntryRepository);
@@ -82,8 +82,8 @@ public class WordEntryServiceTest {
     @Test
     public void testUpdate() throws Exception {
         WordEntry oldEntry = mock(WordEntry.class);
-        when(oldEntry.getName()).thenReturn("old name");
-        when(wordEntryRepository.findByName(anyString())).thenReturn(oldEntry);
+        when(oldEntry.getWord()).thenReturn("old name");
+        when(wordEntryRepository.findByWord(anyString())).thenReturn(oldEntry);
         nameEntryService.updateName(oldEntry, wordEntry);
         verify(oldEntry).update(wordEntry);
     }
@@ -104,7 +104,7 @@ public class WordEntryServiceTest {
     @Test
     public void testdeleteNameEntryAndDuplicates() {
         WordEntry testName = mock(WordEntry.class);
-        when(wordEntryRepository.findByName("lagbaja")).thenReturn(testName);
+        when(wordEntryRepository.findByWord("lagbaja")).thenReturn(testName);
         nameEntryService.deleteNameEntryAndDuplicates("lagbaja");
         verify(wordEntryRepository).delete(testName);
     }

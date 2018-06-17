@@ -25,6 +25,15 @@ public abstract class AbstractWordEntry {
     protected String pronunciation;
 
     @Column
+    protected String partOfSpeech;
+
+    @Column
+    protected String style;
+
+    @Column
+    protected  String grammaticalFeature;
+
+    @Column
     protected String ipaNotation;
 
     @ElementCollection
@@ -67,7 +76,8 @@ public abstract class AbstractWordEntry {
     @ElementCollection
     protected List<MediaLink> mediaLinks;
 
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "word_id")
     protected List<Definition> definitions;
 
     @Column
@@ -258,5 +268,29 @@ public abstract class AbstractWordEntry {
 
     public void setDefinitions(List<Definition> definitions) {
         this.definitions = definitions;
+    }
+
+    public String getPartOfSpeech() {
+        return partOfSpeech;
+    }
+
+    public void setPartOfSpeech(String partOfSpeech) {
+        this.partOfSpeech = partOfSpeech;
+    }
+
+    public String getStyle() {
+        return style;
+    }
+
+    public void setStyle(String style) {
+        this.style = style;
+    }
+
+    public String getGrammaticalFeature() {
+        return grammaticalFeature;
+    }
+
+    public void setGrammaticalFeature(String grammaticalFeature) {
+        this.grammaticalFeature = grammaticalFeature;
     }
 }

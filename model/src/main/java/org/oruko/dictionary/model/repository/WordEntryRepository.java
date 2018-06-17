@@ -16,14 +16,14 @@ import java.util.Set;
 public interface WordEntryRepository extends JpaRepository<WordEntry, Long> {
 
     /**
-     * For finding a {@link WordEntry} given the name
-     * @param name the name
+     * For finding a {@link WordEntry} given the word
+     * @param word the word
      * @return {@link WordEntry}
      */
-    WordEntry findByName(String name);
+    WordEntry findByWord(String word);
 
     /**
-     * For retrieving name entries by state. Supports pagenation
+     * For retrieving word entries by state. Supports pagination
      *
      * @param state the state of {@link WordEntry} to load
      * @param pageable the {@link Pageable} to represent pagination intent
@@ -31,20 +31,15 @@ public interface WordEntryRepository extends JpaRepository<WordEntry, Long> {
      */
     List<WordEntry> findByState(State state, Pageable pageable);
 
-    /**
-     * For retrieving all name entries by state
-     * @param state the state of {@link WordEntry} to load
-     * @return list of {@link WordEntry}
-     */
     List<WordEntry> findByState(State state);
-    Set<WordEntry> findByNameStartingWithAndState(String alphabet, State state);
-    Set<WordEntry> findNameEntryByNameContainingAndState(String name, State state);
-    Set<WordEntry> findNameEntryByVariantsContainingAndState(String name, State state);
-    Set<WordEntry> findNameEntryByMeaningContainingAndState(String name, State state);
-    WordEntry findByNameAndState(String name, State state);
+    Set<WordEntry> findByWordStartingWithAndState(String alphabet, State state);
+    Set<WordEntry> findWordEntryByWordContainingAndState(String word, State state);
+    Set<WordEntry> findWordEntryByVariantsContainingAndState(String word, State state);
+    Set<WordEntry> findWordEntryByMeaningContainingAndState(String word, State state);
+    WordEntry findByWordAndState(String word, State state);
 
 
     Integer countByState(State state);
-    Boolean deleteByNameAndState(String name, State state);
+    Boolean deleteByWordAndState(String word, State state);
     Boolean deleteByState(State state);
 }

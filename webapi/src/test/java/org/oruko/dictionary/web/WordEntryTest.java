@@ -32,7 +32,7 @@ public class WordEntryTest {
         // System under test
         wordEntry.update(newEntry);
 
-        assertEquals("Ajani", wordEntry.getName());
+        assertEquals("Ajani", wordEntry.getWord());
         assertEquals(Collections.singletonList(geoLocation), wordEntry.getGeoLocation());
         assertEquals("morphology1", wordEntry.getMorphology());
         assertEquals("submittedBy1", wordEntry.getSubmittedBy());

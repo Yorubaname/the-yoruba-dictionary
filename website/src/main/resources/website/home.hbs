@@ -27,7 +27,7 @@
                     <li><h5>{{message "lang.latest-search"}}</h5></li>
                     <hr/>
                     {{#each latestSearches}}
-                        <li class="recent_entry"><a class="name" href="/entries/{{this}}">{{this}}</a></li>
+                        <li class="recent_entry"><a class="word" href="/entries/{{this}}">{{this}}</a></li>
                     {{/each}}
                 </ul>
             </div>
@@ -36,7 +36,7 @@
                     <li><h5>{{message "lang.latest-add"}}</h5></li>
                     <hr/>
                     {{#each latestAdditions}}
-                        <li class="recent_entry"><a class="name" href="/entries/{{this}}">{{this}}</a></li>
+                        <li class="recent_entry"><a class="word" href="/entries/{{this}}">{{this}}</a></li>
                     {{/each}}
                 </ul>
             </div>
@@ -45,7 +45,7 @@
                     <li><h5>{{message "lang.most-popular"}}</h5></li>
                     <hr/>
                     {{#each mostPopular}}
-                        <li class="recent_entry"><a class="name" href="/entries/{{this}}">{{this}}</a></li>
+                        <li class="recent_entry"><a class="word" href="/entries/{{this}}">{{this}}</a></li>
                     {{/each}}
                 </ul>
             </div>
@@ -53,7 +53,7 @@
 
 
         <div class="text-center">
-            <h4>{{message "lang.name-listed-by-alphabets"}}:</h4>
+            <h4>{{message "lang.word-listed-by-alphabets"}}:</h4>
             {{> alphabets}}
         </div>
 
@@ -80,7 +80,7 @@
                      data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="false"
                      data-show-posts="false">
                     <div class="fb-xfbml-parse-ignore">
-                        <blockquote cite="https://www.facebook.com/YorubaNames"><a href="https://www.facebook.com/YorubaNames">{{message "lang.yoruba-name-dictionary"}}</a></blockquote>
+                        <blockquote cite="https://www.facebook.com/YorubaNames"><a href="https://www.facebook.com/YorubaNames">{{message "lang.yoruba-word-dictionary"}}</a></blockquote>
                     </div>
                 </div>
             </div>
@@ -88,11 +88,11 @@
                 <form method="post" class="subscribe"
                       action="//YorubaName.us10.list-manage.com/subscribe/post?u=447ae670439b332a80e50107c&amp;id=0cfdd9d988"
                       target="_blank">
-                    <h4>{{message "lang.yoruba-name-newsletter"}}</h4>
+                    <h4>{{message "lang.yoruba-word-newsletter"}}</h4>
                     <p>{{message "lang.follow-update"}}</p>
-                    <input type="hidden" name="b_447ae670439b332a80e50107c_0cfdd9d988" tabindex="-1" value="">
+                    <input type="hidden" word="b_447ae670439b332a80e50107c_0cfdd9d988" tabindex="-1" value="">
                     <div class="form-group">
-                        <input type="email" name="EMAIL" placeholder="{{message "lang.enter-your-email"}}" class="form-control" required="required">
+                        <input type="email" word="EMAIL" placeholder="{{message "lang.enter-your-email"}}" class="form-control" required="required">
                         <button class="btn btn-success"><i class="fa fa-send"></i></button>
                     </div>
                 </form>

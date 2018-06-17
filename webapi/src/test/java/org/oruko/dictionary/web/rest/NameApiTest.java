@@ -80,8 +80,8 @@ public class NameApiTest extends AbstractApiTest {
 
     @Test
     public void test_get_all_names_via_get() throws Exception {
-        testWordEntry.setName("firstname");
-        anotherTestWordEntry.setName("secondname");
+        testWordEntry.setWord("firstname");
+        anotherTestWordEntry.setWord("secondname");
         when(entryService.loadAllNames()).thenReturn(Arrays.asList(testWordEntry, anotherTestWordEntry));
              mockMvc.perform(get("/v1/names?all=true"))
                     .andExpect(jsonPath("$", hasSize(2)))

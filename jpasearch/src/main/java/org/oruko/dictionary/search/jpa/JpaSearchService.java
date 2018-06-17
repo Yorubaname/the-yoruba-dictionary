@@ -25,7 +25,7 @@ public class JpaSearchService implements SearchService {
 
     @Override
     public WordEntry getByName(String nameQuery) {
-        return wordEntryRepository.findByNameAndState(nameQuery, State.PUBLISHED);
+        return wordEntryRepository.findByWordAndState(nameQuery, State.PUBLISHED);
     }
 
     @Override
@@ -44,25 +44,25 @@ public class JpaSearchService implements SearchService {
          * 6. Do a full text search against meaning. Irrespective of outcome, proceed to 7
          * 7. Do a full text search against extendedMeaning
          */
-        WordEntry exactFound = wordEntryRepository.findByNameAndState(searchTerm, State.PUBLISHED);
+        WordEntry exactFound = wordEntryRepository.findByWordAndState(searchTerm, State.PUBLISHED);
         if (exactFound != null) {
             return Collections.singleton(exactFound);
         }
-        Set<WordEntry> startingWithSearchTerm = wordEntryRepository.findByNameStartingWithAndState(searchTerm, State.PUBLISHED);
+        Set<WordEntry> startingWithSearchTerm = wordEntryRepository.findByWordStartingWithAndState(searchTerm, State.PUBLISHED);
         if (startingWithSearchTerm != null && startingWithSearchTerm.size() > 0) {
             return startingWithSearchTerm;
         }
 
-        possibleFound.addAll(wordEntryRepository.findNameEntryByNameContainingAndState(searchTerm, State.PUBLISHED));
-        possibleFound.addAll(wordEntryRepository.findNameEntryByVariantsContainingAndState(searchTerm, State.PUBLISHED));
-        possibleFound.addAll(wordEntryRepository.findNameEntryByMeaningContainingAndState(searchTerm, State.PUBLISHED));
+        possibleFound.addAll(wordEntryRepository.findWordEntryByWordContainingAndState(searchTerm, State.PUBLISHED));
+        possibleFound.addAll(wordEntryRepository.findWordEntryByVariantsContainingAndState(searchTerm, State.PUBLISHED));
+        possibleFound.addAll(wordEntryRepository.findWordEntryByMeaningContainingAndState(searchTerm, State.PUBLISHED));
 
         return possibleFound;
     }
 
     @Override
     public Set<WordEntry> listByAlphabet(String alphabetQuery) {
-        return wordEntryRepository.findByNameStartingWithAndState(alphabetQuery, State.PUBLISHED);
+        return wordEntryRepository.findByWordStartingWithAndState(alphabetQuery, State.PUBLISHED);
     }
 
     @Override
@@ -72,12 +72,12 @@ public class JpaSearchService implements SearchService {
         // TODO calling the db in a for loop might not be a terribly good idea. Revist
         for (int i=2; i<query.length() + 1; i++) {
             String searchTerm = query.substring(0, i);
-            names.addAll(wordEntryRepository.findByNameStartingWithAndState(searchTerm, State.PUBLISHED));
+            names.addAll(wordEntryRepository.findByWordStartingWithAndState(searchTerm, State.PUBLISHED));
         }
-        Set<WordEntry> otherParts = wordEntryRepository.findNameEntryByNameContainingAndState(query, State.PUBLISHED);
+        Set<WordEntry> otherParts = wordEntryRepository.findWordEntryByWordContainingAndState(query, State.PUBLISHED);
         names.addAll(otherParts);
         names.forEach(name -> {
-            nameToReturn.add(name.getName());
+            nameToReturn.add(name.getWord());
         });
         return nameToReturn;
     }
@@ -94,11 +94,11 @@ public class JpaSearchService implements SearchService {
         }
         wordEntryRepository.save(entries);
         return new IndexOperationStatus(true, "Bulk indexing successfully. Indexed the following names "
-                + String.join(",", entries.stream().map(WordEntry::getName).collect(Collectors.toList())));
+                + String.join(",", entries.stream().map(WordEntry::getWord).collect(Collectors.toList())));
     }
 
     public IndexOperationStatus removeFromIndex(String name) {
-        WordEntry foundName = wordEntryRepository.findByNameAndState(name, State.PUBLISHED);
+        WordEntry foundName = wordEntryRepository.findByWordAndState(name, State.PUBLISHED);
         if (foundName == null) {
             return new IndexOperationStatus(false, "Published Name not found");
         }
@@ -112,7 +112,7 @@ public class JpaSearchService implements SearchService {
         if (names.size() == 0) {
             return new IndexOperationStatus(false, "Cannot index an empty list");
         }
-        List<WordEntry> nameEntries = names.stream().map(name -> wordEntryRepository.findByNameAndState(name, State.PUBLISHED))
+        List<WordEntry> nameEntries = names.stream().map(name -> wordEntryRepository.findByWordAndState(name, State.PUBLISHED))
                 .collect(Collectors.toList());
 
 
@@ -136,6 +136,6 @@ public class JpaSearchService implements SearchService {
         wordEntryRepository.save(namesUnpublished);
         return new IndexOperationStatus(true, "Successfully. "
                 + "Removed the following names from search index "
-                + String.join(",", nameEntries.stream().map(WordEntry::getName).collect(Collectors.toList())));
+                + String.join(",", nameEntries.stream().map(WordEntry::getWord).collect(Collectors.toList())));
     }
 }
