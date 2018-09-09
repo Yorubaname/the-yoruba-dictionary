@@ -3,14 +3,15 @@ package org.oruko.dictionary.events;
 import java.time.LocalDateTime;
 
 /**
- * Event when a name has been indexed
- * Created by Dadepo Aderemi.
+ * Events published when a name is deleted from the system
+ *
+ * @author Dadepo Aderemi.
  */
-public class NameIndexedEvent {
+public class WordDeletedEvent {
     private final String name;
     private final LocalDateTime timestamp;
 
-    public NameIndexedEvent(String name) {
+    public WordDeletedEvent(String name) {
         this.name = name;
         this.timestamp = LocalDateTime.now();
     }

@@ -2,14 +2,14 @@ package org.oruko.dictionary.web.event;
 
 import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
-import org.oruko.dictionary.events.NameDeletedEvent;
+import org.oruko.dictionary.events.WordDeletedEvent;
 import org.oruko.dictionary.search.api.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 /**
- * Handler for {@link NameDeletedEvent}
+ * Handler for {@link WordDeletedEvent}
  * @author Dadepo Aderemi.
  */
 @Component
@@ -26,7 +26,7 @@ public class NameDeletedEventHandler {
 
     @Subscribe
     @AllowConcurrentEvents
-    public void listen(NameDeletedEvent event) {
+    public void listen(WordDeletedEvent event) {
         // Handle when a name is deleted
         try {
             nameSearchService.removeFromIndex(event.getName());

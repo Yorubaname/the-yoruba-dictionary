@@ -2,7 +2,7 @@ package org.oruko.dictionary.web.rest;
 
 import org.oruko.dictionary.model.WordEntryFeedback;
 import org.oruko.dictionary.model.repository.WordEntryFeedbackRepository;
-import org.oruko.dictionary.web.NameEntryService;
+import org.oruko.dictionary.web.WordEntryService;
 import org.oruko.dictionary.web.exception.GenericApiCallException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -29,12 +29,12 @@ import java.util.Map;
 @RequestMapping("/v1/feedbacks")
 public class FeedbackApi {
 
-    private NameEntryService entryService;
+    private WordEntryService entryService;
     private WordEntryFeedbackRepository feedbackRepository;
 
 
     @Autowired
-    public FeedbackApi(NameEntryService entryService,
+    public FeedbackApi(WordEntryService entryService,
                        WordEntryFeedbackRepository feedbackRepository) {
         this.entryService = entryService;
         this.feedbackRepository = feedbackRepository;
@@ -60,49 +60,49 @@ public class FeedbackApi {
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, String>> addFeedback(@RequestBody Map<String, String> postFeedback) {
         String feedback = postFeedback.get("feedback");
-        String name = postFeedback.get("name");
+        String word = postFeedback.get("word");
 
         if (feedback.isEmpty()) {
             throw new GenericApiCallException("Cannot give an empty feedback");
         }
 
-        if (entryService.loadName(name) == null) {
-            throw new GenericApiCallException(name + " does not exist. Cannot add feedback");
+        if (entryService.loadWord(word) == null) {
+            throw new GenericApiCallException(word + " does not exist. Cannot add feedback");
         }
 
-        feedbackRepository.save(new WordEntryFeedback(name, feedback));
+        feedbackRepository.save(new WordEntryFeedback(word, feedback));
         return new ResponseEntity<>(response("Feedback added"), HttpStatus.CREATED);
     }
 
     /**
-     * Endpoint for getting all feedback within the system for a given name
+     * Endpoint for getting all feedback within the system for a given word
      *
-     * @param name the name to get all feedback for
+     * @param word the word to get all feedback for
      *
-     * @return a list of all feedback for given name
+     * @return a list of all feedback for given word
      */
-    @RequestMapping(params = "name", method = RequestMethod.GET)
-    public ResponseEntity<List<WordEntryFeedback>> getFeedbacksForName(@RequestParam("name") String name) {
+    @RequestMapping(params = "word", method = RequestMethod.GET)
+    public ResponseEntity<List<WordEntryFeedback>> getFeedbacksForWord(@RequestParam("word") String word) {
         final Sort sort = new Sort(Sort.Direction.DESC, "submittedAt");
-        return new ResponseEntity<>(feedbackRepository.findByName(name, sort), HttpStatus.OK);
+        return new ResponseEntity<>(feedbackRepository.findByWord(word, sort), HttpStatus.OK);
     }
 
     /**
-     * Endpoint for deleting all feedback for a name
+     * Endpoint for deleting all feedback for a word
      *
      * @return {@link org.springframework.http.ResponseEntity} with string containing outcome of action
      */
-    @RequestMapping(params = "name", method = RequestMethod.DELETE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, String>> deleteAllFeedbackForName(@RequestParam("name") String name) {
+    @RequestMapping(params = "word", method = RequestMethod.DELETE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, String>> deleteAllFeedbackForWord(@RequestParam("word") String word) {
 
-        if (entryService.loadName(name) == null) {
-            throw new GenericApiCallException(name + " does not exist. Cannot delete all feedback");
+        if (entryService.loadWord(word) == null) {
+            throw new GenericApiCallException(word + " does not exist. Cannot delete all feedback");
         }
         final Sort sort = new Sort(Sort.Direction.DESC, "submittedAt");
-        List<WordEntryFeedback> feedbacks = feedbackRepository.findByName(name, sort);
+        List<WordEntryFeedback> feedbacks = feedbackRepository.findByWord(word, sort);
         feedbacks.stream().forEach(feedback -> feedbackRepository.delete(feedback));
 
-        return new ResponseEntity<>(response("All Feedback messages deleted for "+ name), HttpStatus.OK);
+        return new ResponseEntity<>(response("All Feedback messages deleted for "+ word), HttpStatus.OK);
     }
 
     /**
@@ -133,7 +133,7 @@ public class FeedbackApi {
     }
 
     /**
-     *  Endpoint for deleting a feedback by Id, for a name
+     *  Endpoint for deleting a feedback by Id, for a word
      *
      * @param feedbackId the feedback to delete
      * @return the status of the delete operation

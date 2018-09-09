@@ -2,15 +2,15 @@ package org.oruko.dictionary.web.rest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.oruko.dictionary.events.EventPubService;
-import org.oruko.dictionary.events.NameDeletedEvent;
+import org.oruko.dictionary.events.WordDeletedEvent;
 import org.oruko.dictionary.importer.ImporterInterface;
 import org.oruko.dictionary.model.GeoLocation;
 import org.oruko.dictionary.model.WordEntry;
 import org.oruko.dictionary.model.State;
 import org.oruko.dictionary.model.repository.GeoLocationRepository;
 import org.oruko.dictionary.web.GeoLocationTypeConverter;
-import org.oruko.dictionary.web.NameEntryService;
-import org.oruko.dictionary.web.event.NameUploadStatus;
+import org.oruko.dictionary.web.WordEntryService;
+import org.oruko.dictionary.web.event.WordUploadStatus;
 import org.oruko.dictionary.web.exception.GenericApiCallException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,37 +49,37 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * End point for inserting and retrieving NameDto Entries
- * This would be the end point the clients would interact with to get names in and out of the dictionary
+ * End point for inserting and retrieving WordDto Entries
+ * This would be the end point the clients would interact with to get words in and out of the dictionary
  * Created by dadepo on 2/12/15.
  */
 @RestController
-public class NameApi {
+public class WordApi {
 
-    private Logger logger = LoggerFactory.getLogger(NameApi.class);
+    private Logger logger = LoggerFactory.getLogger(WordApi.class);
 
     private ImporterInterface importerInterface;
-    private NameEntryService entryService;
+    private WordEntryService entryService;
     private GeoLocationRepository geoLocationRepository;
-    private NameUploadStatus nameUploadStatus;
+    private WordUploadStatus wordUploadStatus;
     private EventPubService eventPubService;
 
 
     /**
-     * Public constructor for {@link NameApi}
-     * @param importerInterface an implementation of {@link ImporterInterface} used for adding names in files
-     * @param entryService an instance of {@link NameEntryService} representing the service layer
+     * Public constructor for {@link WordApi}
+     * @param importerInterface an implementation of {@link ImporterInterface} used for adding words in files
+     * @param entryService an instance of {@link WordEntryService} representing the service layer
      * @param geoLocationRepository an instance of {@link GeoLocationRepository} for persiting {@link GeoLocation}
      */
     @Autowired
-    public NameApi(ImporterInterface importerInterface, NameEntryService entryService,
+    public WordApi(ImporterInterface importerInterface, WordEntryService entryService,
                    GeoLocationRepository geoLocationRepository,
-                   NameUploadStatus nameUploadStatus,
+                   WordUploadStatus wordUploadStatus,
                    EventPubService eventPubService) {
         this.importerInterface = importerInterface;
         this.entryService = entryService;
         this.geoLocationRepository = geoLocationRepository;
-        this.nameUploadStatus = nameUploadStatus;
+        this.wordUploadStatus = wordUploadStatus;
         this.eventPubService = eventPubService;
     }
 
@@ -95,8 +95,8 @@ public class NameApi {
      * @return {@link org.springframework.http.ResponseEntity} with string containing error message.
      * "success" is returned if no error
      */
-    @RequestMapping(value = "/v1/names", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, String>> addName(@Valid @RequestBody WordEntry entry,
+    @RequestMapping(value = "/v1/words", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, String>> addWord(@Valid @RequestBody WordEntry entry,
                                                        BindingResult bindingResult) {
         if (!bindingResult.hasErrors()) {
             if (entry.getState() == null) {
@@ -104,12 +104,12 @@ public class NameApi {
             }
 
             if (!State.NEW.equals(entry.getState())) {
-                // You can only add a name to the system with its state NEW
+                // You can only add a word to the system with its state NEW
                 throw new GenericApiCallException("Invalid State: A new entry needs to have the NEW state");
             }
             entry.setWord(entry.getWord().trim().toLowerCase());
             entryService.insertTakingCareOfDuplicates(entry);
-            return new ResponseEntity<>(response("Name successfully added"), HttpStatus.CREATED);
+            return new ResponseEntity<>(response("Word successfully added"), HttpStatus.CREATED);
         }
         throw new GenericApiCallException(formatErrorMessage(bindingResult));
     }
@@ -119,97 +119,97 @@ public class NameApi {
      *
      * @return a {@link ResponseEntity} with the response message
      */
-    @RequestMapping(value = "/v1/names/meta", method = RequestMethod.GET,
+    @RequestMapping(value = "/v1/words/meta", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Object>> getMetaData() {
 
-        final List<WordEntry> nameEntries = entryService.loadAllNames();
-        long totalNames = ((Integer) nameEntries.size()).longValue();
+        final List<WordEntry> wordEntries = entryService.loadAllWords();
+        long totalWords = ((Integer) wordEntries.size()).longValue();
 
-        final long totalModifiedNames = nameEntries.stream()
-                                                   .filter(nameEntry -> State.MODIFIED.equals(nameEntry.getState()))
+        final long totalModifiedWords = wordEntries.stream()
+                                                   .filter(wordEntry -> State.MODIFIED.equals(wordEntry.getState()))
                                                    .count();
-        final long totalNewNames = nameEntries.stream()
-                                              .filter(nameEntry -> State.NEW.equals(nameEntry.getState()))
+        final long totalNewWords = wordEntries.stream()
+                                              .filter(wordEntry -> State.NEW.equals(wordEntry.getState()))
                                               .count();
-        final long totalPublishedNames = nameEntries.stream()
-                                                    .filter(nameEntry -> State.PUBLISHED.equals(nameEntry.getState()))
+        final long totalPublishedWords = wordEntries.stream()
+                                                    .filter(wordEntry -> State.PUBLISHED.equals(wordEntry.getState()))
                                                     .count();
         Map<String, Object> metaData = new HashMap<>();
-        metaData.put("totalNames", totalNames);
-        metaData.put("totalNewNames", totalNewNames);
-        metaData.put("totalModifiedNames", totalModifiedNames);
-        metaData.put("totalPublishedNames", totalPublishedNames);
+        metaData.put("totalWords", totalWords);
+        metaData.put("totalNewWords", totalNewWords);
+        metaData.put("totalModifiedWords", totalModifiedWords);
+        metaData.put("totalPublishedWords", totalPublishedWords);
 
         return new ResponseEntity<>(metaData, HttpStatus.OK);
     }
 
     /**
-     * Get names that has been persisted. Supports ability to specify the count of names to return and the offset
+     * Get words that has been persisted. Supports ability to specify the count of words to return and the offset
      * @param pageParam a {@link Integer} representing the page (offset) to start the
      *                  result set from. 0 if none is given
-     * @param countParam a {@link Integer} the number of names to return. 50 is none is given
+     * @param countParam a {@link Integer} the number of words to return. 50 is none is given
      * @return the list of {@link WordEntry}
      */
-    @RequestMapping(value = "/v1/names", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<WordEntry> getAllNames(@RequestParam("page") final Optional<Integer> pageParam,
+    @RequestMapping(value = "/v1/words", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<WordEntry> getAllWords(@RequestParam("page") final Optional<Integer> pageParam,
                                        @RequestParam("count") final Optional<Integer> countParam,
                                        @RequestParam("all") final Optional<Boolean> all,
                                        @RequestParam("submittedBy") final Optional<String> submittedBy,
                                        @RequestParam("state") final Optional<State> state) {
 
-        List<WordEntry> allNameEntries;
+        List<WordEntry> allWordEntries;
 
         if (all.isPresent() && all.get()) {
             if (state.isPresent()) {
-                allNameEntries = entryService.loadAllByState(state);
+                allWordEntries = entryService.loadAllByState(state);
             } else {
-                allNameEntries = entryService.loadAllNames();
+                allWordEntries = entryService.loadAllWords();
             }
         } else {
-            allNameEntries = entryService.loadByState(state, pageParam, countParam);
+            allWordEntries = entryService.loadByState(state, pageParam, countParam);
         }
 
-        List<WordEntry> names = new ArrayList<>(allNameEntries);
+        List<WordEntry> words = new ArrayList<>(allWordEntries);
 
         // for filtering based on value of submitBy
-        Predicate<WordEntry> filterBasedOnSubmitBy = (name) -> submittedBy
-                .map(s -> name.getSubmittedBy().trim().equalsIgnoreCase(s.trim()))
+        Predicate<WordEntry> filterBasedOnSubmitBy = (word) -> submittedBy
+                .map(s -> word.getSubmittedBy().trim().equalsIgnoreCase(s.trim()))
                 .orElse(true);
 
-        return names.stream()
+        return words.stream()
                     .filter(filterBasedOnSubmitBy)
                     .collect(Collectors.toCollection(ArrayList::new));
 
     }
 
     /**
-     * Get the details of a name
-     * @param name the name whose details needs to be retrieved
-     * @return a name serialized to a jason string
+     * Get the details of a word
+     * @param word the word whose details needs to be retrieved
+     * @return a word serialized to a jason string
      * @throws JsonProcessingException json processing exception
      */
-    @RequestMapping(value = "/v1/names/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object getName(@RequestParam("feedback") final Optional<Boolean> feedback,
-                          @PathVariable String name) throws JsonProcessingException {
-        WordEntry wordEntry = entryService.loadName(name);
+    @RequestMapping(value = "/v1/words/{word}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Object getWord(@RequestParam("feedback") final Optional<Boolean> feedback,
+                          @PathVariable String word) throws JsonProcessingException {
+        WordEntry wordEntry = entryService.loadWord(word);
         if (wordEntry == null) {
-            String errorMsg = "#NAME not found in the database".replace("#NAME", name);
+            String errorMsg = "#WORD not found in the database".replace("#WORD", word);
             throw new GenericApiCallException(errorMsg);
         }
 
-        HashMap<String, Object> nameEntries = new HashMap<>();
-        nameEntries.put("mainEntry", wordEntry);
+        HashMap<String, Object> wordEntries = new HashMap<>();
+        wordEntries.put("mainEntry", wordEntry);
 
         if (feedback.isPresent() && (feedback.get() == true)) {
-            nameEntries.put("feedback", entryService.getFeedback(wordEntry));
+            wordEntries.put("feedback", entryService.getFeedback(wordEntry));
         }
 
-        if (nameEntries.size() == 1 && nameEntries.get("mainEntry") != null) {
-            return nameEntries.get("mainEntry");
+        if (wordEntries.size() == 1 && wordEntries.get("mainEntry") != null) {
+            return wordEntries.get("mainEntry");
         }
 
-        return nameEntries;
+        return wordEntries;
     }
 
 
@@ -220,22 +220,22 @@ public class NameApi {
      * @return {@link org.springframework.http.ResponseEntity} with string containting error message.
      * "success" is returned if no error
      */
-    @RequestMapping(value = "/v1/names/{name}",
+    @RequestMapping(value = "/v1/words/{word}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.PUT)
-    public ResponseEntity<Map> updateName(@PathVariable String name,
+    public ResponseEntity<Map> updateWord(@PathVariable String word,
                                              @Valid @RequestBody WordEntry newWordEntry,
                                              BindingResult bindingResult) {
         //TODO tonalMark is returning null on update. Fix
         if (!bindingResult.hasErrors()) {
 
-            WordEntry oldWordEntry = entryService.loadName(name);
+            WordEntry oldWordEntry = entryService.loadWord(word);
 
             if (oldWordEntry == null) {
-                throw new GenericApiCallException(name + " not in database", HttpStatus.INTERNAL_SERVER_ERROR);
+                throw new GenericApiCallException(word + " not in database", HttpStatus.INTERNAL_SERVER_ERROR);
             }
-            entryService.updateName(oldWordEntry, newWordEntry);
-            return new ResponseEntity<>(response("Name successfully updated"), HttpStatus.CREATED);
+            entryService.updateWord(oldWordEntry, newWordEntry);
+            return new ResponseEntity<>(response("Word successfully updated"), HttpStatus.CREATED);
         }
 
         throw new GenericApiCallException(formatErrorMessage(bindingResult),
@@ -244,15 +244,15 @@ public class NameApi {
 
 
     /**
-     * Endpoint for uploading names via spreadsheet
+     * Endpoint for uploading words via spreadsheet
      *
      * @param multipartFile the spreadsheet file
      * @return the Import status
      * @throws JsonProcessingException Json processing exception
      */
-    @RequestMapping(value = "/v1/names/upload", method = RequestMethod.POST,
+    @RequestMapping(value = "/v1/words/upload", method = RequestMethod.POST,
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Map<String, String>> upload(@RequestParam("nameFiles") MultipartFile multipartFile)
+    public ResponseEntity<Map<String, String>> upload(@RequestParam("wordFiles") MultipartFile multipartFile)
             throws JsonProcessingException {
         Assert.state(!multipartFile.isEmpty(), "You can't upload an empty file");
 
@@ -260,8 +260,8 @@ public class NameApi {
             File file = File.createTempFile(UUID.randomUUID().toString(), ".tmp");
             multipartFile.transferTo(file);
 
-            // perform the importation of names in a seperate thread
-            // client can poll /v1/names/uploading?q=progress for upload progress
+            // perform the importation of words in a seperate thread
+            // client can poll /v1/words/uploading?q=progress for upload progress
             ExecutorService executorService = Executors.newSingleThreadExecutor();
             executorService.submit(() -> {
                 importerInterface.importFile(file);
@@ -276,19 +276,19 @@ public class NameApi {
     }
 
     /**
-     * Endpoint that returns if a name uploading is ongoing and if so, provides
-     * the number of total names to be uploaded and the numbers already uploaded.
+     * Endpoint that returns if a word uploading is ongoing and if so, provides
+     * the number of total words to be uploaded and the numbers already uploaded.
      * @param parameter query parameter. Supports "progress"
      * @return
      * @throws JsonProcessingException
      */
-    @RequestMapping(value = "/v1/names/uploading", method = RequestMethod.GET)
-    public ResponseEntity<NameUploadStatus> uploadProgress(@RequestParam("q") Optional<String> parameter)
+    @RequestMapping(value = "/v1/words/uploading", method = RequestMethod.GET)
+    public ResponseEntity<WordUploadStatus> uploadProgress(@RequestParam("q") Optional<String> parameter)
             throws JsonProcessingException {
         if (parameter.isPresent()) {
             switch (parameter.get()) {
                 case "progress":
-                    return new ResponseEntity<>(nameUploadStatus, HttpStatus.OK);
+                    return new ResponseEntity<>(wordUploadStatus, HttpStatus.OK);
                 default:
                     throw new GenericApiCallException("query parameter [" + parameter.get() + "] not supported",
                                                       HttpStatus.INTERNAL_SERVER_ERROR);
@@ -299,54 +299,54 @@ public class NameApi {
 
 
     /**
-     * Endpoint for batch uploading of names. Names are sent as array of json from the client
-     * @param nameEntries the array of {@link WordEntry}
+     * Endpoint for batch uploading of words. Words are sent as array of json from the client
+     * @param wordEntries the array of {@link WordEntry}
      * @param bindingResult {@link org.springframework.validation.BindingResult} used to capture result of validation
      * @return {@link org.springframework.http.ResponseEntity} with string containting error message.
      * "success" is returned if no error
      */
-    @RequestMapping(value = "/v1/names/batch", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity< Map<String, String>> addName(@Valid @RequestBody WordEntry[] nameEntries,
+    @RequestMapping(value = "/v1/words/batch", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity< Map<String, String>> addWord(@Valid @RequestBody WordEntry[] wordEntries,
                                                         BindingResult bindingResult) {
-        if (!bindingResult.hasErrors() && nameEntries.length != 0) {
-            entryService.bulkInsertTakingCareOfDuplicates(Arrays.asList(nameEntries));
-            return new ResponseEntity<>(response("Names successfully imported"), HttpStatus.CREATED);
+        if (!bindingResult.hasErrors() && wordEntries.length != 0) {
+            entryService.bulkInsertTakingCareOfDuplicates(Arrays.asList(wordEntries));
+            return new ResponseEntity<>(response("Words successfully imported"), HttpStatus.CREATED);
         }
         throw new GenericApiCallException(formatErrorMessage(bindingResult), HttpStatus.BAD_REQUEST);
     }
 
 
     /**
-     * Endpoint for batch updating  of names. Names are sent as array of json from the client
-     * @param nameEntries the array of {@link WordEntry}
+     * Endpoint for batch updating  of words. Words are sent as array of json from the client
+     * @param wordEntries the array of {@link WordEntry}
      * @param bindingResult {@link org.springframework.validation.BindingResult} used to capture result of validation
      * @return {@link org.springframework.http.ResponseEntity} with string containing error message.
      * "success" is returned if no error
      */
-    @RequestMapping(value = "/v1/names/batch", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity< Map<String, String>> updateNames(@Valid @RequestBody WordEntry[] nameEntries,
+    @RequestMapping(value = "/v1/words/batch", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity< Map<String, String>> updateWords(@Valid @RequestBody WordEntry[] wordEntries,
                                                          BindingResult bindingResult) {
-        if (!bindingResult.hasErrors() && nameEntries.length != 0) {
+        if (!bindingResult.hasErrors() && wordEntries.length != 0) {
 
             //TODO refactor into a method
-            List<WordEntry> notFoundNames = Stream.of(nameEntries)
-                                             .filter(entry -> entryService.loadName(entry.getWord()) == null)
+            List<WordEntry> notFoundWords = Stream.of(wordEntries)
+                                             .filter(entry -> entryService.loadWord(entry.getWord()) == null)
                                             .collect(Collectors.toList());
 
-            List<WordEntry> foundNames = new ArrayList<>(Arrays.asList(nameEntries));
-            foundNames.removeAll(notFoundNames);
+            List<WordEntry> foundWords = new ArrayList<>(Arrays.asList(wordEntries));
+            foundWords.removeAll(notFoundWords);
 
-            if (foundNames.size() == 0) {
-                return new ResponseEntity<>(response("none of the names was found in the repository so not indexed"),
+            if (foundWords.size() == 0) {
+                return new ResponseEntity<>(response("none of the words was found in the repository so not indexed"),
                                             HttpStatus.BAD_REQUEST);
             }
-            entryService.bulkUpdateNames(foundNames);
+            entryService.bulkUpdateWords(foundWords);
 
-            List<String> notFound = notFoundNames.stream()
+            List<String> notFound = notFoundWords.stream()
                                                  .map(WordEntry::getWord)
                                                  .collect(Collectors.toList());
 
-            List<String> found = foundNames.stream()
+            List<String> found = foundWords.stream()
                                              .map(WordEntry::getWord)
                                              .collect(Collectors.toList());
 
@@ -363,71 +363,71 @@ public class NameApi {
     }
 
     /**
-     * End points for deleting ALL names (and their duplicates) from the database
+     * End points for deleting ALL words (and their duplicates) from the database
      * @return {@link org.springframework.http.ResponseEntity} with string containing error message.
      * "success" is returned if no error
      */
-    @RequestMapping(value = "/v1/names",
+    @RequestMapping(value = "/v1/words",
             method = RequestMethod.DELETE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, String>> deleteAllNames() {
+    public ResponseEntity<Map<String, String>> deleteAllWords() {
         entryService.deleteAllAndDuplicates();
-        return new ResponseEntity<>(response("Names deleted"), HttpStatus.OK);
+        return new ResponseEntity<>(response("Words deleted"), HttpStatus.OK);
     }
 
     /**
-     * End point for deleting a name (and its duplicates) from the database.
-     * @param name the name to delete
+     * End point for deleting a word (and its duplicates) from the database.
+     * @param word the word to delete
      * @return {@link org.springframework.http.ResponseEntity} with string containing status message
      */
-    @RequestMapping(value = "/v1/names/{name}",
+    @RequestMapping(value = "/v1/words/{word}",
             method = RequestMethod.DELETE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity< Map<String, String>> deleteName(@PathVariable String name) {
-        if (entryService.loadName(name) == null) {
-            throw new GenericApiCallException(name + " not found in the system so cannot be deleted");
+    public ResponseEntity< Map<String, String>> deleteWord(@PathVariable String word) {
+        if (entryService.loadWord(word) == null) {
+            throw new GenericApiCallException(word + " not found in the system so cannot be deleted");
         }
-        entryService.deleteNameEntryAndDuplicates(name);
-        publishNamesDeletedEvent(Collections.singletonList(name));
-        return new ResponseEntity<>(response(name + " Deleted"), HttpStatus.OK);
+        entryService.deleteWordEntryAndDuplicates(word);
+        publishWordsDeletedEvent(Collections.singletonList(word));
+        return new ResponseEntity<>(response(word + " Deleted"), HttpStatus.OK);
     }
 
     /**
-     * Endpoint for deleting a list of names
+     * Endpoint for deleting a list of words
      *
-     * @param names the list of names to delete
+     * @param words the list of words to delete
      * @return {@link org.springframework.http.ResponseEntity} with string containing status message
      */
-    @RequestMapping(value = "/v1/names/batch",
+    @RequestMapping(value = "/v1/words/batch",
             method = RequestMethod.DELETE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity< Map<String, String>> batchDeleteName(@RequestBody String[] names) {
+    public ResponseEntity< Map<String, String>> batchDeleteWord(@RequestBody String[] words) {
 
-        List<String> notFoundNames = Stream.of(names)
-                                     .filter(entry -> entryService.loadName(entry) == null)
+        List<String> notFoundWords = Stream.of(words)
+                                     .filter(entry -> entryService.loadWord(entry) == null)
                                      .collect(Collectors.toCollection(ArrayList::new));
 
-        List<String> foundNames = new ArrayList<>(Arrays.asList(names));
-        foundNames.removeAll(notFoundNames);
+        List<String> foundWords = new ArrayList<>(Arrays.asList(words));
+        foundWords.removeAll(notFoundWords);
 
-        if (foundNames.size() == 0) {
-            return new ResponseEntity<>(response("No deletion as none of the names were found in the database."),
+        if (foundWords.size() == 0) {
+            return new ResponseEntity<>(response("No deletion as none of the words were found in the database."),
                                         HttpStatus.BAD_REQUEST);
         }
 
-        entryService.batchDeleteNameEntryAndDuplicates(foundNames);
-        publishNamesDeletedEvent(foundNames);
+        entryService.batchDeleteWordEntryAndDuplicates(foundWords);
+        publishWordsDeletedEvent(foundWords);
 
-        String responseMessage = String.join(",",foundNames) + " deleted. ";
-        if (notFoundNames.size() > 0) {
-            responseMessage += String.join(",",notFoundNames) + " not deleted as they were not found in the database";
+        String responseMessage = String.join(",",foundWords) + " deleted. ";
+        if (notFoundWords.size() > 0) {
+            responseMessage += String.join(",",notFoundWords) + " not deleted as they were not found in the database";
         }
         return new ResponseEntity<>(response(responseMessage), HttpStatus.OK);
     }
 
-    private void publishNamesDeletedEvent(List<String> foundNames) {
-        for (String name: foundNames) {
-            eventPubService.publish(new NameDeletedEvent(name));
+    private void publishWordsDeletedEvent(List<String> foundWords) {
+        for (String word: foundWords) {
+            eventPubService.publish(new WordDeletedEvent(word));
         }
     }
 

@@ -8,7 +8,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.oruko.dictionary.model.WordEntry;
 import org.oruko.dictionary.model.WordEntryFeedback;
 import org.oruko.dictionary.model.repository.WordEntryFeedbackRepository;
-import org.oruko.dictionary.web.NameEntryService;
+import org.oruko.dictionary.web.WordEntryService;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -40,7 +40,7 @@ public class FeedbackApiTest extends AbstractApiTest {
     WordEntryFeedbackRepository feedbackRepository;
 
     @Mock
-    NameEntryService entryService;
+    WordEntryService entryService;
 
     MockMvc mockMvc;
 
@@ -81,7 +81,7 @@ public class FeedbackApiTest extends AbstractApiTest {
         mockMvc.perform(get("/v1/feedbacks?name="+ testName)
                                 .contentType(MediaType.parseMediaType("application/json; charset=UTF-8")))
                .andExpect(status().isOk());
-        verify(feedbackRepository).findByName(eq(testName), sortCaptor.capture());
+        verify(feedbackRepository).findByWord(eq(testName), sortCaptor.capture());
         final Sort value = sortCaptor.getValue();
         assertThat(value.equals(sort), is(true));
     }
@@ -90,14 +90,14 @@ public class FeedbackApiTest extends AbstractApiTest {
     public void testdeleteAllFeedbackForName() throws Exception {
         WordEntry wordEntry = mock(WordEntry.class);
         WordEntryFeedback feedback = mock(WordEntryFeedback.class);
-        when(entryService.loadName(testName)).thenReturn(wordEntry);
+        when(entryService.loadWord(testName)).thenReturn(wordEntry);
         final Sort sort = new Sort(Sort.Direction.DESC, "submittedAt");
-        when(feedbackRepository.findByName(testName,sort)).thenReturn(Collections.<WordEntryFeedback>singletonList(feedback));
+        when(feedbackRepository.findByWord(testName,sort)).thenReturn(Collections.<WordEntryFeedback>singletonList(feedback));
         final ArgumentCaptor<Sort> sortCaptor = ArgumentCaptor.forClass(Sort.class);
         mockMvc.perform(delete("/v1/feedbacks?name="+ testName)
                                 .contentType(MediaType.parseMediaType("application/json; charset=UTF-8")))
                .andExpect(status().isOk());
-        verify(feedbackRepository).findByName(eq(testName), sortCaptor.capture());
+        verify(feedbackRepository).findByWord(eq(testName), sortCaptor.capture());
         verify(feedbackRepository, times(1)).delete(feedback);
         final Sort value = sortCaptor.getValue();
         assertThat(value.equals(sort), is(true));
@@ -106,7 +106,7 @@ public class FeedbackApiTest extends AbstractApiTest {
     @Test
     public void testdeleteAllFeedbackForName_name_not_found() throws Exception {
         WordEntryFeedback feedback = mock(WordEntryFeedback.class);
-        when(entryService.loadName(testName)).thenReturn(null);
+        when(entryService.loadWord(testName)).thenReturn(null);
         mockMvc.perform(delete("/v1/feedbacks?name="+ testName)
                                 .contentType(MediaType.parseMediaType("application/json; charset=UTF-8")))
                .andExpect(status().isBadRequest());
@@ -147,7 +147,7 @@ public class FeedbackApiTest extends AbstractApiTest {
     @Test
     public void testAddFeedback() throws Exception {
         WordEntry wordEntry = mock(WordEntry.class);
-        when(entryService.loadName(testName)).thenReturn(wordEntry);
+        when(entryService.loadWord(testName)).thenReturn(wordEntry);
         String requestJson = new ObjectMapper().writeValueAsString(feedbackMap);
         ArgumentCaptor<WordEntryFeedback> argumentCaptor = ArgumentCaptor.forClass(
                 WordEntryFeedback.class);
@@ -159,14 +159,14 @@ public class FeedbackApiTest extends AbstractApiTest {
 
         verify(feedbackRepository).save(argumentCaptor.capture());
         final WordEntryFeedback nameEntryValue = argumentCaptor.getValue();
-        assertThat(nameEntryValue.getName(), is(testName));
+        assertThat(nameEntryValue.getWord(), is(testName));
         assertThat(nameEntryValue.getFeedback(), is(testFeedback));
     }
 
     @Test
     public void test_add_feedback_name_not_in_system() throws Exception{
 
-        when(entryService.loadName(testName)).thenReturn(null); // test condition
+        when(entryService.loadWord(testName)).thenReturn(null); // test condition
         String requestJson = new ObjectMapper().writeValueAsString(feedbackMap);
 
         mockMvc.perform(post("/v1/feedbacks")
@@ -179,7 +179,7 @@ public class FeedbackApiTest extends AbstractApiTest {
     public void test_add_feedback_but_feedback_is_empty() throws Exception {
 
         WordEntry wordEntry = mock(WordEntry.class);
-        when(entryService.loadName(testName)).thenReturn(wordEntry);
+        when(entryService.loadWord(testName)).thenReturn(wordEntry);
 
         Map<String, String> feedbackMap = new HashMap<>();
         String testFeedback = ""; // test condition

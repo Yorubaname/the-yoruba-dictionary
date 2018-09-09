@@ -19,12 +19,12 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * The service for managing name entries
+ * The service for managing word entries
  *
  * @author Dadepo Aderemi.
  */
 @Service
-public class NameEntryService {
+public class WordEntryService {
 
     private Integer BATCH_SIZE = 50;
     private Integer PAGE = 0;
@@ -34,33 +34,33 @@ public class NameEntryService {
     private WordEntryFeedbackRepository wordEntryFeedbackRepository;
 
     /**
-     * Public constructor for {@link NameEntryService} depends on instances of
+     * Public constructor for {@link WordEntryService} depends on instances of
      *
      * @param wordEntryRepository         Repository responsible for persisting {@link WordEntry}
      * @param wordEntryFeedbackRepository Repository responsible for persisting {@link WordEntryFeedback}
      */
     @Autowired
-    public NameEntryService(WordEntryRepository wordEntryRepository,
+    public WordEntryService(WordEntryRepository wordEntryRepository,
                             WordEntryFeedbackRepository wordEntryFeedbackRepository) {
         this.wordEntryRepository = wordEntryRepository;
         this.wordEntryFeedbackRepository = wordEntryFeedbackRepository;
     }
 
     /**
-     * Adds a new name if not present. If already present, adds the name to the
+     * Adds a new word if not present. If already present, adds the word to the
      * duplicate table.
      *
      * @param entry
      */
     public void insertTakingCareOfDuplicates(WordEntry entry) {
-        String name = entry.getWord();
+        String word = entry.getWord();
 
-        if (namePresentAsVariant(name)) {
-            throw new RepositoryAccessError("Given name already exists as a variant entry");
+        if (wordPresentAsVariant(word)) {
+            throw new RepositoryAccessError("Given word already exists as a variant entry");
         }
 
-        if (alreadyExists(name)) {
-            throw new RepositoryAccessError("Given name already exists in the index");
+        if (alreadyExists(word)) {
+            throw new RepositoryAccessError("Given word already exists in the index");
         }
 
         wordEntryRepository.save(entry);
@@ -68,10 +68,10 @@ public class NameEntryService {
 
 
     /**
-     * Adds a list of names in bulk if not present. If any of the name is already present, adds the name to the
+     * Adds a list of words in bulk if not present. If any of the word is already present, adds the word to the
      * duplicate table.
      *
-     * @param entries the list of names
+     * @param entries the list of words
      */
     public void bulkInsertTakingCareOfDuplicates(List<WordEntry> entries) {
         int i = 0;
@@ -88,13 +88,13 @@ public class NameEntryService {
 
 
     /**
-     * Returns all the feedback for a name, sorted by time submitted
+     * Returns all the feedback for a word, sorted by time submitted
      *
      * @return the feedback as a list of {@link WordEntryFeedback}
      */
     public List<WordEntryFeedback> getFeedback(WordEntry entry) {
         final Sort sort = new Sort(Sort.Direction.DESC, "submittedAt");
-        return wordEntryFeedbackRepository.findByName(entry.getWord(), sort);
+        return wordEntryFeedbackRepository.findByWord(entry.getWord(), sort);
     }
 
     /**
@@ -102,27 +102,27 @@ public class NameEntryService {
      *
      * @param entry the entry to be saved
      */
-    public WordEntry saveName(WordEntry entry) {
+    public WordEntry saveWord(WordEntry entry) {
         return wordEntryRepository.save(entry);
     }
 
     /**
      * Saves a list {@link WordEntry}
      *
-     * @param entries the list of name entries to be saved
+     * @param entries the list of word entries to be saved
      */
-    public List<WordEntry> saveNames(List<WordEntry> entries) {
+    public List<WordEntry> saveWords(List<WordEntry> entries) {
         int i = 0;
-        List<WordEntry> savedNames = new ArrayList<>();
+        List<WordEntry> savedWords = new ArrayList<>();
         for (WordEntry entry : entries) {
-            savedNames.add(this.saveName(entry));
+            savedWords.add(this.saveWord(entry));
             i++;
             if (i == BATCH_SIZE) {
                 wordEntryRepository.flush();
                 i = 0;
             }
         }
-        return savedNames;
+        return savedWords;
     }
 
 
@@ -134,7 +134,7 @@ public class NameEntryService {
      * @param newEntry the entry with the new value
      * @return the updated entry
      */
-    public WordEntry updateName(WordEntry oldEntry, WordEntry newEntry) {
+    public WordEntry updateWord(WordEntry oldEntry, WordEntry newEntry) {
         String oldEntryName = oldEntry.getWord();
         // update main entry
         oldEntry.update(newEntry);
@@ -148,18 +148,18 @@ public class NameEntryService {
 
 
     /**
-     * Updates the properties of a list of names with values from another list of name entries
+     * Updates the properties of a list of words with values from another list of word entries
      *
-     * @param nameEntries the new entries
+     * @param wordEntries the new entries
      * @return the updated entries
      */
-    public List<WordEntry> bulkUpdateNames(List<WordEntry> nameEntries) {
+    public List<WordEntry> bulkUpdateWords(List<WordEntry> wordEntries) {
         List<WordEntry> updated = new ArrayList<>();
 
         int i = 0;
-        for (WordEntry wordEntry : nameEntries) {
-            WordEntry oldEntry = this.loadName(wordEntry.getWord());
-            updated.add(this.updateName(oldEntry, wordEntry));
+        for (WordEntry wordEntry : wordEntries) {
+            WordEntry oldEntry = this.loadWord(wordEntry.getWord());
+            updated.add(this.updateWord(oldEntry, wordEntry));
             i++;
 
             if (i == BATCH_SIZE) {
@@ -178,9 +178,9 @@ public class NameEntryService {
      * @param countParam      specifies the count of result
      * @return a list of {@link WordEntry}
      */
-    public List<WordEntry> loadAllNames(Optional<Integer> pageNumberParam, Optional<Integer> countParam) {
+    public List<WordEntry> loadAllWords(Optional<Integer> pageNumberParam, Optional<Integer> countParam) {
 
-        List<WordEntry> nameEntries = new ArrayList<>();
+        List<WordEntry> wordEntries = new ArrayList<>();
         Integer pageNumber = pageNumberParam.orElse(PAGE);
         Integer count = countParam.orElse(COUNT_SIZE);
 
@@ -188,9 +188,9 @@ public class NameEntryService {
                 new PageRequest(pageNumber == 0 ? 0 : pageNumber - 1, count, Sort.Direction.ASC, "id");
 
         Page<WordEntry> pages = wordEntryRepository.findAll(request);
-        pages.forEach(nameEntries::add);
+        pages.forEach(wordEntries::add);
 
-        return nameEntries;
+        return wordEntries;
     }
 
     /**
@@ -214,7 +214,7 @@ public class NameEntryService {
     public List<WordEntry> loadByState(Optional<State> state, Optional<Integer> pageParam, Optional<Integer> countParam) {
 
         if (!state.isPresent()) {
-            return this.loadAllNames(pageParam, countParam);
+            return this.loadAllWords(pageParam, countParam);
         }
 
         final Integer page = pageParam.map(integer -> integer - 1).orElse(1);
@@ -229,57 +229,57 @@ public class NameEntryService {
      *
      * @return a list of all {@link WordEntry}
      */
-    public List<WordEntry> loadAllNames() {
+    public List<WordEntry> loadAllWords() {
         return wordEntryRepository.findAll();
     }
 
     /**
-     * Returns the number of names in the database
+     * Returns the number of words in the database
      *
-     * @return number of names
+     * @return number of words
      */
-    public Long getNameCount() {
+    public Long getWordCount() {
         return wordEntryRepository.count();
     }
 
     /**
-     * Used to retrieve a {@link WordEntry} from the repository using its known name
+     * Used to retrieve a {@link WordEntry} from the repository using its known word
      *
      * @param word the word
      * @return the WordEntry
      */
-    public WordEntry loadName(String word) {
+    public WordEntry loadWord(String word) {
         return wordEntryRepository.findByWord(word);
     }
 
     /**
-     * Duplicates all the name entry plus the duplicates
+     * Duplicates all the word entry plus the duplicates
      */
     public void deleteAllAndDuplicates() {
         wordEntryRepository.deleteAll();
-        //TODO introduce an event that all names have been deleted
+        //TODO introduce an event that all words have been deleted
     }
 
 
     /**
-     * Duplicates a name entry plus its duplicates
+     * Duplicates a word entry plus its duplicates
      *
      * @param word the word to delete
      */
-    public void deleteNameEntryAndDuplicates(String word) {
+    public void deleteWordEntryAndDuplicates(String word) {
         WordEntry wordEntry = wordEntryRepository.findByWord(word);
         wordEntryRepository.delete(wordEntry);
     }
 
     /**
-     * Deletes multiple name entries and their duplicates
+     * Deletes multiple word entries and their duplicates
      *
-     * @param names a list of names to delete their entries and their duplicates
+     * @param words a list of words to delete their entries and their duplicates
      */
-    public void batchDeleteNameEntryAndDuplicates(List<String> names) {
+    public void batchDeleteWordEntryAndDuplicates(List<String> words) {
         int i = 0;
-        for (String name : names) {
-            this.deleteNameEntryAndDuplicates(name);
+        for (String word : words) {
+            this.deleteWordEntryAndDuplicates(word);
             i++;
 
             if (i == BATCH_SIZE) {
@@ -295,12 +295,12 @@ public class NameEntryService {
         return entry != null;
     }
 
-    private boolean namePresentAsVariant(String name) {
+    private boolean wordPresentAsVariant(String word) {
         // TODO revisit. Might end up being impacting performance
-        List<WordEntry> allNames = wordEntryRepository.findAll();
-        return allNames.stream().anyMatch((nameEntry) -> {
-            if (nameEntry.getVariants() != null) {
-                return nameEntry.getVariants().contains(name);
+        List<WordEntry> allWords = wordEntryRepository.findAll();
+        return allWords.stream().anyMatch((wordEntry) -> {
+            if (wordEntry.getVariants() != null) {
+                return wordEntry.getVariants().contains(word);
             }
             return false;
         });

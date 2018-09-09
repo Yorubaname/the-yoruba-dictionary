@@ -22,7 +22,7 @@ public class WordEntryServiceTest {
 
     // System under test
     @InjectMocks
-    private NameEntryService nameEntryService;
+    private WordEntryService wordEntryService;
 
     WordEntry wordEntry;
 
@@ -38,7 +38,7 @@ public class WordEntryServiceTest {
         String testName = "Ajani";
         when(wordEntry.getWord()).thenReturn(testName);
         when(wordEntryRepository.findByWord(testName)).thenReturn(null);
-        nameEntryService.insertTakingCareOfDuplicates(wordEntry);
+        wordEntryService.insertTakingCareOfDuplicates(wordEntry);
 
         verify(wordEntryRepository).save(wordEntry);
         verify(wordEntryRepository).findByWord(testName);
@@ -52,7 +52,7 @@ public class WordEntryServiceTest {
         when(wordEntry.getWord()).thenReturn(testName);
         when(wordEntryRepository.findAll()).thenReturn(Collections.singletonList(wordEntryMock));
         when(wordEntryRepository.findByWord(testName)).thenReturn(wordEntry);
-        nameEntryService.insertTakingCareOfDuplicates(wordEntry);
+        wordEntryService.insertTakingCareOfDuplicates(wordEntry);
 
         verify(wordEntryRepository).findAll();
         verify(wordEntryRepository).findByWord(testName);
@@ -66,7 +66,7 @@ public class WordEntryServiceTest {
         when(wordEntry.getWord()).thenReturn(testName);
         when(wordEntryRepository.findAll()).thenReturn(Collections.singletonList(wordEntryMock));
         when(wordEntryRepository.findByWord(testName)).thenReturn(wordEntry);
-        nameEntryService.insertTakingCareOfDuplicates(wordEntry);
+        wordEntryService.insertTakingCareOfDuplicates(wordEntry);
 
         verifyZeroInteractions(wordEntryRepository);
     }
@@ -74,7 +74,7 @@ public class WordEntryServiceTest {
 
     @Test
     public void testSave() throws Exception {
-        nameEntryService.saveName(wordEntry);
+        wordEntryService.saveWord(wordEntry);
         verify(wordEntryRepository).save(wordEntry);
         verifyNoMoreInteractions(wordEntryRepository);
     }
@@ -84,7 +84,7 @@ public class WordEntryServiceTest {
         WordEntry oldEntry = mock(WordEntry.class);
         when(oldEntry.getWord()).thenReturn("old name");
         when(wordEntryRepository.findByWord(anyString())).thenReturn(oldEntry);
-        nameEntryService.updateName(oldEntry, wordEntry);
+        wordEntryService.updateWord(oldEntry, wordEntry);
         verify(oldEntry).update(wordEntry);
     }
 
@@ -96,7 +96,7 @@ public class WordEntryServiceTest {
 
     @Test
     public void testDeleteAllAndDuplicates() throws Exception {
-        nameEntryService.deleteAllAndDuplicates();
+        wordEntryService.deleteAllAndDuplicates();
         verify(wordEntryRepository).deleteAll();
         verifyNoMoreInteractions(wordEntryRepository);
     }
@@ -105,7 +105,7 @@ public class WordEntryServiceTest {
     public void testdeleteNameEntryAndDuplicates() {
         WordEntry testName = mock(WordEntry.class);
         when(wordEntryRepository.findByWord("lagbaja")).thenReturn(testName);
-        nameEntryService.deleteNameEntryAndDuplicates("lagbaja");
+        wordEntryService.deleteWordEntryAndDuplicates("lagbaja");
         verify(wordEntryRepository).delete(testName);
     }
 }

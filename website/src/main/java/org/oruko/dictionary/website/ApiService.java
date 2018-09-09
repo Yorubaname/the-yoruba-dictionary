@@ -33,7 +33,7 @@ public class ApiService {
     }
 
     @Cacheable("querySearchResult")
-    public WordEntry getName(String nameQuery) {
+    public WordEntry getWord(String nameQuery) {
         return restTemplate.getForObject(APIPATH + "/search/" + nameQuery, WordEntry.class);
     }
 

@@ -10,7 +10,7 @@
 				<div class="col-sm-7 entry">
 
 				   <h2 class="intonation" id="word-entry">{{word.word }}</h2>
-					
+
 					<p><strong>{{message "lang.pronunciation"}}</strong>
                         <button class="btn btn-default btn-sm" id="tts-button">
 							<i class="fa fa-volume-up" data-placement="top" title="{{message "lang.play-sound"}}"></i>
@@ -30,7 +30,7 @@
 					<a target="_blank" class="btn btn-social btn-sm btn-tw btn-info" href="https://twitter.com/intent/tweet?url=http%3A%2F%2F{{host}}/entries/{{word.word}}&amp;text=Did you know {{word.word}} means {{word.meaning}}?&amp;hashtags=YorubaNames&amp;via=YorubaNames"><i class="fa fa-twitter"></i> </a>
 
 					</div>
-					
+
 						<br><br>
 						<h4>{{message "lang.meaningof"}} {{word.word }}</h4>
 						<p class="intonation">{{ word.meaning }}</p>
@@ -38,12 +38,12 @@
 						<br><br>
 						<h4>{{message "lang.extendedmeaningof"}}</h4>
 						<p>{{word.extendedMeaning }}</p>
-					
+
 					<!-- /meaning of word -->
 					    <br><br>
 						<h4 class="intonation">{{message "lang.morphology"}}</h4>
 						<p>{{word.morphology}}</p>
-					
+
 					<!-- /morphology -->
 
 					    <br><br>
@@ -51,11 +51,11 @@
 			            {{#each word.etymology}}
 			               <strong>{{this.part}}</strong><span> - {{this.meaning}}</span><br>
 						{{/each}}
-			            
-					
+
+
 					<!-- /etymology -->
 
-					
+
 						<br><br>
 						<h4>{{message "lang.geolocation"}}</h4>
 						<p>{{message "lang.commonin"}}:
@@ -69,20 +69,20 @@
 					    <br><br>
 						<h4>{{message "lang.famous-persons"}}</h4>
 						<p>{{word.famousPeople}}</p>
-					
+
 					<!-- /famousPeople -->
 
 					    <br><br>
 						<h4>{{message "lang.media-links"}}</h4>
 						<p>{{word.media}}</p>
-					
+
 					<!-- /media -->
 
-					
+
 						<br><br>
 						<h4>{{message "lang.variants"}}</h4>
 						<p class="intonation">{{word.variants}}</p>
-					
+
 					<!-- /variants -->
 
 					    <br><br>

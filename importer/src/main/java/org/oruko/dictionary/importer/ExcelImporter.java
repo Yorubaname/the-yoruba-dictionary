@@ -6,7 +6,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.oruko.dictionary.events.EventPubService;
-import org.oruko.dictionary.events.NameUploadedEvent;
+import org.oruko.dictionary.events.WordUploadedEvent;
 import org.oruko.dictionary.model.GeoLocation;
 import org.oruko.dictionary.model.WordEntry;
 import org.oruko.dictionary.model.repository.GeoLocationRepository;
@@ -69,7 +69,7 @@ public class ExcelImporter implements ImporterInterface {
     @Override
     public ImportStatus importFile(File fileSource) {
         ImportStatus status = new ImportStatus();
-        NameUploadedEvent nameUploadedEvent = new NameUploadedEvent();
+        WordUploadedEvent wordUploadedEvent = new WordUploadedEvent();
 
         XSSFSheet sheet;
         try {
@@ -85,8 +85,8 @@ public class ExcelImporter implements ImporterInterface {
         }
 
         int totalNumberOfNames = sheet.getPhysicalNumberOfRows() - 1; // removes the header row
-        nameUploadedEvent.setTotalNumberOfNames(totalNumberOfNames);
-        nameUploadedEvent.isUploading(true);
+        wordUploadedEvent.setTotalNumberOfNames(totalNumberOfNames);
+        wordUploadedEvent.isUploading(true);
 
         if (validator.isColumnNameInOrder(sheet)) {
             Iterator<Row> rowIterator = sheet.rowIterator();
@@ -214,8 +214,8 @@ public class ExcelImporter implements ImporterInterface {
                     logger.debug("Exception while uploading name entry with name {}", name, e);
                 }
 
-                nameUploadedEvent.setTotalUploaded(status.getNumberOfNamesUpload());
-                eventPubService.publish(nameUploadedEvent);
+                wordUploadedEvent.setTotalUploaded(status.getNumberOfNamesUpload());
+                eventPubService.publish(wordUploadedEvent);
             }
         } else {
             status.setErrorMessages("Columns not in order. Should be in the following order {ORDER}"
@@ -223,8 +223,8 @@ public class ExcelImporter implements ImporterInterface {
         }
 
         // publishes event that signifies end of uploading
-        nameUploadedEvent.isUploading(false);
-        eventPubService.publish(nameUploadedEvent);
+        wordUploadedEvent.isUploading(false);
+        eventPubService.publish(wordUploadedEvent);
         return status;
     }
 

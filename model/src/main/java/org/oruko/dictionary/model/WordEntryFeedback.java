@@ -14,7 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 /**
- * Entity representing the feedback given for a name
+ * Entity representing the feedback given for a word
  *
  * Created by Dadepo Aderemi.
  */
@@ -25,7 +25,7 @@ public class WordEntryFeedback {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     @Column
-    private String name;
+    private String word;
     @Column(length = 2000)
     private String feedback;
     @Column
@@ -37,9 +37,9 @@ public class WordEntryFeedback {
     public WordEntryFeedback() {
     }
 
-    public WordEntryFeedback(@JsonProperty("name") String name,
+    public WordEntryFeedback(@JsonProperty("word") String word,
                              @JsonProperty("feedback") String feedback) {
-        this.name = name;
+        this.word = word;
         this.feedback = feedback;
         this.submittedAt = LocalDateTime.now();
     }
@@ -48,8 +48,8 @@ public class WordEntryFeedback {
     public long getId() {
         return id;
     }
-    public String getName() {
-        return name;
+    public String getWord() {
+        return word;
     }
     public String getFeedback() {
         return feedback;

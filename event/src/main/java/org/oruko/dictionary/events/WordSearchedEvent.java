@@ -6,13 +6,13 @@ import java.time.LocalDateTime;
  * Event object for search activity
  * Created by Dadepo Aderemi.
  */
-public class NameSearchedEvent {
+public class WordSearchedEvent {
 
     private final String nameSearched;
     private final String ipOfRequest;
     private final LocalDateTime timestamp = LocalDateTime.now();
 
-    public NameSearchedEvent(String nameSearched, String ipOfRequest) {
+    public WordSearchedEvent(String nameSearched, String ipOfRequest) {
         this.nameSearched = nameSearched;
         this.ipOfRequest = ipOfRequest;
     }

@@ -4,7 +4,7 @@ package org.oruko.dictionary.events;
  * Event object for when a name is uploaded
  * Created by Dadepo Aderemi.
  */
-public class NameUploadedEvent {
+public class WordUploadedEvent {
     private int totalNumberOfNames;
     private int totalUploaded;
     private boolean isUploading = false;

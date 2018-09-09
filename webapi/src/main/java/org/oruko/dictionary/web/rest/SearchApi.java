@@ -1,13 +1,13 @@
 package org.oruko.dictionary.web.rest;
 
 import org.oruko.dictionary.events.EventPubService;
-import org.oruko.dictionary.events.NameIndexedEvent;
-import org.oruko.dictionary.events.NameSearchedEvent;
+import org.oruko.dictionary.events.WordIndexedEvent;
+import org.oruko.dictionary.events.WordSearchedEvent;
 import org.oruko.dictionary.model.WordEntry;
 import org.oruko.dictionary.model.State;
 import org.oruko.dictionary.search.api.IndexOperationStatus;
 import org.oruko.dictionary.search.api.SearchService;
-import org.oruko.dictionary.web.NameEntryService;
+import org.oruko.dictionary.web.WordEntryService;
 import org.oruko.dictionary.web.event.RecentIndexes;
 import org.oruko.dictionary.web.event.RecentSearches;
 import org.oruko.dictionary.web.exception.GenericApiCallException;
@@ -48,7 +48,7 @@ public class SearchApi {
 
     private Logger logger = LoggerFactory.getLogger(SearchApi.class);
 
-    private NameEntryService nameEntryService;
+    private WordEntryService wordEntryService;
     private SearchService searchService;
     private RecentSearches recentSearches;
     private RecentIndexes recentIndexes;
@@ -57,18 +57,18 @@ public class SearchApi {
     /**
      * Public constructor for {@link SearchApi}
      *
-     * @param nameEntryService         service layer for interacting with name entries
+     * @param wordEntryService         service layer for interacting with name entries
      * @param recentSearches       object holding the recent searches in memory
      * @param recentIndexes        object holding the recent index names in memory
      */
     @Autowired
     public SearchApi(EventPubService eventPubService,
-                     NameEntryService nameEntryService,
+                     WordEntryService wordEntryService,
                      SearchService searchService,
                      RecentSearches recentSearches,
                      RecentIndexes recentIndexes) {
         this.eventPubService = eventPubService;
-        this.nameEntryService = nameEntryService;
+        this.wordEntryService = wordEntryService;
         this.searchService = searchService;
         this.recentSearches = recentSearches;
         this.recentIndexes = recentIndexes;
@@ -90,7 +90,7 @@ public class SearchApi {
     /**
      * Doea a full text search for name
      * @param searchTerm the name to search
-     * @return the set of names found. If only one name is found then {@link NameSearchedEvent} is published
+     * @return the set of names found. If only one name is found then {@link WordSearchedEvent} is published
      */
     @RequestMapping(value = {"/", ""}, method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -101,7 +101,7 @@ public class SearchApi {
         if (foundNames != null
                 && foundNames.size() == 1
                 && foundNames.stream().allMatch(result -> result.getWord().equals(searchTerm))) {
-            eventPubService.publish(new NameSearchedEvent(searchTerm, request.getRemoteAddr()));
+            eventPubService.publish(new WordSearchedEvent(searchTerm, request.getRemoteAddr()));
         }
         return foundNames;
     }
@@ -134,7 +134,7 @@ public class SearchApi {
         WordEntry name = searchService.getByName(searchTerm);
 
         if (name != null) {
-            eventPubService.publish(new NameSearchedEvent(searchTerm, request.getRemoteAddr()));
+            eventPubService.publish(new WordSearchedEvent(searchTerm, request.getRemoteAddr()));
         }
         return name;
     }
@@ -184,21 +184,21 @@ public class SearchApi {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Object>> indexEntry(@Valid WordEntry entry) {
         Map<String, Object> response = new HashMap<>();
-        WordEntry wordEntry = nameEntryService.loadName(entry.getWord());
+        WordEntry wordEntry = wordEntryService.loadWord(entry.getWord());
         if (wordEntry == null) {
             response.put("message", "Cannot index entry. Name " + entry.getWord() + " not in the database");
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
 
         wordEntry.setState(State.PUBLISHED);
-        nameEntryService.saveName(wordEntry);
+        wordEntryService.saveWord(wordEntry);
         publishNameIsIndexed(wordEntry);
         response.put("message", "Name is now searchable");
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     private void publishNameIsIndexed(WordEntry wordEntry) {
-        eventPubService.publish(new NameIndexedEvent(wordEntry.getWord()));
+        eventPubService.publish(new WordIndexedEvent(wordEntry.getWord()));
     }
 
     /**
@@ -212,7 +212,7 @@ public class SearchApi {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Object>> indexEntryByName(@PathVariable String name) {
         Map<String, Object> response = new HashMap<>();
-        WordEntry wordEntry = nameEntryService.loadName(name);
+        WordEntry wordEntry = wordEntryService.loadWord(name);
         if (wordEntry == null) {
             // name requested to be indexed not in the database
             response.put("message",
@@ -222,7 +222,7 @@ public class SearchApi {
 
         publishNameIsIndexed(wordEntry);
         wordEntry.setState(State.PUBLISHED);
-        nameEntryService.saveName(wordEntry);
+        wordEntryService.saveWord(wordEntry);
         response.put("message", name + " has been published");
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -246,7 +246,7 @@ public class SearchApi {
         List<String> notFound = new ArrayList<>();
 
         Arrays.stream(names).forEach(name -> {
-            WordEntry entry = nameEntryService.loadName(name);
+            WordEntry entry = wordEntryService.loadWord(name);
             if (entry == null) {
                 notFound.add(name);
             } else {
@@ -270,7 +270,7 @@ public class SearchApi {
         for (WordEntry wordEntry : nameEntries) {
             publishNameIsIndexed(wordEntry);
             wordEntry.setState(State.PUBLISHED);
-            nameEntryService.saveName(wordEntry);
+            wordEntryService.saveWord(wordEntry);
         }
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -293,10 +293,10 @@ public class SearchApi {
         Map<String, Object> response = new HashMap<>();
         response.put("message", message);
         if (deleted) {
-            WordEntry wordEntry = nameEntryService.loadName(name);
+            WordEntry wordEntry = wordEntryService.loadWord(name);
             if (wordEntry != null) {
                 wordEntry.setState(State.NEW);
-                nameEntryService.saveName(wordEntry);
+                wordEntryService.saveWord(wordEntry);
             }
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
@@ -320,7 +320,7 @@ public class SearchApi {
         List<String> notFound = new ArrayList<>();
 
         Arrays.stream(names).forEach(name -> {
-            WordEntry entry = nameEntryService.loadName(name);
+            WordEntry entry = wordEntryService.loadWord(name);
             if (entry == null) {
                 notFound.add(name);
             } else {

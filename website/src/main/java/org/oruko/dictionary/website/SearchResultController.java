@@ -43,21 +43,21 @@ public class SearchResultController {
 
     /**
      * Displays the result for a single entry
-     * @param nameEntry the {@link WordEntry}
+     * @param wordEntry the {@link WordEntry}
      * @param map the map
      * @return the view name
      */
-    @RequestMapping("/entries/{nameEntry}")
-    public String showEntry(@PathVariable String nameEntry, Model map) {
-        map.addAttribute("title", "Name Entry");
+    @RequestMapping("/entries/{wordEntry}")
+    public String showEntry(@PathVariable String wordEntry, Model map) {
+        map.addAttribute("title", "Word Entry");
         map.addAttribute("host", host);
-        if (!map.containsAttribute("name")) {
-            final WordEntry name = apiService.getName(nameEntry);
-            if (name == null) {
+        if (!map.containsAttribute("word")) {
+            final WordEntry word = apiService.getWord(wordEntry);
+            if (word == null) {
                 // no single entry found for query, return to view where search result can be displayed
-                return "redirect:/entries?q=" + nameEntry;
+                return "redirect:/entries?q=" + wordEntry;
             }
-            map.addAttribute("name", name);
+            map.addAttribute("word", word);
         }
         return "singleresult";
     }

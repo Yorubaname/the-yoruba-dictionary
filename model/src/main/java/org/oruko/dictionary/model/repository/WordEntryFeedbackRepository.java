@@ -14,7 +14,7 @@ import javax.transaction.Transactional;
  */
 @Transactional
 public interface WordEntryFeedbackRepository extends CrudRepository<WordEntryFeedback, Long> {
-    List<WordEntryFeedback> findByName(String name, Sort sort);
+    List<WordEntryFeedback> findByWord(String word, Sort sort);
     List<WordEntryFeedback> findAll(Sort sort);
 
 }

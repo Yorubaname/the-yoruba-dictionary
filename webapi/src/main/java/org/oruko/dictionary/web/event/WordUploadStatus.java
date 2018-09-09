@@ -1,18 +1,18 @@
 package org.oruko.dictionary.web.event;
 
-import org.oruko.dictionary.events.NameUploadedEvent;
+import org.oruko.dictionary.events.WordUploadedEvent;
 import org.springframework.stereotype.Component;
 
 /**
  * Created by Dadepo Aderemi.
  */
 @Component
-public class NameUploadStatus {
+public class WordUploadStatus {
     private Integer totalNumberOfNames;
     private Integer totalUploaded;
     private boolean isUploading = false;
 
-    public void setStatus(NameUploadedEvent event) {
+    public void setStatus(WordUploadedEvent event) {
 
         if (event.isUploading()) {
             isUploading = true;

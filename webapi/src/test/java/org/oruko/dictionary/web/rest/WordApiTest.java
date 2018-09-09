@@ -14,7 +14,7 @@ import org.oruko.dictionary.importer.ImportStatus;
 import org.oruko.dictionary.importer.ImporterInterface;
 import org.oruko.dictionary.model.WordEntry;
 import org.oruko.dictionary.model.State;
-import org.oruko.dictionary.web.NameEntryService;
+import org.oruko.dictionary.web.WordEntryService;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.mock.web.MockMultipartFile;
@@ -38,16 +38,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * Test for {@link org.oruko.dictionary.web.rest.NameApi}
+ * Test for {@link org.oruko.dictionary.web.rest.WordApi}
  */
 @RunWith(MockitoJUnitRunner.class)
-public class NameApiTest extends AbstractApiTest {
+public class WordApiTest extends AbstractApiTest {
 
     @InjectMocks
-    NameApi nameApi;
+    WordApi wordApi;
 
     @Mock
-    private NameEntryService entryService;
+    private WordEntryService entryService;
 
     @Mock
     private ImporterInterface importerInterface;
@@ -71,7 +71,7 @@ public class NameApiTest extends AbstractApiTest {
         objectMapper.registerModule(dateTimeSerializer);
         MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter(objectMapper);
 
-        mockMvc = MockMvcBuilders.standaloneSetup(nameApi).setMessageConverters(converter).setHandlerExceptionResolvers(
+        mockMvc = MockMvcBuilders.standaloneSetup(wordApi).setMessageConverters(converter).setHandlerExceptionResolvers(
                 createExceptionResolver()).build();
         testWordEntry = new WordEntry("test-entry");
         testWordEntry.setMeaning("test_meaninyig");
@@ -82,7 +82,7 @@ public class NameApiTest extends AbstractApiTest {
     public void test_get_all_names_via_get() throws Exception {
         testWordEntry.setWord("firstname");
         anotherTestWordEntry.setWord("secondname");
-        when(entryService.loadAllNames()).thenReturn(Arrays.asList(testWordEntry, anotherTestWordEntry));
+        when(entryService.loadAllWords()).thenReturn(Arrays.asList(testWordEntry, anotherTestWordEntry));
              mockMvc.perform(get("/v1/names?all=true"))
                     .andExpect(jsonPath("$", hasSize(2)))
                     .andExpect(jsonPath("$[0].name", is("firstname")))
@@ -121,7 +121,7 @@ public class NameApiTest extends AbstractApiTest {
 
     @Test
     public void test_get_a_name() throws Exception {
-        when(entryService.loadName("test-entry")).thenReturn(testWordEntry);
+        when(entryService.loadWord("test-entry")).thenReturn(testWordEntry);
         mockMvc.perform(get("/v1/names/test-entry"))
                .andExpect(jsonPath("$.name", is("test-entry")))
                .andExpect(status().isOk());
@@ -129,12 +129,12 @@ public class NameApiTest extends AbstractApiTest {
 
     @Test
     public void test_get_all_names() throws Exception {
-        when(entryService.loadAllNames()).thenReturn(Arrays.asList(testWordEntry, anotherTestWordEntry));
+        when(entryService.loadAllWords()).thenReturn(Arrays.asList(testWordEntry, anotherTestWordEntry));
         mockMvc.perform(get("/v1/names?all=true"))
                .andExpect(jsonPath("$").isArray())
                .andExpect(status().isOk());
 
-        verify(entryService).loadAllNames();
+        verify(entryService).loadAllWords();
     }
 
 
@@ -156,7 +156,7 @@ public class NameApiTest extends AbstractApiTest {
         WordEntry wordEntry_published_2 = mock(WordEntry.class);
         when(wordEntry_published_2.getState()).thenReturn(State.PUBLISHED);
 
-        when(entryService.loadAllNames()).thenReturn(Arrays.asList(wordEntry_new_1, wordEntry_new_2, wordEntry_new_3,
+        when(entryService.loadAllWords()).thenReturn(Arrays.asList(wordEntry_new_1, wordEntry_new_2, wordEntry_new_3,
                 wordEntry_modified_1, wordEntry_modified_2,
                 wordEntry_published_2));
 
@@ -173,7 +173,7 @@ public class NameApiTest extends AbstractApiTest {
 
     @Test
     public void test_get_a_name_not_found_in_db() throws Exception {
-        when(entryService.loadName("test")).thenReturn(null);
+        when(entryService.loadWord("test")).thenReturn(null);
 
         mockMvc.perform(get("/v1/names/test"))
                .andExpect(status().isBadRequest());
@@ -273,7 +273,7 @@ public class NameApiTest extends AbstractApiTest {
     @Test
     public void test_modifying_name_via_put_request() throws Exception {
         WordEntry wordEntry = mock(WordEntry.class);
-        when(entryService.loadName("test")).thenReturn(wordEntry);
+        when(entryService.loadWord("test")).thenReturn(wordEntry);
         String requestJson = new ObjectMapper().writeValueAsString(testWordEntry);
         mockMvc.perform(put("/v1/names/test")
                                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -281,7 +281,7 @@ public class NameApiTest extends AbstractApiTest {
                .andExpect(status().isCreated());
 
         //TODO revisit and see if argument captor can be put to use here
-        verify(entryService).updateName(isA(WordEntry.class), isA(WordEntry.class));
+        verify(entryService).updateWord(isA(WordEntry.class), isA(WordEntry.class));
     }
 
     @Test
@@ -337,14 +337,14 @@ public class NameApiTest extends AbstractApiTest {
 
     @Test
     public void test_get_names_with_feedback() throws Exception {
-        when(entryService.loadName("test")).thenReturn(testWordEntry);
+        when(entryService.loadWord("test")).thenReturn(testWordEntry);
         mockMvc.perform(get("/v1/names/{name}?feedback=true", "test"))
                .andExpect(status().isOk()).andExpect(jsonPath("$.feedback", notNullValue()));
     }
 
     @Test
     public void test_get_names_without_feedback() throws Exception {
-        when(entryService.loadName("test")).thenReturn(testWordEntry);
+        when(entryService.loadWord("test")).thenReturn(testWordEntry);
         mockMvc.perform(get("/v1/names/{name}?feedback=false", "test"))
                .andExpect(status().isOk()).andExpect(jsonPath("$.feedback").doesNotExist());
     }
