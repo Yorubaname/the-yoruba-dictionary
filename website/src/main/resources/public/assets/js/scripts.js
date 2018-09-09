@@ -99,13 +99,13 @@ $(function () {
 
 
     /* Submit Name Feedback */
-    $('form[name="name_feedback"]').on('submit', function (e) {
+    $('form[name="word_feedback"]').on('submit', function (e) {
         e.preventDefault();
         return $.ajax({
             url: e.currentTarget.action,
             method: e.currentTarget.method,
             contentType: 'application/json',
-            data: JSON.stringify({name: $('#nameToFeedback').val(), feedback: $('textarea[name="feedback"]').val()}),
+            data: JSON.stringify({word: $('#wordToFeedback').val(), feedback: $('textarea[name="feedback"]').val()}),
             type: 'json',
             success: function (resp) {
                 e.currentTarget.reset();

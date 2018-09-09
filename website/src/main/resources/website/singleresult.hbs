@@ -113,12 +113,12 @@
 		    <div class="modal-header">
 		    	<h3>{{message "lang.improve-entry.help-us"}} "{{ word.word }}"</h3>
 		    </div>
-			<form word="name_feedback" class="modal-body" action="/v1/feedbacks" method="post">
+			<form name="word_feedback" class="modal-body" action="/v1/feedbacks" method="post">
 			    <div class="response"></div>
 				<div class="form-group">
-                    <input id="nameToFeedback" type="hidden" value="{{word.word}}"/>
+                    <input id="wordToFeedback" type="hidden" value="{{word.word}}"/>
             		<p class="lead">{{message "lang.improve-entry.sub-text"}}</p>
-            		<textarea word="feedback" id="improveEntry" class="form-control" rows="5" required="true"></textarea>
+            		<textarea name="feedback" id="improveEntry" class="form-control" rows="5" required="true"></textarea>
         		</div>
         		<button type="submit" id="submitEntry" class="btn btn-success btn-lg">Submit Feedback</button>
         		&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" data-dismiss="modal">Cancel</a>
