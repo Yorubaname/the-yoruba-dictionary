@@ -9,14 +9,12 @@
 		<div class="row search-result">
 				<div class="col-sm-7 entry">
 
-				   <h2 class="intonation" id="word-entry">{{word.word }}</h2>
-
-					<p><strong>{{message "lang.pronunciation"}}</strong>
-                        <button class="btn btn-default btn-sm" id="tts-button">
-							<i class="fa fa-volume-up" data-placement="top" title="{{message "lang.play-sound"}}"></i>
-						</button>
-						<!--<span> class="pull-right text-muted"><strong>{{message "lang.submitby"}}</strong> {{ word.submittedBy }}</span>-->
-					</p>
+				   <h2 class="intonation" id="word-entry">
+                       {{word.word }}
+                       <button class="btn btn-default btn-sm" id="tts-button">
+                           <i class="fa fa-volume-up" data-placement="top" title="{{message "lang.play-sound"}}"></i>
+                       </button>
+                   </h2>
 
 					<div class="share">
 
