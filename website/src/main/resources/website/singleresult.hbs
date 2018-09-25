@@ -5,124 +5,129 @@
 
 <!-- main-content -->
 <section id="content">
-	<div class="container">
-		<div class="row search-result">
-				<div class="col-sm-7 entry">
+    <div class="container">
+        <div class="row search-result">
+            <div class="col-sm-12 col-md-8 entry">
 
-				   <h2 class="intonation" id="word-entry">
-                       {{word.word }}
-                       <button class="btn btn-default btn-sm" id="tts-button">
-                           <i class="fa fa-volume-up" data-placement="top" title="{{message "lang.play-sound"}}"></i>
-                       </button>
-                   </h2>
+                <h2 class="intonation" id="word-entry">
+                    {{word.word }}
+                    <button class="btn btn-default btn-sm" id="tts-button">
+                        <i class="fa fa-volume-up" data-placement="top" title="{{message "lang.play-sound"}}"></i>
+                    </button>
+                </h2>
 
-					<div class="share">
+                <small>{{word.partOfSpeech}} | {{word.style}} | {{word.ipaNotation}}</small>
+                <div class="share mt-2">
 
-					<a class="btn btn-sm btn-success" href="#/improve-entry" data-toggle="modal" data-target="#improveEntryModal" style="margin-right:20px">
-						{{message "lang.improve-entry"}}  <i class="fa fa-pencil"></i>
-					</a>
+                    <a class="btn btn-sm btn-success" href="#/improve-entry" data-toggle="modal"
+                       data-target="#improveEntryModal" style="margin-right:20px">
+                        {{message "lang.improve-entry"}}  <i class="fa fa-pencil"></i>
+                    </a>
 
-					<span class="text-muted">{{message "lang.share"}} <i class="fa fa-share-alt"></i></span>
+                    <span class="text-muted">{{message "lang.share"}} <i class="fa fa-share-alt"></i></span>
 
-					<a target="_blank" class="btn btn-social btn-sm btn-fb btn-primary" href="http://www.facebook.com/sharer.php?u=http%3A%2F%2F{{host}}/entries/{{word.word}}"><i class="fa fa-facebook"></i> </a>
-					<a target="_blank" class="btn btn-social btn-sm btn-tw btn-info" href="https://twitter.com/intent/tweet?url=http%3A%2F%2F{{host}}/entries/{{word.word}}&amp;text=Did you know {{word.word}} means {{word.meaning}}?&amp;hashtags=YorubaNames&amp;via=YorubaNames"><i class="fa fa-twitter"></i> </a>
+                    <a target="_blank" class="btn btn-social btn-sm btn-fb btn-primary"
+                       href="http://www.facebook.com/sharer.php?u=http%3A%2F%2F{{host}}/entries/{{word.word}}"><i
+                            class="fa fa-facebook"></i> </a>
+                    <a target="_blank" class="btn btn-social btn-sm btn-tw btn-info"
+                       href="https://twitter.com/intent/tweet?url=http%3A%2F%2F{{host}}/entries/{{word.word}}&amp;text=Did you know {{word.word}} means {{word.meaning}}?&amp;hashtags=YorubaNames&amp;via=YorubaNames"><i
+                            class="fa fa-twitter"></i> </a>
 
-					</div>
+                </div>
 
-						<br><br>
-						<h4>{{message "lang.meaningof"}} {{word.word }}</h4>
-						<p class="intonation">{{ word.meaning }}</p>
+                <br><br>
+                <h4>{{message "lang.topDefinition"}}</h4>
+                <p class="intonation">{{ word.definitions.0.content }}</p>
 
-						<br><br>
-						<h4>{{message "lang.extendedmeaningof"}}</h4>
-						<p>{{word.extendedMeaning }}</p>
+                <br><br>
+                <h4>{{message "lang.extendedmeaningof"}}</h4>
+                <p>{{word.extendedMeaning }}</p>
 
-					<!-- /meaning of word -->
-					    <br><br>
-						<h4 class="intonation">{{message "lang.morphology"}}</h4>
-						<p>{{word.morphology}}</p>
+                <!-- /meaning of word -->
+                <br><br>
+                <h4 class="intonation">{{message "lang.morphology"}}</h4>
+                <p>{{word.morphology}}</p>
 
-					<!-- /morphology -->
+                <!-- /morphology -->
 
-					    <br><br>
-						<h4>{{message "lang.etymology"}}</h4>
-			            {{#each word.etymology}}
-			               <strong>{{this.part}}</strong><span> - {{this.meaning}}</span><br>
-						{{/each}}
-
-
-					<!-- /etymology -->
-
-
-						<br><br>
-						<h4>{{message "lang.geolocation"}}</h4>
-						<p>{{message "lang.commonin"}}:
-                                {{#each word.geoLocation}}
-                                    <br/>{{this.place}}
-                                {{/each}}
-                        </p>
-
-					<!-- /geolocation -->
-
-					    <br><br>
-						<h4>{{message "lang.famous-persons"}}</h4>
-						<p>{{word.famousPeople}}</p>
-
-					<!-- /famousPeople -->
-
-					    <br><br>
-						<h4>{{message "lang.media-links"}}</h4>
-						<p>{{word.media}}</p>
-
-					<!-- /media -->
+                <br><br>
+                <h4>{{message "lang.etymology"}}</h4>
+                {{#each word.etymology}}
+                    <strong>{{this.part}}</strong><span> - {{this.meaning}}</span><br>
+                {{/each}}
 
 
-						<br><br>
-						<h4>{{message "lang.variants"}}</h4>
-						<p class="intonation">{{word.variants}}</p>
+                <!-- /etymology -->
 
-					<!-- /variants -->
 
-					    <br><br>
-						<h4>{{message "lang.see-also"}}</h4>
+                <br><br>
+                <h4>{{message "lang.geolocation"}}</h4>
+                <p>{{message "lang.commonin"}}:
+                    {{#each word.geoLocation}}
+                        <br/>{{this.place}}
+                    {{/each}}
+                </p>
 
-					<!-- /see also -->
+                <!-- /geolocation -->
 
-				</div>
+                <br><br>
+                <h4>{{message "lang.famous-persons"}}</h4>
+                <p>{{word.famousPeople}}</p>
 
-			<!-- sidebar -->
-			<aside>
-				<div class="col-md-4">
-					{{> rsidebar }}
-				</div>
-			</aside>
-			<!-- /sidebar -->
-			{{> alphabets}}
-		</div>
+                <!-- /famousPeople -->
 
-	</div>
+                <br><br>
+                <h4>{{message "lang.media-links"}}</h4>
+                <p>{{word.media}}</p>
+
+                <!-- /media -->
+
+
+                <br><br>
+                <h4>{{message "lang.variants"}}</h4>
+                <p class="intonation">{{word.variants}}</p>
+
+                <!-- /variants -->
+
+                <br><br>
+                <h4>{{message "lang.see-also"}}</h4>
+
+                <!-- /see also -->
+
+            </div>
+
+            <!-- sidebar -->
+            <aside class="col-sm-12 col-md-4">
+                    {{> rsidebar }}
+            </aside>
+            <!-- /sidebar -->
+            {{> alphabets}}
+        </div>
+
+    </div>
 </section>
 <!-- /main-content -->
 
 <!--Improve Entry Modal -->
 <div class="modal fade" id="improveEntryModal" role="dialog">
-	<div class="modal-dialog">
-		<div class="modal-content">
-		    <div class="modal-header">
-		    	<h3>{{message "lang.improve-entry.help-us"}} "{{ word.word }}"</h3>
-		    </div>
-			<form name="word_feedback" class="modal-body" action="/v1/feedbacks" method="post">
-			    <div class="response"></div>
-				<div class="form-group">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>{{message "lang.improve-entry.help-us"}} "{{ word.word }}"</h3>
+            </div>
+            <form name="word_feedback" class="modal-body" action="/v1/feedbacks" method="post">
+                <div class="response"></div>
+                <div class="form-group">
                     <input id="wordToFeedback" type="hidden" value="{{word.word}}"/>
-            		<p class="lead">{{message "lang.improve-entry.sub-text"}}</p>
-            		<textarea name="feedback" id="improveEntry" class="form-control" rows="5" required="true"></textarea>
-        		</div>
-        		<button type="submit" id="submitEntry" class="btn btn-success btn-lg">Submit Feedback</button>
-        		&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" data-dismiss="modal">Cancel</a>
-			</form>
-		</div>
-	</div>
+                    <p class="lead">{{message "lang.improve-entry.sub-text"}}</p>
+                    <textarea name="feedback" id="improveEntry" class="form-control" rows="5"
+                              required="true"></textarea>
+                </div>
+                <button type="submit" id="submitEntry" class="btn btn-success btn-lg">Submit Feedback</button>
+                &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" data-dismiss="modal">Cancel</a>
+            </form>
+        </div>
+    </div>
 </div>
 <!--/Improve Entry Modal -->
 
