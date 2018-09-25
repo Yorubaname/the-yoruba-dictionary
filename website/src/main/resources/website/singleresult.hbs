@@ -35,13 +35,97 @@
 
                 </div>
 
-                <br><br>
+                <br>
                 <h4>{{message "lang.topDefinition"}}</h4>
                 <p class="intonation">{{ word.definitions.0.content }}</p>
+                <p class="intonation"><strong>{{message "lang.english-translation"}}:</strong> {{word.definitions.0.content}}</p>
+                <br>
 
-                <br><br>
-                <h4>{{message "lang.extendedmeaningof"}}</h4>
-                <p>{{word.extendedMeaning }}</p>
+                <h4>{{message "lang.other-definitions"}}</h4>
+                <div class="panel-group" id="accordion">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#q1" aria-expanded="false" class="collapsed">
+                                    <h4>Why TTSYorùbá?</h4>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="q1" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+                            <div class="panel-body">
+                                <p>
+                                    Yorùbá is a language spoken by over 30 million people in Nigeria alone and by millions more in Benin Republic, Togo, Ghana,
+                                    Brazil, Cuba, Jamaica, and the United States. It is also a language with
+                                    an extensive and enduring literary and religious value, but with inadequate
+                                    representation in technology (like most African languages). By creating
+                                    tools like the TTS machine (and many more like
+                                    <a id="link" href="http://www.yorubaname.com" target="_blank">the YorubaName dictionary</a>,
+                                    <a id="link" href="http://blog.yorubaname.com/keyboards/">free downloadable keyboards</a>, etc, we are trying to better empower
+                                    African languages to serve interested users in the technological age.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#q2" aria-expanded="false" class="collapsed">
+                                    <h4>How can I use this tool?</h4>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="q2" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+                            <div class="panel-body">
+                                <p>
+                                    It can be used as either a
+                                    <strong>text reader</strong> or
+                                    <strong>tone/spelling verifier</strong> or as a
+                                    <strong>tone marking teacher</strong>.
+                                </p>
+                                <p>
+                                    As a
+                                    <strong>text reader</strong>, you can paste a body of text in the space provided
+                                    and have the machine read it to you. This will work for people who have
+                                    problems reading Yorùbá texts but can comprehend it if spoken to them.</p>
+                                <p>
+                                    As
+                                    <strong>tone/spelling verifier</strong>, you can use TTSYorùbá to verify that
+                                    the tonemarking you have placed on a piece of text is correct by having
+                                    the machine pronounce it for you first. This also works for people who
+                                    have had clients deliver translated Yorùbá texts to them. By copying
+                                    and pasting random segments of the delivered work into this machine,
+                                    you can hear the output and know whether the work is well done or not.</p>
+                                <p>
+                                    As a
+                                    <strong>tone marking teacher</strong>, you will be able to use the application
+                                    to actually understand how different tones are pronounced. By the time
+                                    you try out different tonal combinations on different words, you will
+                                    eventually figure out how tonemarking works in Yorùbá. So, in some
+                                    way, this can actually teach you how to learn to write properly in Yorùbá.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#q3" aria-expanded="false" class="collapsed">
+                                    <h4>How else can I use it?</h4>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="q3" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+                            <div class="panel-body">
+                                <p>You can also use it to send audio missives online. For instance, each generated
+                                    sound can be shared on Twitter or Facebook, or even copied and sent through
+                                    messenger or other means. That way, texting becomes not the only way
+                                    to communicate. You can now send sounds, which can be intimate or mischievous,
+                                    as you want it. Up to you how you decide to use it.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- /meaning of word -->
                 <br><br>
