@@ -38,7 +38,8 @@
                 <br>
                 <h4>{{message "lang.topDefinition"}}</h4>
                 <p class="intonation">{{ word.definitions.0.content }}</p>
-                <p class="intonation"><strong>{{message "lang.english-translation"}}:</strong> {{word.definitions.0.content}}</p>
+                <p class="intonation"><strong>{{message "lang.english-translation"}}
+                    :</strong> {{word.definitions.0.content}}</p>
                 <br>
 
                 <h4>{{message "lang.other-definitions"}}</h4>
@@ -46,7 +47,8 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#accordion" href="#q1" aria-expanded="false" class="collapsed">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#q1" aria-expanded="false"
+                                   class="collapsed">
                                     <h4>Why TTSYorùbá?</h4>
                                 </a>
                             </h4>
@@ -54,13 +56,16 @@
                         <div id="q1" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
                             <div class="panel-body">
                                 <p>
-                                    Yorùbá is a language spoken by over 30 million people in Nigeria alone and by millions more in Benin Republic, Togo, Ghana,
+                                    Yorùbá is a language spoken by over 30 million people in Nigeria alone and by
+                                    millions more in Benin Republic, Togo, Ghana,
                                     Brazil, Cuba, Jamaica, and the United States. It is also a language with
                                     an extensive and enduring literary and religious value, but with inadequate
                                     representation in technology (like most African languages). By creating
                                     tools like the TTS machine (and many more like
-                                    <a id="link" href="http://www.yorubaname.com" target="_blank">the YorubaName dictionary</a>,
-                                    <a id="link" href="http://blog.yorubaname.com/keyboards/">free downloadable keyboards</a>, etc, we are trying to better empower
+                                    <a id="link" href="http://www.yorubaname.com" target="_blank">the YorubaName
+                                        dictionary</a>,
+                                    <a id="link" href="http://blog.yorubaname.com/keyboards/">free downloadable
+                                        keyboards</a>, etc, we are trying to better empower
                                     African languages to serve interested users in the technological age.
                                 </p>
                             </div>
@@ -69,7 +74,8 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#accordion" href="#q2" aria-expanded="false" class="collapsed">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#q2" aria-expanded="false"
+                                   class="collapsed">
                                     <h4>How can I use this tool?</h4>
                                 </a>
                             </h4>
@@ -109,7 +115,8 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#accordion" href="#q3" aria-expanded="false" class="collapsed">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#q3" aria-expanded="false"
+                                   class="collapsed">
                                     <h4>How else can I use it?</h4>
                                 </a>
                             </h4>
@@ -155,14 +162,19 @@
                 <!-- /geolocation -->
 
                 <br><br>
-                <h4>{{message "lang.famous-persons"}}</h4>
-                <p>{{word.famousPeople}}</p>
-
                 <!-- /famousPeople -->
 
                 <br><br>
                 <h4>{{message "lang.media-links"}}</h4>
-                <p>{{word.media}}</p>
+                <p id="media-links">
+                <ul>
+                    {{#each word.mediaLinks}}
+                        <li>
+                            <a href="{{this.link}}" target="_blank">{{this.caption}} ({{this.type}})</a>
+                        </li>
+                    {{/each}}
+                </ul>
+                </p>
 
                 <!-- /media -->
 
@@ -182,7 +194,7 @@
 
             <!-- sidebar -->
             <aside class="col-sm-12 col-md-4">
-                    {{> rsidebar }}
+                {{> rsidebar }}
             </aside>
             <!-- /sidebar -->
             {{> alphabets}}
