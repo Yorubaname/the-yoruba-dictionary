@@ -16,7 +16,7 @@
                     </button>
                 </h2>
 
-                <small>{{word.partOfSpeech}} | {{word.style}} | {{word.ipaNotation}}</small>
+                <small><span title="Part of speech">{{word.partOfSpeech}}</span><span title="Style"> | {{word.style}}</span><span title="IPA Notation">| {{word.ipaNotation}}</span></small>
                 <div class="share mt-2">
 
                     <a class="btn btn-sm btn-success" href="#/improve-entry" data-toggle="modal"
@@ -36,7 +36,7 @@
                 </div>
 
                 <br>
-                <h4>{{message "lang.topDefinition"}}</h4>
+                <h4 class="intonation">{{message "lang.topDefinition"}}</h4>
                 <p class="intonation">{{ word.definitions.0.content }}</p>
                 <p class="intonation"><strong>{{message "lang.english-translation"}}
                     :</strong> {{word.definitions.0.englishTranslation}}</p>
@@ -47,7 +47,7 @@
                 {{/each}}
                 <br>
 
-                <h4>{{message "lang.other-definitions"}}</h4>
+                <h4 class="intonation">{{message "lang.other-definitions"}}</h4>
                 <div class="panel-group" id="accordion">
                     {{#each word.definitions}}
                         {{#if @first}}
@@ -85,8 +85,7 @@
                 <p>{{word.morphology}}</p>
 
                 <!-- /morphology -->
-
-                <br><br>
+                <br>
                 <h4>{{message "lang.etymology"}}</h4>
                 {{#each word.etymology}}
                     <strong>{{this.part}}</strong><span> - {{this.meaning}}</span><br>
@@ -105,9 +104,6 @@
                 <!-- /geolocation -->
 
                 <br><br>
-                <!-- /famousPeople -->
-
-                <br><br>
                 <h4>{{message "lang.media-links"}}</h4>
                 <p id="media-links">
                 <ul>
@@ -121,10 +117,16 @@
 
                 <!-- /media -->
 
-
                 <br><br>
                 <h4>{{message "lang.variants"}}</h4>
-                <p class="intonation">{{word.variants}}</p>
+                <p id="variants">
+                <ul>
+                    {{#each word.variants}}
+                        <li>
+                            {{this.word}} ({{this.geoLocation}})
+                        </li>
+                    {{/each}}
+                </ul></p>
 
                 <!-- /variants -->
 
