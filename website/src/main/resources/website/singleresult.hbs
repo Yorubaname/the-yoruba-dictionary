@@ -86,7 +86,7 @@
 
                 <!-- /morphology -->
                 <br>
-                <h4>{{message "lang.etymology"}}</h4>
+                <h4 class="intonation">{{message "lang.etymology"}}</h4>
                 {{#each word.etymology}}
                     <strong>{{this.part}}</strong><span> - {{this.meaning}}</span><br>
                 {{/each}}
@@ -94,7 +94,7 @@
                 <!-- /etymology -->
 
                 <br><br>
-                <h4>{{message "lang.geolocation"}}</h4>
+                <h4 class="intonation">{{message "lang.geolocation"}}</h4>
                 <p>{{message "lang.commonin"}}:
                     {{#each word.geoLocation}}
                         <br/>{{this.place}}
@@ -104,7 +104,7 @@
                 <!-- /geolocation -->
 
                 <br><br>
-                <h4>{{message "lang.media-links"}}</h4>
+                <h4 class="intonation">{{message "lang.media-links"}}</h4>
                 <p id="media-links">
                 <ul>
                     {{#each word.mediaLinks}}
@@ -118,7 +118,7 @@
                 <!-- /media -->
 
                 <br><br>
-                <h4>{{message "lang.variants"}}</h4>
+                <h4 class="intonation">{{message "lang.variants"}}</h4>
                 <p id="variants">
                 <ul>
                     {{#each word.variants}}
@@ -131,7 +131,7 @@
                 <!-- /variants -->
 
                 <br><br>
-                <h4>{{message "lang.see-also"}}</h4>
+                <h4 class="intonation">{{message "lang.see-also"}}</h4>
 
                 <!-- /see also -->
 
