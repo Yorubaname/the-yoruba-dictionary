@@ -2,109 +2,245 @@
 {{> header }}
 
 <section id="searchform">
+
     <div class="jumbotron" id="home-banner">
+
         <div class="container">
-            <h1>{{message "lang.jumbotron1"}} <span>{{nameCount}}</span> {{message "lang.jumbotron2"}}</h1>
 
-            {{> searchcomponent }}
-            <p>{{message "lang.oni-message"}} <br> &mdash; Ọọ̀ni Adéyẹyè Ẹniìtàn Ògúnwùsì <em>(Ọ̀jájá II
-                .Ọọ̀ni of Ifẹ̀ Kingdom)
-            </em></p>
+            <div class="row">
 
-            <h3>{{message "lang.jumboh31"}}</h3>
-            <a href="/submitname" class="btn btn-lg btn-link" style="margin-bottom:15px">{{message "lang.jumboh32"}}</a>
-        </div>
-    </div>
-</section>
-<!-- /search -->
+                <div class="col-md-2"></div>
 
-<section>
-    <div class="container">
+                <div class="col-md-8">
 
-        <div class="llm row">
-            <div class="col-sm-4" id="recent_searches">
-                <ul>
-                    <li><h5>{{message "lang.latest-search"}}</h5></li>
-                    <hr/>
-                    {{#each latestSearches}}
-                        <li class="recent_entry"><a class="word" href="/entries/{{this}}">{{this}}</a></li>
-                    {{/each}}
-                </ul>
-            </div>
-            <div class="col-sm-4" id="recent_additions">
-                <ul>
-                    <li><h5>{{message "lang.latest-add"}}</h5></li>
-                    <hr/>
-                    {{#each latestAdditions}}
-                        <li class="recent_entry"><a class="word" href="/entries/{{this}}">{{this}}</a></li>
-                    {{/each}}
-                </ul>
-            </div>
-            <div class="col-sm-4" id="recent_popular">
-                <ul>
-                    <li><h5>{{message "lang.most-popular"}}</h5></li>
-                    <hr/>
-                    {{#each mostPopular}}
-                        <li class="recent_entry"><a class="word" href="/entries/{{this}}">{{this}}</a></li>
-                    {{/each}}
-                </ul>
-            </div>
-        </div>
+                    <h1>The Only Multimedia Yorùbá Dictionary Online</h1>
 
+                    <div class="search-background">
 
-        <div class="text-center">
-            <h4>{{message "lang.word-listed-by-alphabets"}}:</h4>
-            {{> alphabets}}
-        </div>
+                        <h4>Names listed alphabetically:</h4>
 
-    </div>
-    <!-- /llm -->
+                        {{> alphabets}}
 
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12 text-center"><h3>{{message "lang.key-supporters"}}</h3></div>
-            <div class="col-sm-2 col-sm-offset-3"><a href="http://www.oraturelab.com" target="_blank">
-                <img class="img-responsive" src="/assets/img/supporters/orature_lab.png"></a>
-            </div>
-            <div class="col-sm-2"><a href="http://capitalsqua.re/" target="_blank">
-                <img class="img-responsive" src="/assets/img/supporters/capital_square.png"></a>
-            </div>
-            <div class="col-sm-2"><a href="http://www.alt-i.org/index.php" target="_blank">
-                <img class="img-responsive" src="/assets/img/supporters/alti.png"></a>
-            </div>
-        </div>
-
-        <div class="row" style="margin-top:40px">
-            <div class="col-sm-4 col-sm-offset-2">
-                <div class="fb-page" data-href="https://www.facebook.com/YorubaNames" data-small-header="false"
-                     data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="false"
-                     data-show-posts="false">
-                    <div class="fb-xfbml-parse-ignore">
-                        <blockquote cite="https://www.facebook.com/YorubaNames"><a href="https://www.facebook.com/YorubaNames">{{message "lang.yoruba-word-dictionary"}}</a></blockquote>
+                        {{> searchcomponent }}
                     </div>
+
+                    <div class="text-center">
+                        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top"
+                              class="text-center">
+                            <input type="hidden" name="cmd" value="_s-xclick">
+                            <input type="hidden" name="hosted_button_id" value="JT6MPHT3RGHDN">
+                            <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif"
+                                   border="0" name="submit" alt="PayPal – The safer, easier way to pay online!">
+                            <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1"
+                                 height="1">
+                        </form>
+                    </div>
+
+
                 </div>
+
+                <div class="col-md-2"></div>
+
             </div>
-            <div class="col-sm-4">
-                <form method="post" class="subscribe"
-                      action="//YorubaName.us10.list-manage.com/subscribe/post?u=447ae670439b332a80e50107c&amp;id=0cfdd9d988"
-                      target="_blank">
-                    <h4>{{message "lang.yoruba-word-newsletter"}}</h4>
-                    <p>{{message "lang.follow-update"}}</p>
-                    <input type="hidden" word="b_447ae670439b332a80e50107c_0cfdd9d988" tabindex="-1" value="">
-                    <div class="form-group">
-                        <input type="email" word="EMAIL" placeholder="{{message "lang.enter-your-email"}}" class="form-control" required="required">
-                        <button class="btn btn-success"><i class="fa fa-send"></i></button>
-                    </div>
-                </form>
-            </div>
+
         </div>
+
+    </div>
+
+</section>
+<!-- end search section-->
+
+<!-- something for the blog -->
+
+<div class="full-cnt clearfix bg-fet padding-lr-0p8em">
+
+    <div class="in-cnt-type1 clearfix">
+
+        <!--Home games widget start-->
+
+        <div class="home-games-wgt-cnt">
+
+            <div class="home-games-wgt-items">
+
+                <h2>Feature Dictionary Blog Posts</h2><br><br>
+
+
+                <div>
+
+                    <a href="">
+                            <span class="lazyload-container ratio-3-2">
+                                <img src="assets/img/d3.jpg">
+                            </span>
+                    </a>
+
+
+                    <h5><a href="#">Aduke Olorinla</a></h5>
+
+                    <p class="mell-wh-0"><a class="" href="#">Bawo ni ashe ma pe Aduke?</a></p>
+
+                    <a class="quiz-link" href="">Read More</a>
+
+                </div>
+
+
+                <div>
+
+                    <a href="#">
+                            <span class="lazyload-container ratio-3-2">
+                                <img src="assets/img/d2.jpg">
+                            </span>
+                    </a>
+
+
+                    <h5><a href="#">Aduke Olorinla</a></h5>
+
+                    <p class="mell-wh-0"><a class="" href="#">Bawo ni ashe ma pe Aduke?</a></p>
+
+                    <a class="quiz-link" href="">Read More</a>
+
+                </div>
+
+
+                <div>
+
+                    <a href="#">
+                            <span class="lazyload-container ratio-3-2">
+                                <img src="assets/img/d4.jpg">
+                            </span>
+                    </a>
+
+
+                    <h5><a href="#">Aduke Olorinla</a></h5>
+
+                    <p class="mell-wh-0"><a class="" href="#">Bawo ni ashe ma pe Aduke?</a></p>
+
+                    <a class="quiz-link" href="">Read More</a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!--Home games widget end-->
+
+        <!-- <hr class="gray-divide home-divide"> -->
+
+    </div>
+
+</div>
+<!-- end something for the blog -->
+
+<!-- middle  section -->
+<section>
+
+    <div class="container">
+
+        <div class="row midbar">
+
+            <div class="col-md-4 col-lg-4 popo-bg">
+
+                <p class="popotext">{{message "lang.latest-search"}}</p>
+
+                <ul class="popo-wd">
+                    {{#each latestSearches}}
+                        <li><a href="/entries/{{this}}">{{this}}</a></li>
+                    {{/each}}
+                </ul>
+
+            </div>
+
+            <div class="col-md-4 popo-bg">
+
+                <p class="popotext">{{message "lang.latest-add"}}</p>
+
+                <ul class="popo-wd">
+                    {{#each latestAdditions}}
+                        <li><a href="/entries/{{this}}">{{this}}</a></li>
+                    {{/each}}
+                </ul>
+
+            </div>
+
+            <div class="col-md-4 popo-bg">
+
+                <p class="popotext">{{message "lang.most-popular"}}</p>
+
+                <ul class="popo-wd">
+                    {{#each mostPopular}}
+                        <li><a href="/entries/{{this}}">{{this}}</a></li>
+                    {{/each}}
+                </ul>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+<!-- end middle  section -->
+
+
+<!-- CTA  section -->
+
+<section class="ctab">
+
+    <div class="container">
+
+        <div class="row">
+
+            <div class="col-md-12">
+
+                <h2>Would You Like To Add To The Dictionary?</h2>
+
+                <p>We will appreciate your input as we try to make this dictionary more comprehensive</p>
+
+                <a href="/submitname" class="btn btn-lg btn-link" style="margin-bottom:15px">Add To Dictionary</a>
+
+            </div>
+
+        </div>
+
     </div>
 
 </section>
 
-<!-- sidebar -->
+<section class="faqq">
 
-<!-- /sidebar -->
+    <div class="container">
+
+        <div class="row">
+
+            <h2 class="faqq-header">Frequently Asked Questions</h2>
+
+            <div class="col-md-6" style="padding-bottom: 30px;">
+
+                <h4>a. How do you get words?</h4><br>
+                <p>Lorem ipsum lorem ipsum lorem ipsum lore edr erwt aer arew are
+                    a<br>Lorem ipsum lorem ipsum lorem ipsum lore edr erwt aer arew are a
+                    <br>Lorem ipsum lorem ipsum lorem ipsum lore edr erwt aer arew are a
+                </p>
+
+            </div>
+
+            <div class="col-md-6" style="padding-bottom: 30px;">
+
+                <h4>b. How do you get words?</h4><br>
+                <p>Lorem ipsum lorem ipsum lorem ipsum lore edr erwt aer arew are
+                    a<br>Lorem ipsum lorem ipsum lorem ipsum lore edr erwt aer arew are a
+                    <br>Lorem ipsum lorem ipsum lorem ipsum lore edr erwt aer arew are a
+                </p>
+
+            </div>
+
+            <a href="/faqs" class="btn btn-lg btn-link" style="margin-bottom:15px;">Read More</a>
+
+        </div>
+
+    </div>
+
+</section>
 
 <!-- footer -->
 {{> footer }}

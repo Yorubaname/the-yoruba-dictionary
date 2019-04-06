@@ -1,7 +1,9 @@
-<ul class="alphabets">
+<ul class="alphasearch">
     {{#if alphabets}}
         {{#each alphabets}}
-        <a href="/alphabets/{{normalize this}}"><li>{{normalize this}}</li></a>
+            <a href="/alphabets/{{normalize this}}">
+                <li>{{normalize this}}</li>
+            </a>
         {{/each}}
     {{/if}}
 </ul>
