@@ -42,6 +42,7 @@ public abstract class AbstractWordEntry {
     @Column
     protected String syllables;
 
+    // TODO: Remove this field from this entity
     @Column(length = 5000)
     protected String meaning;
 

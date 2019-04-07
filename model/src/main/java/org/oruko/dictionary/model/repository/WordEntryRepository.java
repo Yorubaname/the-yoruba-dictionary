@@ -34,8 +34,8 @@ public interface WordEntryRepository extends JpaRepository<WordEntry, Long> {
     List<WordEntry> findByState(State state);
     Set<WordEntry> findByWordStartingWithAndState(String alphabet, State state);
     Set<WordEntry> findWordEntryByWordContainingAndState(String word, State state);
-    Set<WordEntry> findWordEntryByVariantsContainingAndState(String word, State state);
-    Set<WordEntry> findWordEntryByMeaningContainingAndState(String word, State state);
+    Set<WordEntry> findWordEntryByVariants_wordContainingAndState(String word, State state);
+    Set<WordEntry> findWordEntryByDefinitions_contentContainingAndState(String word, State state);
     WordEntry findByWordAndState(String word, State state);
 
 

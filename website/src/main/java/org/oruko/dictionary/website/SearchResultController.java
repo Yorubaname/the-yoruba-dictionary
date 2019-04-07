@@ -79,7 +79,7 @@ public class SearchResultController {
         map.addAttribute("title", "Search results for query");
         List<Map<String, Object>> names = apiService.searchName(nameQuery);
 
-        if (names.size() == 1 && isEqualWithoutAccent((String) names.get(0).get("name"), nameQuery)) {
+        if (names.size() == 1 && isEqualWithoutAccent((String) names.get(0).get("word"), nameQuery)) {
             nameQuery = URLEncoder.encode(nameQuery, "UTF-8");
             redirectAttributes.addFlashAttribute("name", names.get(0));
             return "redirect:/entries/"+nameQuery;
