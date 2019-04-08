@@ -1,0 +1,44 @@
+{{#if blogs}}
+    <div class="full-cnt clearfix bg-fet padding-lr-0p8em">
+
+        <div class="in-cnt-type1 clearfix">
+
+            <!--Home games widget start-->
+
+            <div class="home-games-wgt-cnt">
+
+                <div class="home-games-wgt-items">
+
+                    <h2>Feature Dictionary Blog Posts</h2><br><br>
+
+                    {{#each blogs}}
+                        <div>
+
+                            <a href="">
+                            <span class="lazyload-container ratio-3-2">
+                                <img src="{{this.imageUrl}}">
+                            </span>
+                            </a>
+
+
+                            <h5><a href="#">{{this.title}}</a></h5>
+
+                            <p class="mell-wh-0"><a class="" href="{{this.url}}">{{this.intro}}</a></p>
+
+                            <a class="quiz-link" href="{{this.url}}">Read More</a>
+
+                        </div>
+                    {{/each}}
+
+                </div>
+
+            </div>
+
+            <!--Home games widget end-->
+
+            <!-- <hr class="gray-divide home-divide"> -->
+
+        </div>
+
+    </div>
+{{/if}}
