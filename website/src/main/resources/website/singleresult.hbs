@@ -1,176 +1,394 @@
 <!-- Header -->
 {{> header }}
 
-{{> minisearchform }}
+{{> searchform }}
 
-<!-- main-content -->
-<section id="content">
-    <div class="container">
-        <div class="row search-result">
-            <div class="col-sm-12 col-md-8 entry">
-
-                <h2 class="intonation" id="word-entry">
-                    {{word.word }}
-                    <button class="btn btn-default btn-sm" id="tts-button">
-                        <i class="fa fa-volume-up" data-placement="top" title="{{message "lang.play-sound"}}"></i>
-                    </button>
-                </h2>
-
-                <small><span title="Part of speech">{{word.partOfSpeech}}</span><span title="Style"> | {{word.style}}</span><span title="IPA Notation">| {{word.ipaNotation}}</span></small>
-                <div class="share mt-2">
-
-                    <a class="btn btn-sm btn-success" href="#/improve-entry" data-toggle="modal"
-                       data-target="#improveEntryModal" style="margin-right:20px">
-                        {{message "lang.improve-entry"}}  <i class="fa fa-pencil"></i>
-                    </a>
-
-                    <span class="text-muted">{{message "lang.share"}} <i class="fa fa-share-alt"></i></span>
-
-                    <a target="_blank" class="btn btn-social btn-sm btn-fb btn-primary"
-                       href="http://www.facebook.com/sharer.php?u=http%3A%2F%2F{{host}}/entries/{{word.word}}"><i
-                            class="fa fa-facebook"></i> </a>
-                    <a target="_blank" class="btn btn-social btn-sm btn-tw btn-info"
-                       href="https://twitter.com/intent/tweet?url=http%3A%2F%2F{{host}}/entries/{{word.word}}&amp;text=Did you know {{word.word}} means {{word.meaning}}?&amp;hashtags=YorubaNames&amp;via=YorubaNames"><i
-                            class="fa fa-twitter"></i> </a>
-
-                </div>
-
-                <br>
-                <h4 class="intonation">{{message "lang.topDefinition"}}</h4>
-                <p class="intonation">{{ word.definitions.0.content }}</p>
-                <p class="intonation"><strong>{{message "lang.english-translation"}}
-                    :</strong> {{word.definitions.0.englishTranslation}}</p>
-
-                {{#each word.definitions.0.examples}}
-                    <p class="intonation"><strong>{{message "lang.example"}} {{increment @index}}
-                        :</strong> {{this.content}} ({{this.englishTranslation}})</p>
-                {{/each}}
-                <br>
-
-                <h4 class="intonation">{{message "lang.other-definitions"}}</h4>
-                <div class="panel-group" id="accordion">
-                    {{#each word.definitions}}
-                        {{#if @first}}
-                        {{else}}
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h4 class="panel-title">
-                                        <a data-toggle="collapse" data-parent="#accordion" href="#q1"
-                                           aria-expanded="false"
-                                           class="collapsed">
-                                            <h4>{{this.content}}</h4>
-                                        </a>
-                                    </h4>
-                                </div>
-                                <div id="q1" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
-                                    <div class="panel-body">
-                                        <p class="intonation"><strong>{{message "lang.english-translation"}}
-                                            :</strong> {{this.englishTranslation}}</p>
-
-                                        {{#each this.examples}}
-                                            <p class="intonation"><strong>{{message "lang.example"}} {{increment
-                                                    @index}}
-                                                :</strong> {{this.content}} ({{this.englishTranslation}})</p>
-                                        {{/each}}
-                                    </div>
-                                </div>
-                            </div>
-                        {{/if}}
-                    {{/each}}
-                </div>
-
-                <!-- /meaning of word -->
-                <br><br>
-                <h4 class="intonation">{{message "lang.morphology"}}</h4>
-                <p>{{word.morphology}}</p>
-
-                <!-- /morphology -->
-                <br>
-                <h4 class="intonation">{{message "lang.etymology"}}</h4>
-                {{#each word.etymology}}
-                    <strong>{{this.part}}</strong><span> - {{this.meaning}}</span><br>
-                {{/each}}
-
-                <!-- /etymology -->
-
-                <br><br>
-                <h4 class="intonation">{{message "lang.geolocation"}}</h4>
-                <p>{{message "lang.commonin"}}:
-                    {{#each word.geoLocation}}
-                        <br/>{{this.place}}
-                    {{/each}}
-                </p>
-
-                <!-- /geolocation -->
-
-                <br><br>
-                <h4 class="intonation">{{message "lang.media-links"}}</h4>
-                <p id="media-links">
-                <ul>
-                    {{#each word.mediaLinks}}
-                        <li>
-                            <a href="{{this.link}}" target="_blank">{{this.caption}} ({{this.type}})</a>
-                        </li>
-                    {{/each}}
-                </ul>
-                </p>
-
-                <!-- /media -->
-
-                <br><br>
-                <h4 class="intonation">{{message "lang.variants"}}</h4>
-                <p id="variants">
-                <ul>
-                    {{#each word.variants}}
-                        <li>
-                            {{this.word}} ({{this.geoLocation}})
-                        </li>
-                    {{/each}}
-                </ul></p>
-
-                <!-- /variants -->
-
-                <br><br>
-                <h4 class="intonation">{{message "lang.see-also"}}</h4>
-
-                <!-- /see also -->
-
-            </div>
-
-            <!-- sidebar -->
-            <aside class="col-sm-12 col-md-4">
-                {{> rsidebar }}
-            </aside>
-            <!-- /sidebar -->
-            {{> alphabets}}
-        </div>
-
-    </div>
-</section>
 <!-- /main-content -->
 
-<!--Improve Entry Modal -->
-<div class="modal fade" id="improveEntryModal" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>{{message "lang.improve-entry.help-us"}} "{{ word.word }}"</h3>
-            </div>
-            <form name="word_feedback" class="modal-body" action="/v1/feedbacks" method="post">
-                <div class="response"></div>
-                <div class="form-group">
-                    <input id="wordToFeedback" type="hidden" value="{{word.word}}"/>
-                    <p class="lead">{{message "lang.improve-entry.sub-text"}}</p>
-                    <textarea name="feedback" id="improveEntry" class="form-control" rows="5"
-                              required="true"></textarea>
+<section class="ryt">
+
+    <div class="container">
+
+        <div class="row">
+
+            <div class=" col-lg-8 col-xl-9">
+
+                <div class="row entry-header">
+
+                    <div class="col-lg-12">
+
+                        <h1 class="hword"> Àṣeyọrí </h1>
+
+                        <span class="fl"><a class="important-blue-link" href="#">adjective</a></span>
+
+                    </div>
+
                 </div>
-                <button type="submit" id="submitEntry" class="btn btn-success btn-lg">Submit Feedback</button>
-                &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" data-dismiss="modal">Cancel</a>
-            </form>
+
+                <div class="row entry-attr">
+
+                    <div class="col">
+
+                        <span class="word-syllables">À·&#8203;ṣe·&#8203;yọ·&#8203;rí </span>
+
+
+                        <span class="prs">
+
+                                <span class="syl-break">|</span>            <span class="first-slash">\</span>
+
+                                    <span class="pr">a. &#8203; ʃeɪ. &#8203; jɔ. &#8203; ɾɪ</span>    <a class="play-pron hw-play-pron hoverable converted"
+                                                                                                         data-lang="en_us" data-file="diffic02" data-dir="d"
+                                                                                                         href="" title="">
+
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="22px" height="22px" viewBox="0 0 26 26" version="1.1" class="svg replaced-svg">
+
+                                        <defs>
+
+                                            <linearGradient id="grad2" x1="0%" y1="0%" x2="0%" y2="100%">
+
+                                                <stop offset="0%" style="stop-color:rgb(38,86,103);stop-opacity:1"></stop>
+
+                                                <stop offset="100%" style="stop-color:rgb(15,56,80);stop-opacity:1"></stop>
+
+                                            </linearGradient>
+
+                                        </defs>
+
+                                        <g id="Audio" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+
+                                            <g id="Icon/AudioPron">
+
+                                                <g id="Audio">
+
+                                                    <circle id="Oval" class="outline" fill="url(#grad2) #265667" cx="13" cy="13" r="13"></circle>
+
+                                                    <polygon class="logo" id="Path-2" stroke="#FFFFFF" fill="#FFFFFF" points="6 10.5031797 6 15.4563465 9.37102011 15.4563465 13 18 13 8.02789307 9.5 10.5031797"></polygon>
+
+                                                    <path class="logo2" d="M16,8.5 C17.4887382,10.0718463 18.2331073,11.569707 18.2331073,12.993582 C18.2331073,15.1293945 17.1165537,16.4498291 16,17.5894775" id="Path-3" stroke="#FFFFFF"></path>
+
+                                                    <path class="logo2" d="M18.0189209,6.5 C20.0989176,8.3652264 21.138916,10.5318931 21.138916,13 C21.138916,15.4681069 20.0723674,17.6756672 17.93927,19.6226807" id="Path-4" stroke="#FFFFFF"></path>
+
+                                                </g>
+
+                                            </g>
+
+                                        </g>
+
+                                    </svg>
+
+                                </a>
+
+                                <span class="last-slash">\</span>    <span class="syl-break">|</span>
+
+                                <span class="word-syllables"><a href="#" style="text-decoration: underline;">Ibadan</a></span>
+
+                                <span class="syl-break">|</span>
+
+                                <span class="smd">
+
+                                    <a href="#"><i class="fa fa-facebook"></i></a>
+
+                                    <a href="#"><i class="fa fa-twitter"></i></a>
+
+                                    <a href="#"><i class="fa fa-instagram"></i></a>
+
+                                </span>
+
+                            </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="row vg-header" style="padding-top: 20px; padding-bottom: 20px;">
+
+                    <div class="col">
+
+                        <h5 class="ptw">
+                            <em>
+
+                                <span class="ety-sl" data-entry-id="1"> <a href="#" style="text-decoration: underline;">Transitive</a>  </span>
+
+                                |
+
+                                <span class="ety-sl" data-entry-id="1"><a href="#" style="text-decoration: underline;">Taboo</a>    </span>
+                            </em>
+
+                        </h5>
+                    </div>
+
+                </div>
+
+
+
+                <div id="dictionary-entry-1">
+
+
+                    <div class="row vg-header">
+
+                        <div class="col">
+
+                            <h2 class="ptm">Definition of <em>Àṣeyọrí&nbsp;</em></h2><p class="entryNumbers"></p>                                </div>
+
+                    </div>
+
+
+
+                    <div class="vg">
+
+
+                        <div class="sb has-num">
+
+                                    <span class="sb-0">
+
+                                        <p class="sense has-num-only">
+
+                                            <span class="sn sense-1"><span class="num">1</span></span>
+
+                                            <span class="dt ">
+
+                                                <span class="dtText"><strong class="mw_t_bc">: </strong>hard to do, make, or carry out <strong class="mw_t_bc">: </strong><a href="" class="mw_t_sx"><span class="text-uppercase">Àṣeyọrí</span></a>
+
+                                                <span class="ex-sent t no-aq sents">a <span class="mw_t_wi">Àṣeyọrí</span> climb</span>
+
+                                            </span>
+
+                                            </span>
+                                        </p>
+
+                                    </span>
+
+                        </div>
+
+                        <div class="sb has-num has-let">
+
+                                    <span class="sb-0">
+
+                                        <p class="sense has-sn">
+
+                                            <span class="sn sense-2 a"><span class="num">2</span><span class="letter">a</span></span>
+
+                                            <span class="dt ">
+
+
+
+
+
+                                                <span class="dtText"><strong class="mw_t_bc">: </strong>hard to deal with, manage, or overcome
+
+
+                                                    <span class="ex-sent t no-aq sents">a <span class="mw_t_wi">difficult</span> child</span>
+
+
+
+                                                </span>
+
+
+                                            </span>
+                                        </p>
+
+                                    </span>
+
+                            <span class="sb-1">
+
+                                        <p class="sense has-sn">
+
+                                            <span class="sn sense-b"><span class="letter">b</span></span>
+
+                                            <span class="dt ">
+
+
+                                                <span class="dtText"><strong class="mw_t_bc">: </strong>hard to understand <strong class="mw_t_bc">: </strong><a href="/dictionary/puzzling" class="mw_t_sx"><span class="text-uppercase">puzzling</span></a>
+
+
+                                                <span class="ex-sent t no-aq sents"><span class="mw_t_wi">difficult</span> reading</span>
+
+
+
+                                            </span>
+
+
+                                            </span>
+                                        </p>
+
+                                    </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div id="first-known-anchor" class="row widget">
+
+                        <h2 class="ptm">English Translation</h2>
+
+                        <p class="ety-sl">Been Successful, Achiever</p>
+
+                    </div>
+
+
+                    <div id="first-known-anchor" class="row widget">
+
+                        <h2 class="ptm">Extra Information About This <em>word&nbsp;</em></h2><p class="entryNumbers"></p>  <br>
+
+                        <strong>Etymologies</strong>
+
+                        <br>
+
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus
+                            tincidunt aliquam. Aliquam gravida massa at sem vulputate interdum et vel
+                            eros. Maecenas eros enim, tincidunt vel turpis vel, dapibus tempus nulla.
+                            Donec vel nulla dui. Pellentesque sed ante sed ligula hendrerit condimentum.
+                        </p>
+
+                        <br><br>
+
+                        <strong>Histories</strong>
+
+                        <br>
+
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus
+                            tincidunt aliquam. Aliquam gravida massa at sem vulputate interdum et vel
+                            eros. Maecenas eros enim, tincidunt vel turpis vel, dapibus tempus nulla.
+                            Donec vel nulla dui. Pellentesque sed ante sed ligula hendrerit condimentum.
+                        </p>
+
+
+                    </div>
+
+
+                </div>
+
+
+
+
+
+                <div id="dictionary-entry-1">
+
+
+                    <div class="row vg-header">
+
+                        <div class="col">
+
+                            <h2 class="ptm">Example of <em>Àṣeyọrí&nbsp;</em></h2><p class="entryNumbers"></p>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="vg">
+
+
+                        <div class="sb has-num">
+
+                                <span class="sb-0">
+
+                                    <p class="sense has-num-only">
+
+                                        <span class="sn sense-1"><span class="num">a.</span></span>
+
+                                        <span class="dt ">
+
+                                            <span class="dtText">
+                                                <strong class="mw_t_bc"> </strong>hard to do, make, or carry out
+
+                                            </span>
+
+                                        </span>
+                                    </p>
+
+                                </span>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <div id="first-known-anchor" class="row widget">
+
+                    <h2 class="ptm">Gloss</h2>
+
+                    <p class="ety-sl" data-entry-id="1">a  - <span>A</span></p>
+                    <p class="ety-sl" data-entry-id="1">ja  - <span>move</span></p>
+
+                </div>
+
+
+                <div id="first-known-anchor" class="row widget">
+
+                    <h2 class="ptm">Variants</h2>
+
+                    <ul>
+                        <li>dweasr</li>
+                    </ul>
+
+                </div>
+
+
+
+                <div class="row widget">
+
+                    <h2 class="ptm">What Do You Think About This Word?</h2>
+
+                    <p class="ety-sl" data-entry-id="1">How could we have illustrated it better?</p>
+
+                    <textarea cols="40" rows="5" placeholder="Type Here and Please Note That The Name You Are Providing Might Show Up In The Dictionary And In Search Results">
+
+                            </textarea><br>
+
+                    <input type="submit" class="btnz" value="Submit Message">
+
+                </div>
+
+
+
+                <div class="row widget">
+
+                    <i class="fa fa-edit"></i>
+
+                    <span class="ety-sl" data-entry-id="1">Edited by <strong>Adewuyi Hafeez</strong> on <strong>15/01/2001</strong></span>
+
+
+                    and
+
+
+                    <span class="ety-sl" data-entry-id="1">Submitted by <strong>Adewuyi Hafeez</strong> on <strong>15/01/2001</strong></span>
+
+                </div>
+
+
+
+            </div>
+
+
+            <div class=" col-lg-4 col-xl-3 popo-bg-p">
+
+                <p class="popotext-p">Latest Searches</p>
+
+                <ul class="popo-wd-p">
+                    <li><a href="">Adunni</a></li>
+                    <li><a href="">Adunni</a></li>
+                    <li><a href="">Adunni</a></li>
+                    <li><a href="">Adunni</a></li>
+                </ul>
+
+            </div>
+
+
         </div>
     </div>
-</div>
-<!--/Improve Entry Modal -->
+</section>
+
+<br>
+
+<!-- /main-content -->
 
 <!-- footer -->
 {{> footer }}
