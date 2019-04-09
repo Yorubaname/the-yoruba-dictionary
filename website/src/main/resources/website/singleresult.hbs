@@ -98,7 +98,8 @@
                             {{/if}}
 
                             {{#if word.geoLocation}}
-                                <span class="word-syllables"><a href="#" style="text-decoration: underline;">{{word.geoLocation.0.place}}</a></span>
+                                <span class="word-syllables"><a href="#"
+                                                                style="text-decoration: underline;">{{word.geoLocation.0.place}}</a></span>
                                 <span class="syl-break"> |</span>
                             {{/if}}
 
@@ -127,14 +128,16 @@
                             <em>
 
                                 {{#if word.grammaticalFeature}}
-                                    <span class="ety-sl" data-entry-id="1"> <a href="#" style="text-decoration: underline;">{{word.grammaticalFeature}}</a></span>
+                                    <span class="ety-sl" data-entry-id="1"> <a href="#"
+                                                                               style="text-decoration: underline;">{{word.grammaticalFeature}}</a></span>
                                     {{#if word.style}}
                                         |
                                     {{/if}}
                                 {{/if}}
 
                                 {{#if word.style}}
-                                    <span class="ety-sl" data-entry-id="1"><a href="#" style="text-decoration: underline;">{{word.style}}</a></span>
+                                    <span class="ety-sl" data-entry-id="1"><a href="#"
+                                                                              style="text-decoration: underline;">{{word.style}}</a></span>
                                 {{/if}}
                             </em>
 
@@ -160,176 +163,102 @@
 
                     <div class="vg">
 
+                        {{#each word.definitions}}
 
-                        <div class="sb has-num">
+                            <div class="sb has-num has-let">
 
-                            <div class="sb-0">
+                                <div class="sb-0">
 
-                                <p class="sense has-num-only">
+                                    <p class="sense has-num-only">
 
-                                    <span class="sn sense-1"><span class="num">1</span></span>
+                                        <span class="sn sense-1"><span class="num">{{increment @index}}</span></span>
 
-                                    <span class="dt ">
+                                        <span class="dt ">
 
                                         <span class="dtText">
-                                            <strong class="mw_t_bc">: </strong>hard to do, make, or carry out <strong
-                                                class="mw_t_bc">:</strong><a href="" class="mw_t_sx">
-                                                <span class="text-uppercase">{{word.word}}</span>
-                                            </a>
+                                            <strong class="mw_t_bc">: </strong>{{this.content}}<strong
+                                                class="mw_t_bc">:</strong>
 
                                             <span class="ex-sent t no-aq sents">
-                                                a <span class="mw_t_wi">{{word.word}}</span> climb
+                                                {{this.examples.0.content}}
                                             </span>
 
                                         </span>
 
                                     </span>
-                                </p>
+                                    </p>
+
+                                </div>
 
                             </div>
 
-                        </div>
-
-                        <div class="sb has-num has-let">
-
-                            <div class="sb-0">
-
-                                <p class="sense has-sn">
-
-                                    <span class="sn sense-2 a">
-                                        <span class="num">2</span><span class="letter">a</span>
-                                    </span>
-
-                                    <span class="dt ">
-
-
-
-
-
-                                        <span class="dtText">
-                                            <strong class="mw_t_bc">: </strong>hard to deal with, manage, or overcome
-
-
-                                            <span class="ex-sent t no-aq sents">a <span class="mw_t_wi">difficult</span> child</span>
-
-
-
-                                        </span>
-
-
-                                    </span>
-                                </p>
-
-                            </div>
-
-                            <div class="sb-1">
-
-                                <p class="sense has-sn">
-
-                                    <span class="sn sense-b"><span class="letter">b</span></span>
-
-                                    <span class="dt ">
-
-
-                                        <span class="dtText">
-                                            <strong class="mw_t_bc">: </strong>hard to understand <strong
-                                                class="mw_t_bc">:</strong><a href="/dictionary/puzzling"
-                                                                             class="mw_t_sx">
-                                                <span class="text-uppercase">puzzling</span>
-                                            </a>
-
-
-                                            <span class="ex-sent t no-aq sents">
-                                                <span class="mw_t_wi">difficult</span> reading
-                                            </span>
-
-
-
-                                        </span>
-
-
-                                    </span>
-                                </p>
-
-                            </div>
-
-                        </div>
+                        {{/each}}
 
                     </div>
-
 
                     <div id="first-known-anchor" class="row widget">
 
                         <h2 class="ptm">English Translation</h2>
 
-                        <p class="ety-sl">Been Successful, Achiever</p>
+                        <p class="ety-sl">
+                            {{#each word.definitions}}
+                                {{this.englishTranslation}}{{#unless @last}}<span>,&nbsp;</span>{{/unless}}
+                            {{/each}}
+                        </p>
 
                     </div>
 
+                    {{#if word.history}}
 
-                    <div id="first-known-anchor" class="row widget">
+                        <div id="first-known-anchor" class="row widget">
 
-                        <h2 class="ptm">Extra Information About This <em>word&nbsp;</em></h2>
-                        <p class="entryNumbers"></p>  <br>
+                            <h2 class="ptm">Extra Information About This <em>word&nbsp;</em></h2>
+                            <p class="entryNumbers"></p>  <br>
 
-                        <strong>Etymologies</strong>
+                            {{#if word.history}}
+                                <strong>History</strong>
 
-                        <br>
+                                <br>
 
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus
-                            tincidunt aliquam. Aliquam gravida massa at sem vulputate interdum et vel
-                            eros. Maecenas eros enim, tincidunt vel turpis vel, dapibus tempus nulla.
-                            Donec vel nulla dui. Pellentesque sed ante sed ligula hendrerit condimentum.
-                        </p>
+                                <p>
+                                    {{word.history}}
+                                </p>
+                            {{/if}}
 
-                        <br><br>
+                        </div>
 
-                        <strong>Histories</strong>
-
-                        <br>
-
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus
-                            tincidunt aliquam. Aliquam gravida massa at sem vulputate interdum et vel
-                            eros. Maecenas eros enim, tincidunt vel turpis vel, dapibus tempus nulla.
-                            Donec vel nulla dui. Pellentesque sed ante sed ligula hendrerit condimentum.
-                        </p>
-
-
-                    </div>
-
+                    {{/if}}
 
                 </div>
 
 
-                <div id="dictionary-entry-1">
+                {{#if word.examples}}
+                    <div id="dictionary-entry-1">
 
+                        <div class="row vg-header">
 
-                    <div class="row vg-header">
+                            <div class="col">
 
-                        <div class="col">
+                                <h2 class="ptm">Example of <em>{{word.word}}&nbsp;</em></h2>
+                                <p class="entryNumbers"></p>
 
-                            <h2 class="ptm">Example of <em>{{word.word}}&nbsp;</em></h2>
-                            <p class="entryNumbers"></p>
+                            </div>
 
                         </div>
 
-                    </div>
+
+                        <div class="vg">
 
 
-                    <div class="vg">
+                            <div class="sb has-num">
 
+                                <div class="sb-0">
 
-                        <div class="sb has-num">
+                                    <p class="sense has-num-only">
 
-                            <div class="sb-0">
+                                        <span class="sn sense-1"><span class="num">a.</span></span>
 
-                                <p class="sense has-num-only">
-
-                                    <span class="sn sense-1"><span class="num">a.</span></span>
-
-                                    <span class="dt ">
+                                        <span class="dt ">
 
                                         <span class="dtText">
                                             <strong class="mw_t_bc"> </strong>hard to do, make, or carry out
@@ -337,37 +266,59 @@
                                         </span>
 
                                     </span>
-                                </p>
+                                    </p>
+
+                                </div>
 
                             </div>
 
                         </div>
 
+
+                    </div>
+                {{/if}}
+
+                {{#if word.morphology}}
+
+                    <div id="first-known-anchor" class="row widget">
+
+                        <h2 class="ptm">Morphology</h2>
+
+                        <p class="ety-sl">
+                            <span>{{word.morphology}}</span>
+                        </p>
+
                     </div>
 
+                    <div id="first-known-anchor" class="row widget">
 
-                </div>
+                        <h2 class="ptm">Gloss</h2>
 
+                        {{#each word.etymology}}
 
-                <div id="first-known-anchor" class="row widget">
+                            <p class="ety-sl" data-entry-id="1"><strong>{{this.part}}</strong> - {{this.meaning}}</p>
 
-                    <h2 class="ptm">Gloss</h2>
+                        {{/each}}
 
-                    <p class="ety-sl" data-entry-id="1">a - <span>A</span></p>
-                    <p class="ety-sl" data-entry-id="1">ja - <span>move</span></p>
+                    </div>
 
-                </div>
+                {{/if}}
 
+                {{#if word.variants}}
 
-                <div id="first-known-anchor" class="row widget">
+                    <div id="first-known-anchor" class="row widget">
 
-                    <h2 class="ptm">Variants</h2>
+                        <h2 class="ptm">Variants</h2>
 
-                    <ul>
-                        <li>dweasr</li>
-                    </ul>
+                        <ul>
+                            {{#each word.variants}}
+                                <li>{{this.word}}</li>
+                            {{/each}}
+                        </ul>
 
-                </div>
+                    </div>
+
+                {{/if}}
 
 
                 <div class="row widget">
@@ -376,11 +327,8 @@
 
                     <p class="ety-sl" data-entry-id="1">How could we have illustrated it better?</p>
 
-                    <textarea cols="40" rows="5"
-                              placeholder="Type Here and Please Note That The Name You Are Providing Might Show Up In The Dictionary And In Search Results">
-
-                            </textarea><br>
-
+                    <textarea cols="40" rows="5"></textarea>
+                    <br>
                     <input type="submit" class="btnz" value="Submit Message">
 
                 </div>
