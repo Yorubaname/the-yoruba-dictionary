@@ -15,9 +15,10 @@
 
                 <div class="row entry-header">
 
+
                     <div class="col-lg-12">
 
-                        <h1 class="hword"> Àṣeyọrí </h1>
+                        <h1 class="hword"> {{word.word}} </h1>
 
                         <span class="fl"><a class="important-blue-link" href="#">adjective</a></span>
 
@@ -29,26 +30,35 @@
 
                     <div class="col">
 
-                        <span class="word-syllables">À·&#8203;ṣe·&#8203;yọ·&#8203;rí </span>
+                        {{#if word.syllables }}
+                            <span class="word-syllables">{{word.syllables}}</span>
+                            <span class="syl-break"> |</span>
+                        {{/if}}
 
 
                         <span class="prs">
 
-                                <span class="syl-break">|</span>            <span class="first-slash">\</span>
+                            {{#if word.ipaNotation}}
+                                <span class="first-slash">\</span>
 
-                                    <span class="pr">a. &#8203; ʃeɪ. &#8203; jɔ. &#8203; ɾɪ</span>    <a class="play-pron hw-play-pron hoverable converted"
-                                                                                                         data-lang="en_us" data-file="diffic02" data-dir="d"
-                                                                                                         href="" title="">
+                                <span class="pr">{{word.ipaNotation}}</span>
+                                <a class="play-pron hw-play-pron hoverable converted"
+                                   data-lang="en_us" data-file="diffic02" data-dir="d"
+                                   href="" title="">
 
-                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="22px" height="22px" viewBox="0 0 26 26" version="1.1" class="svg replaced-svg">
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                         width="22px" height="22px" viewBox="0 0 26 26" version="1.1"
+                                         class="svg replaced-svg">
 
                                         <defs>
 
                                             <linearGradient id="grad2" x1="0%" y1="0%" x2="0%" y2="100%">
 
-                                                <stop offset="0%" style="stop-color:rgb(38,86,103);stop-opacity:1"></stop>
+                                                <stop offset="0%"
+                                                      style="stop-color:rgb(38,86,103);stop-opacity:1"></stop>
 
-                                                <stop offset="100%" style="stop-color:rgb(15,56,80);stop-opacity:1"></stop>
+                                                <stop offset="100%"
+                                                      style="stop-color:rgb(15,56,80);stop-opacity:1"></stop>
 
                                             </linearGradient>
 
@@ -60,13 +70,19 @@
 
                                                 <g id="Audio">
 
-                                                    <circle id="Oval" class="outline" fill="url(#grad2) #265667" cx="13" cy="13" r="13"></circle>
+                                                    <circle id="Oval" class="outline" fill="url(#grad2) #265667" cx="13"
+                                                            cy="13" r="13"></circle>
 
-                                                    <polygon class="logo" id="Path-2" stroke="#FFFFFF" fill="#FFFFFF" points="6 10.5031797 6 15.4563465 9.37102011 15.4563465 13 18 13 8.02789307 9.5 10.5031797"></polygon>
+                                                    <polygon class="logo" id="Path-2" stroke="#FFFFFF" fill="#FFFFFF"
+                                                             points="6 10.5031797 6 15.4563465 9.37102011 15.4563465 13 18 13 8.02789307 9.5 10.5031797"></polygon>
 
-                                                    <path class="logo2" d="M16,8.5 C17.4887382,10.0718463 18.2331073,11.569707 18.2331073,12.993582 C18.2331073,15.1293945 17.1165537,16.4498291 16,17.5894775" id="Path-3" stroke="#FFFFFF"></path>
+                                                    <path class="logo2"
+                                                          d="M16,8.5 C17.4887382,10.0718463 18.2331073,11.569707 18.2331073,12.993582 C18.2331073,15.1293945 17.1165537,16.4498291 16,17.5894775"
+                                                          id="Path-3" stroke="#FFFFFF"></path>
 
-                                                    <path class="logo2" d="M18.0189209,6.5 C20.0989176,8.3652264 21.138916,10.5318931 21.138916,13 C21.138916,15.4681069 20.0723674,17.6756672 17.93927,19.6226807" id="Path-4" stroke="#FFFFFF"></path>
+                                                    <path class="logo2"
+                                                          d="M18.0189209,6.5 C20.0989176,8.3652264 21.138916,10.5318931 21.138916,13 C21.138916,15.4681069 20.0723674,17.6756672 17.93927,19.6226807"
+                                                          id="Path-4" stroke="#FFFFFF"></path>
 
                                                 </g>
 
@@ -78,23 +94,25 @@
 
                                 </a>
 
-                                <span class="last-slash">\</span>    <span class="syl-break">|</span>
+                                <span class="last-slash">\</span><span class="syl-break"> |</span>
+                            {{/if}}
 
-                                <span class="word-syllables"><a href="#" style="text-decoration: underline;">Ibadan</a></span>
+                            {{#if word.geoLocation}}
+                                <span class="word-syllables"><a href="#" style="text-decoration: underline;">{{word.geoLocation.0.place}}</a></span>
+                                <span class="syl-break"> |</span>
+                            {{/if}}
 
-                                <span class="syl-break">|</span>
+                            <span class="smd">
 
-                                <span class="smd">
+                                <a href="#"><i class="fa fa-facebook"></i></a>
 
-                                    <a href="#"><i class="fa fa-facebook"></i></a>
+                                <a href="#"><i class="fa fa-twitter"></i></a>
 
-                                    <a href="#"><i class="fa fa-twitter"></i></a>
-
-                                    <a href="#"><i class="fa fa-instagram"></i></a>
-
-                                </span>
+                                <a href="#"><i class="fa fa-instagram"></i></a>
 
                             </span>
+
+                        </span>
 
                     </div>
 
@@ -121,7 +139,6 @@
                 </div>
 
 
-
                 <div id="dictionary-entry-1">
 
 
@@ -129,10 +146,11 @@
 
                         <div class="col">
 
-                            <h2 class="ptm">Definition of <em>Àṣeyọrí&nbsp;</em></h2><p class="entryNumbers"></p>                                </div>
+                            <h2 class="ptm">Definition of <em>{{word.word}}&nbsp;</em></h2>
+                            <p class="entryNumbers"></p>
+                        </div>
 
                     </div>
-
 
 
                     <div class="vg">
@@ -140,79 +158,95 @@
 
                         <div class="sb has-num">
 
-                                    <span class="sb-0">
+                            <div class="sb-0">
 
-                                        <p class="sense has-num-only">
+                                <p class="sense has-num-only">
 
-                                            <span class="sn sense-1"><span class="num">1</span></span>
+                                    <span class="sn sense-1"><span class="num">1</span></span>
 
-                                            <span class="dt ">
+                                    <span class="dt ">
 
-                                                <span class="dtText"><strong class="mw_t_bc">: </strong>hard to do, make, or carry out <strong class="mw_t_bc">: </strong><a href="" class="mw_t_sx"><span class="text-uppercase">Àṣeyọrí</span></a>
+                                        <span class="dtText">
+                                            <strong class="mw_t_bc">: </strong>hard to do, make, or carry out <strong
+                                                class="mw_t_bc">:</strong><a href="" class="mw_t_sx">
+                                                <span class="text-uppercase">{{word.word}}</span>
+                                            </a>
 
-                                                <span class="ex-sent t no-aq sents">a <span class="mw_t_wi">Àṣeyọrí</span> climb</span>
-
+                                            <span class="ex-sent t no-aq sents">
+                                                a <span class="mw_t_wi">{{word.word}}</span> climb
                                             </span>
 
-                                            </span>
-                                        </p>
+                                        </span>
 
                                     </span>
+                                </p>
+
+                            </div>
 
                         </div>
 
                         <div class="sb has-num has-let">
 
-                                    <span class="sb-0">
+                            <div class="sb-0">
 
-                                        <p class="sense has-sn">
+                                <p class="sense has-sn">
 
-                                            <span class="sn sense-2 a"><span class="num">2</span><span class="letter">a</span></span>
-
-                                            <span class="dt ">
-
-
-
-
-
-                                                <span class="dtText"><strong class="mw_t_bc">: </strong>hard to deal with, manage, or overcome
-
-
-                                                    <span class="ex-sent t no-aq sents">a <span class="mw_t_wi">difficult</span> child</span>
-
-
-
-                                                </span>
-
-
-                                            </span>
-                                        </p>
-
+                                    <span class="sn sense-2 a">
+                                        <span class="num">2</span><span class="letter">a</span>
                                     </span>
 
-                            <span class="sb-1">
-
-                                        <p class="sense has-sn">
-
-                                            <span class="sn sense-b"><span class="letter">b</span></span>
-
-                                            <span class="dt ">
-
-
-                                                <span class="dtText"><strong class="mw_t_bc">: </strong>hard to understand <strong class="mw_t_bc">: </strong><a href="/dictionary/puzzling" class="mw_t_sx"><span class="text-uppercase">puzzling</span></a>
-
-
-                                                <span class="ex-sent t no-aq sents"><span class="mw_t_wi">difficult</span> reading</span>
+                                    <span class="dt ">
 
 
 
-                                            </span>
 
 
-                                            </span>
-                                        </p>
+                                        <span class="dtText">
+                                            <strong class="mw_t_bc">: </strong>hard to deal with, manage, or overcome
+
+
+                                            <span class="ex-sent t no-aq sents">a <span class="mw_t_wi">difficult</span> child</span>
+
+
+
+                                        </span>
+
 
                                     </span>
+                                </p>
+
+                            </div>
+
+                            <div class="sb-1">
+
+                                <p class="sense has-sn">
+
+                                    <span class="sn sense-b"><span class="letter">b</span></span>
+
+                                    <span class="dt ">
+
+
+                                        <span class="dtText">
+                                            <strong class="mw_t_bc">: </strong>hard to understand <strong
+                                                class="mw_t_bc">:</strong><a href="/dictionary/puzzling"
+                                                                             class="mw_t_sx">
+                                                <span class="text-uppercase">puzzling</span>
+                                            </a>
+
+
+                                            <span class="ex-sent t no-aq sents">
+                                                <span class="mw_t_wi">difficult</span> reading
+                                            </span>
+
+
+
+                                        </span>
+
+
+                                    </span>
+                                </p>
+
+                            </div>
 
                         </div>
 
@@ -230,13 +264,15 @@
 
                     <div id="first-known-anchor" class="row widget">
 
-                        <h2 class="ptm">Extra Information About This <em>word&nbsp;</em></h2><p class="entryNumbers"></p>  <br>
+                        <h2 class="ptm">Extra Information About This <em>word&nbsp;</em></h2>
+                        <p class="entryNumbers"></p>  <br>
 
                         <strong>Etymologies</strong>
 
                         <br>
 
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus
+                        <p>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus
                             tincidunt aliquam. Aliquam gravida massa at sem vulputate interdum et vel
                             eros. Maecenas eros enim, tincidunt vel turpis vel, dapibus tempus nulla.
                             Donec vel nulla dui. Pellentesque sed ante sed ligula hendrerit condimentum.
@@ -248,7 +284,8 @@
 
                         <br>
 
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus
+                        <p>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus
                             tincidunt aliquam. Aliquam gravida massa at sem vulputate interdum et vel
                             eros. Maecenas eros enim, tincidunt vel turpis vel, dapibus tempus nulla.
                             Donec vel nulla dui. Pellentesque sed ante sed ligula hendrerit condimentum.
@@ -261,9 +298,6 @@
                 </div>
 
 
-
-
-
                 <div id="dictionary-entry-1">
 
 
@@ -271,12 +305,12 @@
 
                         <div class="col">
 
-                            <h2 class="ptm">Example of <em>Àṣeyọrí&nbsp;</em></h2><p class="entryNumbers"></p>
+                            <h2 class="ptm">Example of <em>{{word.word}}&nbsp;</em></h2>
+                            <p class="entryNumbers"></p>
 
                         </div>
 
                     </div>
-
 
 
                     <div class="vg">
@@ -284,23 +318,23 @@
 
                         <div class="sb has-num">
 
-                                <span class="sb-0">
+                            <div class="sb-0">
 
-                                    <p class="sense has-num-only">
+                                <p class="sense has-num-only">
 
-                                        <span class="sn sense-1"><span class="num">a.</span></span>
+                                    <span class="sn sense-1"><span class="num">a.</span></span>
 
-                                        <span class="dt ">
+                                    <span class="dt ">
 
-                                            <span class="dtText">
-                                                <strong class="mw_t_bc"> </strong>hard to do, make, or carry out
-
-                                            </span>
+                                        <span class="dtText">
+                                            <strong class="mw_t_bc"> </strong>hard to do, make, or carry out
 
                                         </span>
-                                    </p>
 
-                                </span>
+                                    </span>
+                                </p>
+
+                            </div>
 
                         </div>
 
@@ -310,13 +344,12 @@
                 </div>
 
 
-
                 <div id="first-known-anchor" class="row widget">
 
                     <h2 class="ptm">Gloss</h2>
 
-                    <p class="ety-sl" data-entry-id="1">a  - <span>A</span></p>
-                    <p class="ety-sl" data-entry-id="1">ja  - <span>move</span></p>
+                    <p class="ety-sl" data-entry-id="1">a - <span>A</span></p>
+                    <p class="ety-sl" data-entry-id="1">ja - <span>move</span></p>
 
                 </div>
 
@@ -332,21 +365,20 @@
                 </div>
 
 
-
                 <div class="row widget">
 
                     <h2 class="ptm">What Do You Think About This Word?</h2>
 
                     <p class="ety-sl" data-entry-id="1">How could we have illustrated it better?</p>
 
-                    <textarea cols="40" rows="5" placeholder="Type Here and Please Note That The Name You Are Providing Might Show Up In The Dictionary And In Search Results">
+                    <textarea cols="40" rows="5"
+                              placeholder="Type Here and Please Note That The Name You Are Providing Might Show Up In The Dictionary And In Search Results">
 
                             </textarea><br>
 
                     <input type="submit" class="btnz" value="Submit Message">
 
                 </div>
-
 
 
                 <div class="row widget">
@@ -362,7 +394,6 @@
                     <span class="ety-sl" data-entry-id="1">Submitted by <strong>Adewuyi Hafeez</strong> on <strong>15/01/2001</strong></span>
 
                 </div>
-
 
 
             </div>
@@ -389,6 +420,5 @@
 <br>
 
 <!-- /main-content -->
-
 <!-- footer -->
 {{> footer }}
