@@ -126,11 +126,16 @@
                         <h5 class="ptw">
                             <em>
 
-                                <span class="ety-sl" data-entry-id="1"> <a href="#" style="text-decoration: underline;">Transitive</a>  </span>
+                                {{#if word.grammaticalFeature}}
+                                    <span class="ety-sl" data-entry-id="1"> <a href="#" style="text-decoration: underline;">{{word.grammaticalFeature}}</a></span>
+                                    {{#if word.style}}
+                                        |
+                                    {{/if}}
+                                {{/if}}
 
-                                |
-
-                                <span class="ety-sl" data-entry-id="1"><a href="#" style="text-decoration: underline;">Taboo</a>    </span>
+                                {{#if word.style}}
+                                    <span class="ety-sl" data-entry-id="1"><a href="#" style="text-decoration: underline;">{{word.style}}</a></span>
+                                {{/if}}
                             </em>
 
                         </h5>
