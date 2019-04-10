@@ -18,7 +18,7 @@
 
                     <div class="col-lg-12">
 
-                        <h1 class="hword"> {{word.word}} </h1>
+                        <h1 class="hword" id="word-entry"> {{word.word}} </h1>
 
                         <span class="fl"><a class="important-blue-link" href="#">adjective</a></span>
 
@@ -38,64 +38,62 @@
 
                         <span class="prs">
 
-                            {{#if word.ipaNotation}}
                                 <span class="first-slash">\</span>
 
+                            {{#if word.ipaNotation}}
                                 <span class="pr">{{word.ipaNotation}}</span>
-                                <a class="play-pron hw-play-pron hoverable converted"
-                                   data-lang="en_us" data-file="diffic02" data-dir="d"
-                                   href="" title="">
+                            {{/if}}
 
-                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                                         width="22px" height="22px" viewBox="0 0 26 26" version="1.1"
-                                         class="svg replaced-svg">
+                            <a class="play-pron hw-play-pron hoverable converted pointer" id="tts-button">
 
-                                        <defs>
+                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                 width="22px" height="22px" viewBox="0 0 26 26" version="1.1"
+                                 class="svg replaced-svg">
 
-                                            <linearGradient id="grad2" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <defs>
 
-                                                <stop offset="0%"
-                                                      style="stop-color:rgb(38,86,103);stop-opacity:1"></stop>
+                                    <linearGradient id="grad2" x1="0%" y1="0%" x2="0%" y2="100%">
 
-                                                <stop offset="100%"
-                                                      style="stop-color:rgb(15,56,80);stop-opacity:1"></stop>
+                                        <stop offset="0%"
+                                              style="stop-color:rgb(38,86,103);stop-opacity:1"></stop>
 
-                                            </linearGradient>
+                                        <stop offset="100%"
+                                              style="stop-color:rgb(15,56,80);stop-opacity:1"></stop>
 
-                                        </defs>
+                                    </linearGradient>
 
-                                        <g id="Audio" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                </defs>
 
-                                            <g id="Icon/AudioPron">
+                                <g id="Audio" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
 
-                                                <g id="Audio">
+                                    <g id="Icon/AudioPron">
 
-                                                    <circle id="Oval" class="outline" fill="url(#grad2) #265667" cx="13"
-                                                            cy="13" r="13"></circle>
+                                        <g id="Audio">
 
-                                                    <polygon class="logo" id="Path-2" stroke="#FFFFFF" fill="#FFFFFF"
-                                                             points="6 10.5031797 6 15.4563465 9.37102011 15.4563465 13 18 13 8.02789307 9.5 10.5031797"></polygon>
+                                            <circle id="Oval" class="outline" fill="url(#grad2) #265667" cx="13"
+                                                    cy="13" r="13"></circle>
 
-                                                    <path class="logo2"
-                                                          d="M16,8.5 C17.4887382,10.0718463 18.2331073,11.569707 18.2331073,12.993582 C18.2331073,15.1293945 17.1165537,16.4498291 16,17.5894775"
-                                                          id="Path-3" stroke="#FFFFFF"></path>
+                                            <polygon class="logo" id="Path-2" stroke="#FFFFFF" fill="#FFFFFF"
+                                                     points="6 10.5031797 6 15.4563465 9.37102011 15.4563465 13 18 13 8.02789307 9.5 10.5031797"></polygon>
 
-                                                    <path class="logo2"
-                                                          d="M18.0189209,6.5 C20.0989176,8.3652264 21.138916,10.5318931 21.138916,13 C21.138916,15.4681069 20.0723674,17.6756672 17.93927,19.6226807"
-                                                          id="Path-4" stroke="#FFFFFF"></path>
+                                            <path class="logo2"
+                                                  d="M16,8.5 C17.4887382,10.0718463 18.2331073,11.569707 18.2331073,12.993582 C18.2331073,15.1293945 17.1165537,16.4498291 16,17.5894775"
+                                                  id="Path-3" stroke="#FFFFFF"></path>
 
-                                                </g>
-
-                                            </g>
+                                            <path class="logo2"
+                                                  d="M18.0189209,6.5 C20.0989176,8.3652264 21.138916,10.5318931 21.138916,13 C21.138916,15.4681069 20.0723674,17.6756672 17.93927,19.6226807"
+                                                  id="Path-4" stroke="#FFFFFF"></path>
 
                                         </g>
 
-                                    </svg>
+                                    </g>
 
-                                </a>
+                                </g>
 
-                                <span class="last-slash">\</span><span class="syl-break"> |</span>
-                            {{/if}}
+                            </svg>
+                        </a>
+
+                            <span class="last-slash">\</span><span class="syl-break"> |</span>
 
                             {{#if word.geoLocation}}
                                 <span class="word-syllables"><a href="#"
@@ -105,7 +103,8 @@
 
                             <span class="smd">
 
-                                <a href="http://www.facebook.com/sharer.php?u=http%3A%2F%2F{{host}}/entries/{{word.word}}" target="_blank"><i class="fa fa-facebook"></i></a>
+                                <a href="http://www.facebook.com/sharer.php?u=http%3A%2F%2F{{host}}/entries/{{word.word}}"
+                                   target="_blank"><i class="fa fa-facebook"></i></a>
 
                                 <a href="https://twitter.com/intent/tweet?url=http%3A%2F%2F{{host}}/entries/{{word.word}}&amp;text=Did you know {{word.word}} means '{{word.definitions.0.content}}'?&amp;hashtags=YorubaWords&amp;via=YorubaWords"
                                    target="_blank">
@@ -354,20 +353,7 @@
 
             </div>
 
-
-            <div class=" col-lg-4 col-xl-3 popo-bg-p">
-
-                <p class="popotext-p">Latest Searches</p>
-
-                <ul class="popo-wd-p">
-                    <li><a href="">Adunni</a></li>
-                    <li><a href="">Adunni</a></li>
-                    <li><a href="">Adunni</a></li>
-                    <li><a href="">Adunni</a></li>
-                </ul>
-
-            </div>
-
+            {{> rsidebar }}
 
         </div>
     </div>

@@ -1,9 +1,12 @@
-<div class="side-bar">
-    <ul id="side_popular">
-        <li><h5>{{message "lang.most-popular-names"}}</h5></li>
-        <hr />
+<div class=" col-lg-4 col-xl-3 popo-bg-p">
+
+    <p class="popotext-p">{{message "lang.most-popular"}}</p>
+
+    <ul class="popo-wd-p" id="side_popular">
+
         {{#each mostPopular}}
-            <li class="intonation"><a href="/entries/{{this}}">{{this}}</a></li>
+            <li><a href="/entries/{{this}}">{{this}}</a></li>
         {{/each}}
     </ul>
+
 </div>
