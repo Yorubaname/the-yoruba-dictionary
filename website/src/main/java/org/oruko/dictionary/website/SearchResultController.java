@@ -77,16 +77,16 @@ public class SearchResultController {
         }
 
         map.addAttribute("title", "Search results for query");
-        List<Map<String, Object>> names = apiService.searchName(nameQuery);
+        List<Map<String, Object>> words = apiService.searchName(nameQuery);
 
-        if (names.size() == 1 && isEqualWithoutAccent((String) names.get(0).get("word"), nameQuery)) {
+        if (words.size() == 1 && isEqualWithoutAccent((String) words.get(0).get("word"), nameQuery)) {
             nameQuery = URLEncoder.encode(nameQuery, "UTF-8");
-            redirectAttributes.addFlashAttribute("name", names.get(0));
+            redirectAttributes.addFlashAttribute("word", words.get(0));
             return "redirect:/entries/"+nameQuery;
         }
 
         map.addAttribute("query", nameQuery);
-        map.addAttribute("names", names);
+        map.addAttribute("words", words);
 
         return "searchresults";
     }
