@@ -181,9 +181,13 @@
                                             <strong class="mw_t_bc">: </strong>{{this.content}}<strong
                                                 class="mw_t_bc">:</strong>
 
-                                            <span class="ex-sent t no-aq sents">
-                                                {{this.examples.0.content}}
-                                            </span>
+                                            {{#if this.examples.0.content}}
+                                                
+                                                <span class="ex-sent t no-aq sents">
+                                                    {{this.examples.0.content}}
+                                                </span>
+
+                                            {{/if}}
 
                                         </span>
 
