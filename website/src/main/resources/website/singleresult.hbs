@@ -333,9 +333,12 @@
 
                     <p class="ety-sl" data-entry-id="1">How could we have illustrated it better?</p>
 
-                    <textarea cols="40" rows="5"></textarea>
-                    <br>
-                    <input type="submit" class="btnz" value="Submit Message">
+                    <form name="word_feedback" action="/v1/feedbacks" method="post">
+                        <input id="wordToFeedback" type="hidden" value="{{word.word}}"/>
+                        <textarea name="feedback" id="improveEntry" required="true" cols="40" rows="5"></textarea>
+                        <br>
+                        <button type="submit" id="submitEntry" class="btnz">Submit Message</button>
+                    </form>
 
                 </div>
 
