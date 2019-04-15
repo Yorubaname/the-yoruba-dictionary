@@ -347,13 +347,13 @@
 
                     <i class="fa fa-edit"></i>
 
-                    <span class="ety-sl" data-entry-id="1">Edited by <strong>Adewuyi Hafeez</strong> on <strong>15/01/2001</strong></span>
+                    {{#if word.updatedAt}}
+                        <span class="ety-sl" data-entry-id="1">Updated on <strong>{{longDate word.updatedAt}}</strong></span>
 
+                        and
+                    {{/if}}
 
-                    and
-
-
-                    <span class="ety-sl" data-entry-id="1">Submitted by <strong>Adewuyi Hafeez</strong> on <strong>15/01/2001</strong></span>
+                    <span class="ety-sl" data-entry-id="1">Submitted on <strong>{{longDate word.createdAt}}</strong></span>
 
                 </div>
 

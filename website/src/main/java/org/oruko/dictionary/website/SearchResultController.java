@@ -14,6 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -57,6 +58,11 @@ public class SearchResultController {
                 // no single entry found for query, return to view where search result can be displayed
                 return "redirect:/entries?q=" + wordEntry;
             }
+
+            LocalDateTime updatedAt = word.getUpdatedAt();
+            LocalDateTime createdAt = word.getCreatedAt();
+            if(updatedAt.isEqual(createdAt))
+                word.setUpdatedAt(null);
             map.addAttribute("word", word);
         }
         return "singleresult";
