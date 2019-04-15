@@ -114,7 +114,7 @@ $(function () {
                     text: 'Thanks for your feedback. We have received it.',
                     showHideTransition: 'slide',
                     icon: 'success',
-                    position: 'top-right'
+                    position: 'top-center'
                 });
             },
             error: function (jqXHR) {
