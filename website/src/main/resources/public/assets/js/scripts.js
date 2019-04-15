@@ -109,10 +109,13 @@ $(function () {
             type: 'json',
             success: function (resp) {
                 e.currentTarget.reset();
-                $('.response').html(alert_success("Feedback posted successfully. Thanks.")).fadeIn();
-                setTimeout(function () {
-                    $('#improveEntryModal').modal('close');
-                }, 1000);
+                $.toast({
+                    heading: 'Success',
+                    text: 'Thanks for your feedback. We have received it.',
+                    showHideTransition: 'slide',
+                    icon: 'success',
+                    position: 'top-right'
+                });
             },
             error: function (jqXHR) {
                 $('.response').html(alert_error(jqXHR.responseJSON.message || jqXHR.responseText)).fadeIn();
