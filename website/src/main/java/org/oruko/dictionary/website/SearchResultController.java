@@ -61,8 +61,8 @@ public class SearchResultController {
 
             LocalDateTime updatedAt = word.getUpdatedAt();
             LocalDateTime createdAt = word.getCreatedAt();
-            if(updatedAt.isEqual(createdAt))
-                word.setUpdatedAt(null);
+            if(updatedAt != null && createdAt.isEqual(updatedAt))
+                 word.setUpdatedAt(null);
             map.addAttribute("word", word);
         }
         return "singleresult";
