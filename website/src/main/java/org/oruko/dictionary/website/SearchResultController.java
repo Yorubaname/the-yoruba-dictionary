@@ -1,6 +1,7 @@
 package org.oruko.dictionary.website;
 
 import org.apache.commons.lang3.StringUtils;
+import org.oruko.dictionary.model.GeoLocation;
 import org.oruko.dictionary.model.WordEntry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -63,6 +64,11 @@ public class SearchResultController {
             LocalDateTime createdAt = word.getCreatedAt();
             if(updatedAt != null && createdAt.isEqual(updatedAt))
                  word.setUpdatedAt(null);
+
+            List<GeoLocation> location = word.getGeoLocation();
+            if(location.size() > 0 && location.get(0).getRegion().equalsIgnoreCase("undefined"))
+                word.getGeoLocation().clear();
+
             map.addAttribute("word", word);
         }
         return "singleresult";
