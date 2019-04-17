@@ -45,42 +45,44 @@ public class SearchResultController {
 
     /**
      * Displays the result for a single entry
+     *
      * @param wordEntry the {@link WordEntry}
-     * @param map the map
+     * @param map       the map
      * @return the view name
      */
     @RequestMapping("/entries/{wordEntry}")
     public String showEntry(@PathVariable String wordEntry, Model map) {
         map.addAttribute("title", "Word Entry");
         map.addAttribute("host", host);
-        if (!map.containsAttribute("word")) {
-            final WordEntry word = apiService.getWord(wordEntry);
-            if (word == null) {
-                // no single entry found for query, return to view where search result can be displayed
-                return "redirect:/entries?q=" + wordEntry;
-            }
 
-            LocalDateTime updatedAt = word.getUpdatedAt();
-            LocalDateTime createdAt = word.getCreatedAt();
-            if(updatedAt != null && createdAt.isEqual(updatedAt))
-                 word.setUpdatedAt(null);
-
-            List<GeoLocation> location = word.getGeoLocation();
-            if(location.size() > 0 && location.get(0).getRegion().equalsIgnoreCase("undefined"))
-                word.getGeoLocation().clear();
-
-            map.addAttribute("word", word);
+        final WordEntry word = apiService.getWord(wordEntry);
+        if (word == null) {
+            // no single entry found for query, return to view where search result can be displayed
+            return "redirect:/entries?q=" + wordEntry;
         }
+
+        LocalDateTime updatedAt = word.getUpdatedAt();
+        LocalDateTime createdAt = word.getCreatedAt();
+        if (updatedAt != null && createdAt.isEqual(updatedAt))
+            word.setUpdatedAt(null);
+
+        List<GeoLocation> location = word.getGeoLocation();
+        if (location.size() > 0 && location.get(0).getRegion().equalsIgnoreCase("undefined"))
+            word.getGeoLocation().clear();
+
+        map.addAttribute("word", word);
+
         return "singleresult";
     }
 
     /**
      * Controller for page that displays multiple result for a search. i.e. ambiguous page
+     *
      * @param map model the model
      * @return returns the view name
      */
     @RequestMapping("/entries")
-    public String searchNameQuery(@RequestParam(value = "q",required = false) String nameQuery,
+    public String searchNameQuery(@RequestParam(value = "q", required = false) String nameQuery,
                                   Model map,
                                   RedirectAttributes redirectAttributes)
             throws UnsupportedEncodingException {
@@ -91,10 +93,11 @@ public class SearchResultController {
         map.addAttribute("title", "Search results for query");
         List<Map<String, Object>> words = apiService.searchName(nameQuery);
 
+        // Redirect to single-result page if there is only one search result
         if (words.size() == 1 && isEqualWithoutAccent((String) words.get(0).get("word"), nameQuery)) {
+            Map<String, Object> matchWord = words.get(0);
             nameQuery = URLEncoder.encode(nameQuery, "UTF-8");
-            redirectAttributes.addFlashAttribute("word", words.get(0));
-            return "redirect:/entries/"+nameQuery;
+            return "redirect:/entries/" + nameQuery;
         }
 
         map.addAttribute("query", nameQuery);
@@ -128,6 +131,7 @@ public class SearchResultController {
 
     /**
      * Displays all the names in the dictionary. Supports pagination
+     *
      * @param map model the model
      * @return returns the view name
      */
