@@ -20,7 +20,7 @@
 
                         <h1 class="hword" id="word-entry"> {{word.word}} </h1>
 
-                        <span class="fl"><a class="important-blue-link" href="#">adjective</a></span>
+                        <span class="fl"><a class="important-blue-link" href="#">{{word.partOfSpeech}}</a></span>
 
                     </div>
 
@@ -103,11 +103,11 @@
 
                             <span class="smd">
 
-                                <a href="http://www.facebook.com/sharer.php?u=http%3A%2F%2F{{host}}/entries/{{word.word}}"
+                                <a href="http://www.facebook.com/sharer.php?u=http%3A%2F%2F{{host}}/entries/{{word.word}}" title="Share to Facebook"
                                    target="_blank"><i class="fa fa-facebook"></i></a>
 
                                 <a href="https://twitter.com/intent/tweet?url=http%3A%2F%2F{{host}}/entries/{{word.word}}&amp;text=Did you know {{word.word}} means '{{word.definitions.0.content}}'?&amp;hashtags=YorubaWords&amp;via=YorubaWords"
-                                   target="_blank">
+                                   title="Share to Twitter" target="_blank">
                                     <i class="fa fa-twitter"></i>
                                 </a>
 
