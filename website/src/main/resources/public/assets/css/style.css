@@ -988,13 +988,12 @@ h6 {
 	padding-bottom: 20px;
 }
 
-
-
 .exsh-wd {
 	padding: 30px 30px;
 	text-decoration: underline;
 	list-style: none;
 	line-height: 35px;
+    column-width: 100px;
 }
 
 

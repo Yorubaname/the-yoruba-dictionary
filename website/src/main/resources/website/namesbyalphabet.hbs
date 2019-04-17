@@ -1,28 +1,37 @@
 <!-- Header -->
 {{> header }}
 
-{{> minisearchform }}
+{{> searchformwithalphabet }}
 
 <!-- main-content -->
-<section id="content">
+<section class="exsh">
 
     <div class="container">
-        {{> alphabets}}
-        <br/>
-        <div class="row">
-            <h3>{{message "lang.number-of-names"}}: {{count}}</h3>
-            <div class="alphabet-listing">
-                <ul>
-                {{#if names}}
-                    {{#each names}}
-                        <a  title="{{this.meaning}}" class="word intonation" href="/entries/{{this.word}}"><li>{{this.word}}</li></a>
+
+        <div class="row midbar">
+
+            <h1>{{letter}}</h1>
+
+            {{#if count}}
+                <h5>Words starting with '{{toUpperCase letter}}': {{count}}</h5>
+            {{else}}
+                <h5>No words starting with '{{toUpperCase letter}}' yet. <a href="/submit-name">Want to add one?</a></h5>
+            {{/if}}
+
+            {{#if words}}
+                <p>Click on any word you want to learn more about.</p>
+
+                <ul class="exsh-wd">
+                    {{#each words}}
+                        <a title="{{this.definitions.0.content}}" class="word intonation" href="/entries/{{this.word}}">
+                            <li>{{this.word}}</li>
+                        </a>
                     {{/each}}
-                {{/if}}
+
                 </ul>
-            </div>
+            {{/if}}
         </div>
-        <br/>
-        {{> alphabets}}
+
     </div>
 
 </section>

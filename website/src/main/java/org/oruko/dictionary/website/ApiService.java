@@ -42,7 +42,7 @@ public class ApiService {
         return Arrays.asList(restTemplate.getForObject(APIPATH + "/search/?q=" + nameQuery, Map[].class));
     }
 
-    public List<Map<String, Object>> getAllNamesByAlphabet(String alphabet) {
+    public List<Map<String, Object>> getAllWordsByAlphabet(String alphabet) {
         return Arrays.asList(restTemplate.getForObject(APIPATH + "/search/alphabet/" + alphabet, Map[].class));
     }
 

@@ -208,11 +208,11 @@ $(function () {
     $(function () {
         var alphabet = location.pathname.split("/").pop();
 
-        if ($(".alphabets").length !== 0 && alphabet && alphabet.length === 1) {
+        if ($(".alphasearch").length !== 0 && alphabet && alphabet.length === 1) {
 
-            $("ul.alphabets li").filter(function () {
+            $("ul.alphasearch li").filter(function () {
                 return $(this).text() === alphabet;
-            }).css({"background-color": "#D3A463", "font-weight": "bold"});
+            }).css({"font-size": "36px"});
 
         }
 

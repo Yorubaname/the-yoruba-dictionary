@@ -111,15 +111,18 @@ public class SearchResultController {
         }
 
         map.addAttribute("title", "Names listed alphabetically");
-        final ArrayList<Map<String, Object>> allNamesByAlphabet = new ArrayList<>(apiService.getAllNamesByAlphabet(alphabet));
+        final ArrayList<Map<String, Object>> allWordsByAlphabet = new ArrayList<>(apiService.getAllWordsByAlphabet(alphabet));
 
+        // Remove words starting with 'gb' when the search letter is 'g'
         if ("g".equals(alphabet)) {
-            allNamesByAlphabet.removeIf(name -> ((String) name.get("name")).toLowerCase().startsWith("gb"));
+            allWordsByAlphabet.removeIf(name -> ((String) name.get("name")).toLowerCase().startsWith("gb"));
         }
 
         // TODO cant believe I can't do this from within handlebars. Revisit!
-        map.addAttribute("count", allNamesByAlphabet.size());
-        map.addAttribute("names", allNamesByAlphabet);
+        map.addAttribute("count", allWordsByAlphabet.size());
+        map.addAttribute("words", allWordsByAlphabet);
+        map.addAttribute("showAlphabet", true);
+        map.addAttribute("letter", alphabet);
         return "namesbyalphabet";
     }
 

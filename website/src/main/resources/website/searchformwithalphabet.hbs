@@ -1,0 +1,41 @@
+<section id="searchform">
+
+    <div class="jumbotron" id="home-banner">
+
+        <div class="container">
+
+            <div class="row">
+
+                <div class="col-md-2"></div>
+
+                <div class="col-md-8">
+
+                    {{#if showTagline}}
+                        <h1>The Only Multimedia Yorùbá Dictionary Online</h1>
+                    {{/if}}
+
+                    <div class="search-background">
+
+                        <h4>Names listed alphabetically:</h4>
+
+                        {{#if showAlphabet}}
+                            {{> alphabets}}
+                        {{/if}}
+
+                        {{> searchcomponent }}
+                    </div>
+
+                    {{> donate }}
+
+                </div>
+
+                <div class="col-md-2"></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+<!-- end search section-->
