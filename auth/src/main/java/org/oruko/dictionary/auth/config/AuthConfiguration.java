@@ -43,14 +43,14 @@ public class AuthConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers(HttpMethod.GET, "/v1/auth/users").hasAnyRole(Role.ADMIN.toString(),
                                                                       Role.PRO_LEXICOGRAPHER.toString(),
                                                                       Role.BASIC_LEXICOGRAPHER.toString())
-                // names endpoint auth
-            .antMatchers(HttpMethod.PUT, "/v1/names/**").hasAnyRole(Role.ADMIN.toString(),
+                // words endpoint auth
+            .antMatchers(HttpMethod.PUT, "/v1/words/**").hasAnyRole(Role.ADMIN.toString(),
                                                                    Role.PRO_LEXICOGRAPHER.toString(),
                                                                    Role.BASIC_LEXICOGRAPHER.toString())
-            .antMatchers(HttpMethod.POST, "/v1/names/**").hasAnyRole(Role.ADMIN.toString(),
+            .antMatchers(HttpMethod.POST, "/v1/words/**").hasAnyRole(Role.ADMIN.toString(),
                                                                  Role.PRO_LEXICOGRAPHER.toString(),
                                                                  Role.BASIC_LEXICOGRAPHER.toString())
-            .antMatchers(HttpMethod.DELETE, "/v1/names/**").hasRole(Role.ADMIN.toString())
+            .antMatchers(HttpMethod.DELETE, "/v1/words/**").hasRole(Role.ADMIN.toString())
 
 
                 // search endpoint auth
