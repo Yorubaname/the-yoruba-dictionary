@@ -83,24 +83,24 @@ public class ElasticSearchService implements SearchService {
     }
 
     /**
-     * For getting an entry from the search index by name
+     * For getting an entry from the search index by word
      *
-     * @param nameQuery the name
-     * @return the nameEntry as a Map or null if name not found
+     * @param wordQuery the word
+     * @return the wordEntry as a Map or null if word not found
      */
     @Override
-    public WordEntry getByName(String nameQuery) {
-        SearchResponse searchResponse = exactSearchByName(nameQuery);
+    public WordEntry getByWord(String wordQuery) {
+        SearchResponse searchResponse = exactSearchByWord(wordQuery);
 
         SearchHit[] hits = searchResponse.getHits().getHits();
         if (hits.length == 1) {
-            return sourceToNameEntry(hits[0].getSource());
+            return sourceToWordEntry(hits[0].getSource());
         } else {
             return null;
         }
     }
 
-    private WordEntry sourceToNameEntry(Map<String, Object> source) {
+    private WordEntry sourceToWordEntry(Map<String, Object> source) {
         String valueAsString = null;
         try {
             valueAsString = mapper.writeValueAsString(source);
@@ -134,10 +134,10 @@ public class ElasticSearchService implements SearchService {
         final Set<WordEntry> result = new LinkedHashSet<>();
 
         // 1. exact search
-        SearchResponse searchResponse = exactSearchByName(searchTerm);
+        SearchResponse searchResponse = exactSearchByWord(searchTerm);
         if (searchResponse.getHits().getHits().length >= 1) {
             Stream.of(searchResponse.getHits().getHits()).forEach(hit -> {
-                result.add(sourceToNameEntry(hit.getSource()));
+                result.add(sourceToWordEntry(hit.getSource()));
             });
 
             if (result.size() == 1) {
@@ -149,7 +149,7 @@ public class ElasticSearchService implements SearchService {
         searchResponse = exactSearchByNameAsciiFolded(searchTerm);
         if (searchResponse.getHits().getHits().length >= 1) {
             Stream.of(searchResponse.getHits().getHits()).forEach(hit -> {
-                result.add(sourceToNameEntry(hit.getSource()));
+                result.add(sourceToWordEntry(hit.getSource()));
             });
 
             if (result.size() == 1) {
@@ -162,7 +162,7 @@ public class ElasticSearchService implements SearchService {
         searchResponse = prefixFilterSearch(searchTerm, false);
         if (searchResponse.getHits().getHits().length >= 1) {
             Stream.of(searchResponse.getHits().getHits()).forEach(hit -> {
-                result.add(sourceToNameEntry(hit.getSource()));
+                result.add(sourceToWordEntry(hit.getSource()));
             });
 
             return result;
@@ -189,7 +189,7 @@ public class ElasticSearchService implements SearchService {
                 .actionGet();
 
         Stream.of(tempSearchAll.getHits().getHits()).forEach(hit -> {
-            result.add(sourceToNameEntry(hit.getSource()));
+            result.add(sourceToWordEntry(hit.getSource()));
         });
 
         return result;
@@ -206,7 +206,7 @@ public class ElasticSearchService implements SearchService {
 
         Collections.reverse(searchHits);
         searchHits.forEach(hit -> {
-            result.add(sourceToNameEntry(hit.getSource()));
+            result.add(sourceToWordEntry(hit.getSource()));
         });
 
         return result;
@@ -367,9 +367,9 @@ public class ElasticSearchService implements SearchService {
     }
 
     //TODO revisit. Omo returns Omowunmi and Owolabi. Ideal this should return just one result
-    private SearchResponse exactSearchByName(String nameQuery) {
+    private SearchResponse exactSearchByWord(String wordQuery) {
         return client.prepareSearch(esConfig.getIndexName())
-                .setPostFilter(FilterBuilders.termFilter("name", nameQuery.toLowerCase()))
+                .setPostFilter(FilterBuilders.termFilter("word", wordQuery.toLowerCase()))
                 .execute()
                 .actionGet();
     }

@@ -7,12 +7,12 @@ import java.util.Set;
 
 public interface SearchService {
     /**
-     * For getting an entry from the search index by name
+     * For getting an entry from the search index by word
      *
-     * @param nameQuery the name
-     * @return the nameEntry or null if name not found
+     * @param wordQuery the word
+     * @return the nameEntry or null if word not found
      */
-    WordEntry getByName(String nameQuery);
+    WordEntry getByWord(String wordQuery);
 
     /**
      * For searching the name entries for a name

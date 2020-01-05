@@ -131,7 +131,7 @@ public class SearchApi {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public WordEntry findByName(@PathVariable String searchTerm, HttpServletRequest request) {
 
-        WordEntry name = searchService.getByName(searchTerm);
+        WordEntry name = searchService.getByWord(searchTerm);
 
         if (name != null) {
             eventPubService.publish(new WordSearchedEvent(searchTerm, request.getRemoteAddr()));

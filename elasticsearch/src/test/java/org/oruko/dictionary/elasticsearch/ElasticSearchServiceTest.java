@@ -62,9 +62,9 @@ public class ElasticSearchServiceTest extends ElasticsearchIntegrationTest {
     public void setup() throws IOException {
 
         esConfig = new ESConfig();
-        esConfig.setDocumentType("nameentry");
+        esConfig.setDocumentType("wordentry");
         esConfig.setIndexName("dictionary");
-        esConfig.setClusterName("yoruba_name_dictionary");
+        esConfig.setClusterName("yoruba_word_dictionary");
         esConfig.setHostName("localhost");
         esConfig.setPort(9300);
 
@@ -76,15 +76,15 @@ public class ElasticSearchServiceTest extends ElasticsearchIntegrationTest {
     }
 
     @Test
-    public void testGetByName() throws IOException {
+    public void testGetByWord() throws IOException {
         XContentBuilder lagbaja = jsonBuilder().startObject()
-                                                     .field("name", "jamo")
+                                                     .field("word", "jamo")
                                                      .endObject();
         index(esConfig.getIndexName(), esConfig.getDocumentType(), lagbaja);
 
         flushAndRefresh();
 
-        WordEntry jamo = searchService.getByName("jamo");
+        WordEntry jamo = searchService.getByWord("jamo");
         assertEquals("jamo", jamo.getWord());
     }
 

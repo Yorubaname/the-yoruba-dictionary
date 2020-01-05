@@ -24,8 +24,8 @@ public class JpaSearchService implements SearchService {
     }
 
     @Override
-    public WordEntry getByName(String nameQuery) {
-        return wordEntryRepository.findByWordAndState(nameQuery, State.PUBLISHED);
+    public WordEntry getByWord(String wordQuery) {
+        return wordEntryRepository.findByWordAndState(wordQuery, State.PUBLISHED);
     }
 
     @Override

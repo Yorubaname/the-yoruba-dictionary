@@ -76,7 +76,7 @@ public class SearchApiTest extends AbstractApiTest {
 
     @Test
     public void testFindByName_NameNotFound() throws Exception {
-        when(searchService.getByName("searchTerm")).thenReturn(null);
+        when(searchService.getByWord("searchTerm")).thenReturn(null);
         mockMvc.perform(get("/v1/search/searchTerm"))
                 .andExpect(content().string(""))
                 .andExpect(status().isOk());
