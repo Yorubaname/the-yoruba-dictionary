@@ -122,6 +122,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <mainClass>org.oruko.dictionary.DictionaryApplication</mainClass>
+                    <executable>true</executable>
                 </configuration>
             </plugin>
 
