@@ -1,11 +1,13 @@
 package org.oruko.dictionary.website;
 
 import org.oruko.dictionary.model.WordEntry;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.PostConstruct;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -22,9 +24,11 @@ public class ApiService {
 
     public static String APIPATH;
 
-    @Value("http://${app.host}:${server.port}/v1")
-    public void setAPIPATH(String apipath) {
-        ApiService.APIPATH = apipath;
+    @Autowired
+    public void setAPIPATH(@Value("${app.host}") String hostName,
+                           @Value("${server.port}") String port, @Value("${server.ssl.enabled:#{false}}") boolean sslEnabled) {
+        String apiPath = (sslEnabled ? "https" : "http") + "://" + hostName + ":" + port + "/v1";
+        ApiService.APIPATH = apiPath;
     }
 
 
