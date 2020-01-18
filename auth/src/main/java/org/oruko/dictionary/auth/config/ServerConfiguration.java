@@ -39,10 +39,9 @@ public class ServerConfiguration {
     private Connector getHttpConnector(Integer serverPort, Integer httpPort) {
         Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
         connector.setScheme("http");
-        connector.setPort(serverPort);
         connector.setSecure(false);
         connector.setPort(httpPort);
-        connector.setRedirectPort(serverPort);
+        connector.setRedirectPort(443); //https default port: 443
         return connector;
     }
 }
