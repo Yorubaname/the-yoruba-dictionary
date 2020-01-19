@@ -20,12 +20,12 @@ public class SubmitNewNameController {
         this.apiService = apiService;
     }
 
-    @RequestMapping("/submitname")
+    @RequestMapping("/submit-word")
     public String submitNameIndexPage(Model map, @RequestParam(value = "missing", required = false) String missingName) {
         map.addAttribute("geoLocations", apiService.getGeoLocations());
         map.addAttribute("title", "Submit Name");
         map.addAttribute("missingName", missingName);
         map.addAttribute("nameCount", apiService.getIndexedNameCount());
-        return "submitname";
+        return "submitword";
     }
 }
