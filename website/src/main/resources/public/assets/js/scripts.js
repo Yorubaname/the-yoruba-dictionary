@@ -262,7 +262,7 @@ $(function () {
             event.preventDefault();
 
             var suggestedName = {
-                name: $('form#suggest-form #miniKeyboard').val(),
+                word: $('form#suggest-form #miniKeyboard').val(),
                 meaning: $('form#suggest-form #suggestedMeaning').val(),
                 geoLocation: getGeoLocations(),
                 submittedBy: $('form#suggest-form #suggestedEmail').val()
